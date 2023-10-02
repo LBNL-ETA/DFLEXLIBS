@@ -55,8 +55,8 @@ To run BOPTEST examples, follow these steps:
 
 If you are interested in contributing to the library:
 
-- You are welcome to report any issues in [Issues](https://github.com/flaand/demand_response_controls_library/issues).
-- You are also welcome to follow the [Contribution Guide](https://github.com/flaand/demand_response_controls_library/tree/main/doc) for:
+- You are welcome to report any issues in [Issues](https://github.com/LBNL-ETA/DFLEXLIBS/issues).
+- You are also welcome to follow the [Contribution Guide](https://github.com/LBNL-ETA/DFLEXLIBS/edit/main/doc) for:
    - Creating new control functions and applications
    - Running the control applications reusing the available interfaces (BOPTEST and VOLTTRON)
    - Creating new interfaces to run the applications in other control platforms/environments
@@ -155,7 +155,7 @@ works, and perform publicly and display publicly, and to permit others to do so.
 
 ## License
 
-DFLEXLIBS is available under the following open-source [license](https://github.com/flaand/demand_response_controls_library/tree/main/License.txt).
+DFLEXLIBS is available under the following open-source [license](https://github.com/LBNL-ETA/DFLEXLIBS/edit/main/License.txt).
 
 ## Related Publications
 
