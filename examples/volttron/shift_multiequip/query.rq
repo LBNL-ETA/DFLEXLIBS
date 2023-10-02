@@ -1,0 +1,41 @@
+SELECT ?equip (MAX(?TZonPoint) as ?TZonPoint) (MAX(?TSetMinPoint) as ?TSetMinPoint) (MAX(?TSetMaxPoint) as ?TSetMaxPoint) (COALESCE(MAX(?TSetHeaZonPoint), "N/A") as ?TSetHeaZonPoint) (COALESCE(MAX(?TSetCooZonPoint), "N/A") as ?TSetCooZonPoint) (COALESCE(MAX(?TSetZonPoint), "N/A") as ?TSetZonPoint)
+WHERE {
+    ?zone a brick:HVAC_Zone .
+    ?equip brick:feeds ?zone ;
+        a brick:FCU ;
+        brick:hasPoint ?TZon, ?TSetZon .
+    ?TZon a brick:Air_Temperature_Sensor ;
+        ref:hasExternalReference/ref:hasTimeseriesId ?TZonPoint  .
+    ?TSetZon a brick:Air_Temperature_Setpoint ;
+        ref:hasExternalReference/ref:hasTimeseriesId ?TSetZonPoint  .
+}
+    GROUP BY ?equip
+    
+# SELECT ?zone (MAX(?TZonPoint) as ?TZonPoint) (MAX(?TSetMinPoint) as ?TSetMinPoint) (MAX(?TSetMaxPoint) as ?TSetMaxPoint) (COALESCE(MAX(?TSetHeaZonPoint), "N/A") as ?TSetHeaZonPoint) (COALESCE(MAX(?TSetCooZonPoint), "N/A") as ?TSetCooZonPoint) (COALESCE(MAX(?TSetZonPoint), "N/A") as ?TSetZonPoint)
+# WHERE {
+#     ?zone a brick:Zone ;
+#     brick:hasPoint ?TZon, ?TSetMin, ?TSetMax, ?TSetHeaZon, ?TSetCooZon, ?TSetZon .
+    
+#     ?TZon a brick:Zone_Air_Temperature_Sensor ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TZonPoint .
+
+#     ?TSetMin a brick:Min_Air_Temperature_Setpoint ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetMinPoint .
+
+#     ?TSetMax a brick:Max_Air_Temperature_Setpoint ;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetMaxPoint .
+
+#     OPTIONAL {
+#     ?TSetHeaZon a brick:Zone_Air_Heating_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetHeaZonPoint .}
+
+#     OPTIONAL {
+#     ?TSetCooZon a brick:Zone_Air_Cooling_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetCooZonPoint .}
+
+#     OPTIONAL {
+#     ?TSetZon a brick:Zone_Air_Temperature_Setpoint;
+#         ref:hasExternalReference/ref:hasTimeseriesId ?TSetZonPoint .}
+
+# }
+#     GROUP BY ?zone

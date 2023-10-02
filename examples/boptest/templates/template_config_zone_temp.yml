@@ -1,0 +1,12 @@
+sparql_query: #path to interface query.
+graph_path: #path to each test case Brick graph.
+price_identifier:  #identifier to get the price signal.
+price_threshold_value: #price threshold to active the DR strategies.
+Tlimit_min:  #upper bound on the range of permitted values of a temperature setpoint. 
+Tlimit_max:  #lower bound on the range of permitted values of a temperature setpoint.
+hvac_mode_identifier:  #identifier to get control signal (for test cases in which HVAC mode estimation is based on a single control signal). 
+heat_signal_identifier: #identifier to get heating control signal (for test cases which have a heating control signal).
+cool_signal_identifier: #identifier to get cooling control signal (for test cases which have a cooling control signal).
+adj_comfort_range_flag: #boolean flag to define if comfort range adjustment is needed
+adj_comfort_range_value: #temperature value (offset) to define how much the comfort range can be adjusted
+shift_horizon_time: # hours ahead to start shift period (not required for shed)

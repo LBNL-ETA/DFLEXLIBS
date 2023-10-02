@@ -1,0 +1,35 @@
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+@prefix bldg: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+bldg:building a brick:Building ;
+brick:hasPart bldg:space .
+
+bldg:space a brick:Space .
+
+bldg:hvacZone a brick:Zone ;
+brick:hasPart bldg:space ; 
+brick:hasPoint bldg:reaTZon_y, bldg:oveTZonSet_u, bldg:lowerSetp, bldg:upperSetp, bldg:occ.
+
+
+bldg:reaTZon_y a brick:Zone_Air_Temperature_Sensor ; 
+    ref:hasExternalReference [ ref:hasTimeseriesId  "reaTZon_y" ] .
+
+
+bldg:oveTZonSet_u a brick:Zone_Air_Temperature_Setpoint ; 
+    ref:hasExternalReference [ ref:hasTimeseriesId  "oveTZonSet_u" ] .
+
+
+bldg:lowerSetp  a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId  "LowerSetp[1]" ] .
+
+
+bldg:upperSetp a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "UpperSetp[1]" ] .
+
+
+bldg:occ a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId  "Occupancy[1]" ] .

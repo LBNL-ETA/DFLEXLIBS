@@ -1,0 +1,328 @@
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+
+<test:building/> a owl:Ontology .
+
+<test:building/Bldg> a brick:Building ;
+    brick:hasPart <test:building/AdminSpace>,
+        <test:building/Office> .
+
+<test:building/Boiler2> a brick:Boiler ;
+    brick:feeds <test:building/HeatEx2> .
+
+<test:building/FCU1> a brick:FCU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPoint <test:building/FCU1.fanLevel>,
+        <test:building/FCU1.mode>,
+        <test:building/FCU1.on>,
+        <test:building/FCU1.targetTemperature>,
+        <test:building/FCU1.temperature>,
+        <test:building/FCU1.timeOfTemperature> .
+
+<test:building/FCU2> a brick:FCU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPoint <test:building/FCU2.fanLevel>,
+        <test:building/FCU2.mode>,
+        <test:building/FCU2.on>,
+        <test:building/FCU2.targetTemperature>,
+        <test:building/FCU2.temperature>,
+        <test:building/FCU2.timeOfTemperature> .
+
+<test:building/FCU3> a brick:FCU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPoint <test:building/FCU3.fanLevel>,
+        <test:building/FCU3.mode>,
+        <test:building/FCU3.on>,
+        <test:building/FCU3.targetTemperature>,
+        <test:building/FCU3.temperature>,
+        <test:building/FCU3.timeOfTemperature> .
+
+<test:building/FCU4> a brick:FCU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPoint <test:building/FCU4.fanLevel>,
+        <test:building/FCU4.mode>,
+        <test:building/FCU4.on>,
+        <test:building/FCU4.targetTemperature>,
+        <test:building/FCU4.temperature>,
+        <test:building/FCU4.timeOfTemperature> .
+
+<test:building/FCU5> a brick:FCU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPoint <test:building/FCU5.fanLevel>,
+        <test:building/FCU5.mode>,
+        <test:building/FCU5.on>,
+        <test:building/FCU5.targetTemperature>,
+        <test:building/FCU5.temperature>,
+        <test:building/FCU5.timeOfTemperature> .
+
+<test:building/Furnace1> a brick:AHU ;
+    brick:feeds <test:building/Zone1> ;
+    brick:hasPart <test:building/Boiler1>,
+        <test:building/Fan1>,
+        <test:building/HeatEx1> ;
+    brick:hasPoint <test:building/Furnace1.actualHumidity>,
+        <test:building/Furnace1.actualTemperature>,
+        <test:building/Furnace1.desiredCool>,
+        <test:building/Furnace1.desiredFanMode>,
+        <test:building/Furnace1.desiredHeat>,
+        <test:building/Furnace1.desiredHeatRange>,
+        <test:building/Furnace1.humidity>,
+        <test:building/Furnace1.hvacMode>,
+        <test:building/Furnace1.rawTemperature> .
+
+<test:building/Boiler1> a brick:Boiler ;
+    brick:feeds <test:building/HeatEx1> .
+
+<test:building/FCU1.fanLevel> a brick:Fan_Status ;
+    ref:hasExternalReference <test:building/FCU1.fanLevel.id> .
+
+<test:building/FCU1.fanLevel.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/fanLevel" .
+
+<test:building/FCU1.mode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/FCU1.mode.id> .
+
+<test:building/FCU1.mode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/mode" .
+
+<test:building/FCU1.on> a brick:On_Off_Status ;
+    ref:hasExternalReference <test:building/FCU1.on.id> .
+
+<test:building/FCU1.on.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/on" .
+
+<test:building/FCU1.targetTemperature> a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/FCU1.targetTemperature.id> .
+
+<test:building/FCU1.targetTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/targetTemperature" .
+
+<test:building/FCU1.temperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/FCU1.temperature.id> .
+
+<test:building/FCU1.temperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/temperature" .
+
+<test:building/FCU1.timeOfTemperature> a brick:Time_Parameter ;
+    ref:hasExternalReference <test:building/FCU1.timeOfTemperature.id> .
+
+<test:building/FCU1.timeOfTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU1/timeOfTemperature" .
+
+<test:building/FCU2.fanLevel> a brick:Fan_Status ;
+    ref:hasExternalReference <test:building/FCU2.fanLevel.id> .
+
+<test:building/FCU2.fanLevel.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/fanLevel" .
+
+<test:building/FCU2.mode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/FCU2.mode.id> .
+
+<test:building/FCU2.mode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/mode" .
+
+<test:building/FCU2.on> a brick:On_Off_Status ;
+    ref:hasExternalReference <test:building/FCU2.on.id> .
+
+<test:building/FCU2.on.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/on" .
+
+<test:building/FCU2.targetTemperature> a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/FCU2.targetTemperature.id> .
+
+<test:building/FCU2.targetTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/targetTemperature" .
+
+<test:building/FCU2.temperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/FCU2.temperature.id> .
+
+<test:building/FCU2.temperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/temperature" .
+
+<test:building/FCU2.timeOfTemperature> a brick:Time_Parameter ;
+    ref:hasExternalReference <test:building/FCU2.timeOfTemperature.id> .
+
+<test:building/FCU2.timeOfTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU2/timeOfTemperature" .
+
+<test:building/FCU3.fanLevel> a brick:Fan_Status ;
+    ref:hasExternalReference <test:building/FCU3.fanLevel.id> .
+
+<test:building/FCU3.fanLevel.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/fanLevel" .
+
+<test:building/FCU3.mode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/FCU3.mode.id> .
+
+<test:building/FCU3.mode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/mode" .
+
+<test:building/FCU3.on> a brick:On_Off_Status ;
+    ref:hasExternalReference <test:building/FCU3.on.id> .
+
+<test:building/FCU3.on.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/on" .
+
+<test:building/FCU3.targetTemperature> a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/FCU3.targetTemperature.id> .
+
+<test:building/FCU3.targetTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/targetTemperature" .
+
+<test:building/FCU3.temperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/FCU3.temperature.id> .
+
+<test:building/FCU3.temperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/temperature" .
+
+<test:building/FCU3.timeOfTemperature> a brick:Time_Parameter ;
+    ref:hasExternalReference <test:building/FCU3.timeOfTemperature.id> .
+
+<test:building/FCU3.timeOfTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU3/timeOfTemperature" .
+
+<test:building/FCU4.fanLevel> a brick:Fan_Status ;
+    ref:hasExternalReference <test:building/FCU4.fanLevel.id> .
+
+<test:building/FCU4.fanLevel.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/fanLevel" .
+
+<test:building/FCU4.mode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/FCU4.mode.id> .
+
+<test:building/FCU4.mode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/mode" .
+
+<test:building/FCU4.on> a brick:On_Off_Status ;
+    ref:hasExternalReference <test:building/FCU4.on.id> .
+
+<test:building/FCU4.on.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/on" .
+
+<test:building/FCU4.targetTemperature> a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/FCU4.targetTemperature.id> .
+
+<test:building/FCU4.targetTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/targetTemperature" .
+
+<test:building/FCU4.temperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/FCU4.temperature.id> .
+
+<test:building/FCU4.temperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/temperature" .
+
+<test:building/FCU4.timeOfTemperature> a brick:Time_Parameter ;
+    ref:hasExternalReference <test:building/FCU4.timeOfTemperature.id> .
+
+<test:building/FCU4.timeOfTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU4/timeOfTemperature" .
+
+<test:building/FCU5.fanLevel> a brick:Fan_Status ;
+    ref:hasExternalReference <test:building/FCU5.fanLevel.id> .
+
+<test:building/FCU5.fanLevel.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/fanLevel" .
+
+<test:building/FCU5.mode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/FCU5.mode.id> .
+
+<test:building/FCU5.mode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/mode" .
+
+<test:building/FCU5.on> a brick:On_Off_Status ;
+    ref:hasExternalReference <test:building/FCU5.on.id> .
+
+<test:building/FCU5.on.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/on" .
+
+<test:building/FCU5.targetTemperature> a brick:Air_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/FCU5.targetTemperature.id> .
+
+<test:building/FCU5.targetTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/targetTemperature" .
+
+<test:building/FCU5.temperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/FCU5.temperature.id> .
+
+<test:building/FCU5.temperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/temperature" .
+
+<test:building/FCU5.timeOfTemperature> a brick:Time_Parameter ;
+    ref:hasExternalReference <test:building/FCU5.timeOfTemperature.id> .
+
+<test:building/FCU5.timeOfTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "sensibo/FCU5/timeOfTemperature" .
+
+<test:building/Fan2> a brick:Fan .
+
+<test:building/Furnace1.actualHumidity> a brick:Relative_Humidity_Sensor ;
+    ref:hasExternalReference <test:building/Furnace1.actualHumidity.id> .
+
+<test:building/Furnace1.actualHumidity.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/actualHumidity" .
+
+<test:building/Furnace1.actualTemperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/Furnace1.actualTemperature.id> .
+
+<test:building/Furnace1.actualTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/actualTemperature" .
+
+<test:building/Furnace1.desiredCool> a brick:Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/Furnace1.desiredCool.id> .
+
+<test:building/Furnace1.desiredCool.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/desiredCool" .
+
+<test:building/Furnace1.desiredFanMode> a brick:Fan_Command ;
+    ref:hasExternalReference <test:building/Furnace1.desiredFanMode.id> .
+
+<test:building/Furnace1.desiredFanMode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/desiredFanMode" .
+
+<test:building/Furnace1.desiredHeat> a brick:Heating_Temperature_Setpoint ;
+    ref:hasExternalReference <test:building/Furnace1.desiredHeat.id> .
+
+<test:building/Furnace1.desiredHeat.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/desiredHeat" .
+
+<test:building/Furnace1.desiredHeatRange> a brick:Air_Temperature_Setpoint_Limit ;
+    ref:hasExternalReference <test:building/Furnace1.desiredHeatRange.id> .
+
+<test:building/Furnace1.desiredHeatRange.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/desiredHeatRange" .
+
+<test:building/Furnace1.humidity> a brick:Humidity_Setpoint ;
+    ref:hasExternalReference <test:building/Furnace1.humidity.id> .
+
+<test:building/Furnace1.humidity.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/humidity" .
+
+<test:building/Furnace1.hvacMode> a brick:Operating_Mode_Status ;
+    ref:hasExternalReference <test:building/Furnace1.hvacMode.id> .
+
+<test:building/Furnace1.hvacMode.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/hvacMode" .
+
+<test:building/Furnace1.rawTemperature> a brick:Air_Temperature_Sensor ;
+    ref:hasExternalReference <test:building/Furnace1.rawTemperature.id> .
+
+<test:building/Furnace1.rawTemperature.id> a ref:TimeseriesReference ;
+    ref:hasTimeseriesId "ecobeeMainFloor/rawTemperature" .
+
+<test:building/HeatEx2> a brick:Heat_Exchanger ;
+    brick:feeds <test:building/Fan2> .
+
+<test:building/AdminSpace> a brick:Space .
+
+<test:building/Fan1> a brick:Fan .
+
+<test:building/HeatEx1> a brick:Heat_Exchanger ;
+    brick:feeds <test:building/Fan1> .
+
+<test:building/Office> a brick:Office .
+
+<test:building/Zone1> a brick:HVAC_Zone ;
+    brick:hasPart <test:building/AdminSpace>,
+        <test:building/Office> .
+

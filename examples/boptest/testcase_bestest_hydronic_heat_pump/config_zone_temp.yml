@@ -1,0 +1,12 @@
+sparql_query: BOPTest_query_zone_temp.rq #path to interface query.
+graph_path: \testcase_bestest_hydronic_heat_pump\bestest_hydronic_heat_pump.ttl #path to each test case Brick graph.
+price_identifier: PriceElectricPowerDynamic #identifier to get the price signal.
+price_threshold_value: 0.25 #price threshold to active the DR strategies.
+Tlimit_min: 288.15 #upper bound on the range of permitted values of a temperature setpoint.
+Tlimit_max: 303.15 #lower bound on the range of permitted values of a temperature setpoint.
+hvac_mode_identifier: oveHeaPumY_u #identifier to get control signal (for test cases in which HVAC mode estimation is based on a single control signal). 
+heat_signal_identifier: #identifier to get heating control signal (for test cases which have a heating control signal).
+cool_signal_identifier: #identifier to get cooling control signal (for test cases which have a cooling control signal).
+adj_comfort_range_flag: True #boolean flag to define if comfort range adjustment is needed
+adj_comfort_range_value: 2 #temperature value (offset) to define how much the comfort range can be adjusted
+shift_horizon_time: 3 # hours ahead to start shift period (not required for shed)

@@ -1,0 +1,12 @@
+sparql_query_path: query.rq
+graph_path: building_model.ttl
+price_schedule: [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]
+occ_schedule: [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0] 
+price_threshold_value:  0
+Tlimit_min:  285
+Tlimit_max:  313
+dr_control_setting: heat
+heat_signal_identifier:  
+cool_signal_identifier:  
+adjust_comfort_range: True
+adjust_comfort_offset: 2

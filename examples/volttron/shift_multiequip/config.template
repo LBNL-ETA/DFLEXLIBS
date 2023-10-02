@@ -1,0 +1,14 @@
+{
+    "Tlimit_min",
+    "Tlimit_max",  
+    "adjust_comfort_range",
+    "adjust_comfort_offset",
+    "user_setting",
+    "schedule": null,
+    "baseline": null,
+    "furnace": null,
+    "prices": null,
+    "TZonPoint": null,
+    "TsetZonPoint": null,
+    "equip": null
+}
