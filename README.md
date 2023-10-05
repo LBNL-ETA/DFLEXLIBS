@@ -8,7 +8,7 @@ To access the library, follow these steps:
 
 1. Clone the repository
    ``` 
-   git clone https://github.com/flaand/demand_response_controls_library.git 
+   git clone https://github.com/LBNL-ETA/DFLEXLIBS.git 
    ```
 
 2. Install the library and dependencies
