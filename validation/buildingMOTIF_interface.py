@@ -22,7 +22,7 @@ class ValidationInterface:
     def validate(self):
     
         table_data = []
-        suitable_kpis = []
+        suitable_controlApps = []
 
         # Iterate over manifest paths and validate each one
         for key, manifest_path in self.manifest_paths.items():
@@ -71,26 +71,24 @@ class ValidationInterface:
             row = [key, validation_result.valid]
 
             if validation_result.valid == True:
-                suitable_kpis.append({key})
+                suitable_controlApps.append({key})
 
             # Add reasons for each diff if available
             for diff in validation_result.diffset:
-                print (f" For KPI {key} - {diff.reason()}") 
-
-            #print(f"KPI: {key}, Validation Result: {validation_result.valid}")
+                print (f" For DF control app {key} - {diff.reason()}") 
 
             # Append the row to the overall table data
             table_data.append(row)
 
 
         # Print the table without headers
-        print(tabulate(table_data, headers=["KPI", "Brick model validation result"], tablefmt="fancy_grid"))
+        print(tabulate(table_data, headers=["DF Control app", "Brick model validation result"], tablefmt="fancy_grid"))
 
-        return suitable_kpis    
+        return suitable_controlApps    
     
     def get_results(self):
         validation_table = []
-        suitable_kpis = []
+        suitable_controlApps = []
         non_suitable_reason = []
 
                 # Iterate over manifest paths and validate each one
@@ -140,7 +138,7 @@ class ValidationInterface:
             row = [key, validation_result.valid]
 
             if validation_result.valid == True:
-                suitable_kpis.append(key)
+                suitable_controlApps.append(key)
 
             # Add reasons for each diff if available
             for diff in validation_result.diffset:
@@ -149,11 +147,11 @@ class ValidationInterface:
             # Append the row to the overall table data
             validation_table.append(row)
 
-        # Prepare a dictionary with table data and suitable KPIs
+        # Prepare a dictionary with table data and suitable controlApps
         results_dict = {
             "validation_table": validation_table,
-            "suitable_kpis": list(suitable_kpis),
-            "non_suitable_kpis": non_suitable_reason
+            "suitable_controlApps": list(suitable_controlApps),
+            "non_suitable_controlApps": non_suitable_reason
         }
 
         # Convert the dictionary to JSON format
