@@ -11,7 +11,7 @@ typing = "*"
 
 [packages]
 rdflib = "*"
-controls = {path = ".", editable = true}
+dflexlibs = {path = "./python", editable = true}
 requests = "*"
 pandas = "*"
 matplotlib = "*"

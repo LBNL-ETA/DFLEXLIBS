@@ -1,15 +1,15 @@
 from typing import Protocol
 import rdflib
-from controls.hvac.sequences.python.strategies.stra_zone_temp_shift_shed_price import (
+from DFLEXLIBS.hvac.sequences.python.strategies.stra_zone_temp_shift_shed_price import (
     compute_control
 )
 
-from controls.hvac.protocols_zone_temp import (
+from DFLEXLIBS.hvac.protocols_zone_temp import (
     DRControlFunctions,
     DRControlStrategy,
     DRInterface
 )
-from controls.hvac.sequences.python.functions import (
+from DFLEXLIBS.hvac.sequences.python.functions import (
     ashrae_TSet_adjust,
     new_comfort_range,
     runaway_condition,
