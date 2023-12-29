@@ -1,5 +1,5 @@
 sparql_query: BOPTest_query_zone_temp.rq #path to interface query.
-graph_path: \testcase_multizone_office_simple_air\multizone_office_simple_air.ttl #path to each test case Brick graph.
+graph_path: testcase_multizone_office_simple_air/multizone_office_simple_air.ttl #path to each test case Brick graph.
 price_identifier:  PriceElectricPowerDynamic #identifier to get the price signal.
 price_threshold_value:  0.06 #price threshold to active the DR strategies.
 Tlimit_min:  285.15 #upper bound on the range of permitted values of a temperature setpoint.
