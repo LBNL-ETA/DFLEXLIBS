@@ -3,16 +3,16 @@ import sys
 sys.path.append("..")
 import os
 
-from DFLEXLIBS.hvac.sequences.python.strategies.stra_zone_temp_shift_shed_price import (
+from dflexlibs.hvac.strategies.stra_zone_temp_shift_shed_price import (
     compute_control,
     sparql_query
 )
-from DFLEXLIBS.hvac.protocols_zone_temp import (
+from dflexlibs.hvac.protocols_zone_temp import (
     DRControlFunctions,
     DRControlStrategy,
     DRInterface
 )
-from DFLEXLIBS.hvac.sequences.python.functions import (
+from dflexlibs.hvac.functions import (
     
     ashrae_TSet_adjust,
     new_comfort_range,
