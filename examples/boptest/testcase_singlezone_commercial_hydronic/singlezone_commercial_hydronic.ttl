@@ -33,3 +33,28 @@ bldg:upperSetp a brick:Max_Air_Temperature_Setpoint ;
 
 bldg:occ a brick:Occupancy_Sensor ;
     ref:hasExternalReference [ ref:hasTimeseriesId  "Occupancy[1]" ] .
+
+
+
+
+bldg:ahu_reaPFanRet_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "ahu_reaPFanRet_y" ] .
+
+
+bldg:ahu_reaPFanSup_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "ahu_reaPFanSup_y" ] .
+
+
+bldg:reaPEle_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPEle_y" ] .
+
+
+bldg:reaPFan_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPFan_y" ] .    
+
+bldg:reaPPum_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPPum_y" ] .    
+
+
+bldg:reaQHea_y a brick:Thermal_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaQHea_y" ] .

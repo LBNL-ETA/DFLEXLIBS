@@ -6,19 +6,21 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
 bldg:building a brick:Building ;
+brick:area [ brick:value "48"^^xsd:float ];
 brick:hasPart bldg:space .
 
 bldg:space a brick:Space .
 
 bldg:hvacZone a brick:Zone ;
-brick:hasPart bldg:space ; 
-brick:hasPoint 
-	bldg:zon_reaTRooAir_y, 
-	bldg:con_oveTSetHea_u, 
-	bldg:con_oveTSetCoo_u,
-    bldg:lowerSetp,
-    bldg:upperSetp ,
-    bldg:occ .
+    brick:hasPart bldg:space ; 
+    brick:isFedBy bldg:fcu ;
+    brick:hasPoint 
+        bldg:zon_reaTRooAir_y, 
+        bldg:con_oveTSetHea_u, 
+        bldg:con_oveTSetCoo_u,
+        bldg:lowerSetp,
+        bldg:upperSetp ,
+        bldg:occ .
 
 bldg:zon_reaTRooAir_y a brick:Zone_Air_Temperature_Sensor ; 
     ref:hasExternalReference [ ref:hasTimeseriesId "zon_reaTRooAir_y" ] .
@@ -34,10 +36,39 @@ bldg:con_oveTSetCoo_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
 bldg:lowerSetp  a brick:Min_Air_Temperature_Setpoint ;
     ref:hasExternalReference [ ref:hasTimeseriesId "LowerSetp[1]" ] .
 
-
 bldg:upperSetp a brick:Max_Air_Temperature_Setpoint ;
     ref:hasExternalReference [ ref:hasTimeseriesId "UpperSetp[1]" ] .
 
-
 bldg:occ a brick:Occupancy_Sensor ;
     ref:hasExternalReference [ ref:hasTimeseriesId "Occupancy[1]" ] .
+
+bldg:fcu a brick:Fan_Coil_Unit;
+    brick:feeds bldg:hvacZone ;
+    brick:hasPart 
+        bldg:fan ,
+        bldg:cooling_coil ,
+        bldg:heating_coil .
+
+bldg:cooling_coil a brick:Cooling_Coil;
+    brick:isFedBy bldg:chiller .
+
+bldg:heating_coil a brick:Heating_Coil ;
+    brick:isFedBy bldg:boiler .
+
+bldg:boiler a brick:Natural_Gas_Boiler ;
+    brick:hasPoint bldg:fcu_reaPHea_y .
+
+bldg:fcu_reaPHea_y a brick:Thermal_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "fcu_reaPHea_y" ] .
+
+bldg:fan a brick:Fan ;
+    brick:hasPoint bldg:fcu_reaPFan_y .
+
+bldg:fcu_reaPFan_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "fcu_reaPFan_y" ] .
+
+bldg:chiller a brick:Chiller ;
+    brick:hasPoint bldg:fcu_reaPCoo_y .
+
+bldg:fcu_reaPCoo_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "fcu_reaPCoo_y" ] .
