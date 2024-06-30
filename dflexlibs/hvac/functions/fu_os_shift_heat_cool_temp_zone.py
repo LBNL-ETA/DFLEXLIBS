@@ -10,11 +10,11 @@ def shift_heat_cool_temp_zone (operation_mode, zone_set_temp_heat, zone_set_temp
         operation_mode : str 
             Contains the value representing the current operation mode.
 
-        zone_set_temp_heat_name : str
-            Contains the value representing the name of the heating setpoint for the zone.
+        zone_set_temp_heat : int or float
+            Contains the setpoint value for heating in the zone.
 
-        zone_set_temp_cool_name : str
-            Contains the value representing the name of the cooling setpoint for the zone.
+        zone_set_temp_cool : int or float
+            Contains the setpoint value for cooling in the zone.
 
         shift_adjust : int or float
             Contains the current temperature adjusment value allowed for the shifting.
@@ -25,12 +25,6 @@ def shift_heat_cool_temp_zone (operation_mode, zone_set_temp_heat, zone_set_temp
         zone_temp : int or float
             Contains the current temperature value of the zone.
 
-        zone_set_temp_heat_bas_schedule : list
-            Contains the baseline schedule value for heating setpoint in the zone.
-
-        zone_set_temp_cool_bas_schedule : list
-            Contains the baseline schedule value for cooling setpoint in the zone.
-
         ratcheting_list : list
             Contains the names of the zones to be ratchet.
 
@@ -40,6 +34,14 @@ def shift_heat_cool_temp_zone (operation_mode, zone_set_temp_heat, zone_set_temp
         zone_set_temp_cool_name : str
             Contains the value representing the name of the cooling setpoint for the zone.
  
+        zone_set_temp_heat_bas_schedule : list
+            Contains the baseline schedule value for heating setpoint in the zone.
+
+        zone_set_temp_cool_bas_schedule : list
+            Contains the baseline schedule value for cooling setpoint in the zone.
+
+        shift_horizon_time : int
+            Contains start time of the shift period. Multiply hours by 4 for 15-minute intervals, by 2 for 30-minute intervals, etc.    
             
         Returns
         -------
