@@ -1,0 +1,4 @@
+[submodule "energy_flexibility_kpis"]
+	path = energy_flexibility_kpis
+	url = https://github.com/HichamJohra/energy_flexibility_kpis.git
+	branch = develop
