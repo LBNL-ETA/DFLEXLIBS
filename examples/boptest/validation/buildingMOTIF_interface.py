@@ -75,9 +75,10 @@ class ValidationInterface:
                 suitable_controlApps.append({key})
 
             # Add reasons for each diff if available
-            for diff in validation_result.diffset:
-                if diff:
-                    print (f" For DF control app {key} - {diff.reason()}") 
+            for entity, errors in validation_result.diffset.items():
+                print(entity)
+                for err in errors:
+                    print (f" For DF control app {key} - {err.reason()}") 
 
             # Append the row to the overall table data
             table_data.append(row)
@@ -143,9 +144,10 @@ class ValidationInterface:
                 suitable_controlApps.append(key)
 
             # Add reasons for each diff if available
-            for diff in validation_result.diffset:
-                if diff:
-                    non_suitable_reason.append([key, diff.reason()]) 
+            for entity, errors in validation_result.diffset.items():
+                print(entity)
+                for err in errors:
+                    non_suitable_reason.append([key, err.reason()]) 
 
             # Append the row to the overall table data
             validation_table.append(row)
