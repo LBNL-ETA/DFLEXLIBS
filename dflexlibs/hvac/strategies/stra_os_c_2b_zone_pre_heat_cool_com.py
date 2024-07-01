@@ -7,7 +7,7 @@ def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_z
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     shift_adjust, shift_dev_threshold, shift_horizon_time,
-                    baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min):
+                    baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min, reduce_VAV):
  
     '''Compute the control output based on measurement and forecast values.
     
@@ -144,8 +144,7 @@ def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_z
         '''
     control_results = {}  
     ratcheting_list = {}
-    rebound_heat_list = {}
-    rebound_cool_list = {}
+    ratcheting_list_unshift = {}
 
     if zone not in shift_counter_dict:
         shift_counter_dict[zone] = 0
@@ -193,7 +192,7 @@ def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_z
             control_results [zone_set_temp_cool_name] = zone_set_temp_cool_bas_schedule[0] 
         print("no shift, baseline setpoint", control_results)       
     
-    print(ratcheting_list)
+    print(ratcheting_list, ratcheting_list_unshift)
     return shift_counter_dict[zone], ratcheting_list, control_results, reduce_VAV, ratcheting_list_unshift
                                             
 def sparql_query(graph_path, query_paths):

@@ -2,7 +2,7 @@ def shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_c
                          ratcheting_list_unshift, zone_set_temp_heat_name, zone_set_temp_cool_name, 
                          zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, shift_horizon_time):
 
-''' Computes demand modulation according to a target demand decrease from baseline peak.
+    ''' Computes demand modulation according to a target demand decrease from baseline peak.
     
         Parameters
         ----------
@@ -50,7 +50,7 @@ def shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_c
 
         ratcheting_list_unshift : list
             Updates the list with the name of the zones to be ratchet to revert shifting. 
-        '''  
+    '''  
     
     dev_heat = dev_cool = None
     new_zone_set_temp_heat = None
@@ -78,7 +78,7 @@ def shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_c
                 new_zone_set_temp_heat = zone_set_temp_heat
                 print("continue")
         
-        if TSetCooZon is not None:
+        if new_zone_set_temp_cool is not None:
             new_zone_set_temp_cool = zone_set_temp_cool_bas_schedule[0]
 
     else:
