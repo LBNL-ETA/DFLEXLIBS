@@ -6,6 +6,7 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
 bldg:building a brick:Building ;
+brick:area [ brick:value "8500"^^xsd:float] ;
 brick:hasPart bldg:space .
 
 bldg:space a brick:Space .

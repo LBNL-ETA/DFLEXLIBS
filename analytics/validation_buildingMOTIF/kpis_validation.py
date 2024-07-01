@@ -64,6 +64,7 @@ class ValidationInterface:
 
             # pass a list of shape collections to .validate()
             validation_result = model.validate(shape_collections)
+            #print(validation_result)
 
             # Append a row to the table with validation result and key
             row = [key, validation_result.valid]
@@ -72,9 +73,10 @@ class ValidationInterface:
                 suitable_kpis.append({key})
             
             # Add reasons for each diff if available
-            for diff in validation_result.diffset:
-                if diff.reason:
-                    print (f" For KPI {key} - {diff.reason()}") 
+            for entity, errors in validation_result.diffset.items():
+                #print(entity)
+                for err in errors:
+                    print (f" For KPI {key} - {err.reason()}") 
 
             #print(f"KPI: {key}, Validation Result: {validation_result.valid}")
 

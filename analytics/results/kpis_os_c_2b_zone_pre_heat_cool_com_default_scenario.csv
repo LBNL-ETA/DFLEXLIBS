@@ -1,14 +1,14 @@
-kpi,b1
-average demand decrease,0.04313136227363445
-average demand decrease intensity,0.0008985700473673843
-average demand decrease index,0.10241856381618909
-average demand increase,-0.0010473153646933726
-average demand increase intensity,-2.1819070097778594e-05
-average demand increase index,-0.006725700510261223
-average power rebound,0.05521232137149878
-average power rebound index,-0.15116094249871917
-flexibility savings index,-2.978794000032403
-energy savings of demand response,-7.0247862712259845
-net building consumption change percentage,4.039295993303414
-peak power reduction,-1.9297096838777854
-tdis_tot,0.37857382222099834
+kpi,b1,b2
+average demand decrease,0.0431313622736344,-0.0006102048105153538
+average demand decrease intensity,0.0008985700473673,-3.178150054767468e-06
+average demand decrease index,0.102418563816189,
+average demand increase,-0.0010473153646933,0.00043118556848595097
+average demand increase intensity,-2.1819070097778597e-05,2.2457581691976614e-06
+average demand increase index,-0.0067257005102612,
+average power rebound,0.0552123213714987,-0.0012557546864314408
+average power rebound index,-0.1511609424987191,-0.000471445369166934
+flexibility savings index,-2.978794000032403,-0.010048927466099755
+energy savings of demand response,-7.0247862712259845,-0.13531175437460893
+net building consumption change percentage,4.039295993303414,0.020508662668158224
+peak power reduction,-1.9297096838777852,6.887783232656375e-07
+tdis_tot,0.3785738222209983,0.5986925694780776

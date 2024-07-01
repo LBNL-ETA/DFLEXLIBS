@@ -7,6 +7,7 @@
 @prefix om: <http://openmetrics.eu/openmetrics#> .
 
 bldg:Building a brick:Building ;
+brick:area [ brick:value "1662.66"^^xsd:float] ;
 brick:hasPart 
 	bldg:hvac_cor_zone, 
 	bldg:hvac_eas_zone,
