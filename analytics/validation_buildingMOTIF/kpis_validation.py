@@ -73,7 +73,8 @@ class ValidationInterface:
             
             # Add reasons for each diff if available
             for diff in validation_result.diffset:
-                print (f" For KPI {key} - {diff.reason()}") 
+                if diff.reason:
+                    print (f" For KPI {key} - {diff.reason()}") 
 
             #print(f"KPI: {key}, Validation Result: {validation_result.valid}")
 
