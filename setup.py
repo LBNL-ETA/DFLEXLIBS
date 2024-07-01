@@ -1,7 +1,40 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="controls",
-    version="1.0",
+    name='dflexlibs',
+    version='0.1.0',
+    description='Demand Flexibility Controls Library using Semantics (DFLEXLIBS)',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    author='Lawrence Berkeley National Laboratory',
+    author_email='LPaul@lbl.gov',
+    url='https://github.com/LBNL-ETA/DFLEXLIBS',
     packages=find_packages(),
+    include_package_data=True,
+    install_requires=[
+        'rdflib',
+        'pandas',
+        'numpy',
+        'matplotlib',
+        'pyyaml',
+        'requests',
+        'typing',
+        'notebook',
+        'ipykernel',
+        'pipenv',
+        'pyshacl',
+        'python-dotenv'
+    ],
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+    ],
+    python_requires='>=3.7',
 )
