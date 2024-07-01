@@ -97,6 +97,10 @@ DFLEXLIBS is available under the following open-source [license](https://github.
 
 ## Related Publications
 
+de Andrade Pereira, Flavia; Paul, Lazlo; Pritoni, Marco; Casillas, Armando; Prakash, Anand; Huang, Weiping; Shaw, Conor;  Martín-Toral, Susana; Finn, Donal; O’Donnell, James.
+Enabling portable demand flexibility control applications in virtual and real buildings, Journal of Building Engineering,
+Volume 86, 2024. https://doi.org/10.1016/j.jobe.2024.108645.
+
 Paul, Lazlo; De Andrade Pereira, Flavia; Ham, Sang woo;Pritoni, Marco; Brown, Rich; Feng, Jingjuan Dove. Open Building Operating System: an Open-Source Grid Responsive Control Platform for Buildings (2023). ASHRAE Annual Conference 2023.
 
 de Andrade Pereira, Flavia; Pritoni, Marco; Martín-Toral, Susana; Finn, Donal; O’Donnell, James. A semantics-driven framework for scalable demand flexibility control applications (2023). Proceedings of the 2023 European Conference on Computing in Construction and the 40th International CIB W78 Conference.
