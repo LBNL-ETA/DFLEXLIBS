@@ -60,6 +60,7 @@ To run BOPTEST examples, follow these steps:
 3. Check the results
 
    Open the `_analytics/results` directory and check the results from each test case for each control application.
+   Individual analytic results is saved within each testcase directory for each control. 
 
 
 ## Contributing
