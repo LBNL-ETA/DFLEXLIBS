@@ -1,7 +1,7 @@
 # Note: ensure that the timestamp column of all files follows the %Y-%m-%d %I:%M:%S %p' format
 
 # Define path and file names
-database_file_name: 'kpis_multizone_office_simple_air.db'
+database_file_name: 'database/kpis_multizone_office_simple_air.db'
 brick_model_file_name: "multizone_office_simple_air.ttl"
 updated_brick_model_file_name: "multizone_office_simple_air_with_data.ttl"
 

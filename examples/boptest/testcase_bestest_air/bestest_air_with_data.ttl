@@ -16,22 +16,22 @@ bldg1:chiller a brick:Chiller ;
 bldg1:con_oveTSetCoo_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "con_oveTSetCoo_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "con_oveTSetCoo_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "con_oveTSetCoo_u" ] .
 
 bldg1:con_oveTSetHea_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "con_oveTSetHea_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "con_oveTSetHea_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "con_oveTSetHea_u" ] .
 
@@ -50,22 +50,22 @@ bldg1:fcu a brick:Fan_Coil_Unit ;
 bldg1:fcu_reaPCoo_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPCoo_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPCoo_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "fcu_reaPCoo_y" ] .
 
 bldg1:fcu_reaPFan_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPFan_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPFan_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "fcu_reaPFan_y" ] .
 
