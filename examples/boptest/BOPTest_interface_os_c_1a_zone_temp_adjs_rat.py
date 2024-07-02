@@ -135,7 +135,7 @@ class BOPTestInterface(DRInterface):
     
         '''
         control_results = {}
-        print(current_time)
+        print(current_time, step)
         print(self.shed_counter_dict)
 
         # Read baseline setpoint values        

@@ -129,7 +129,7 @@ class BOPTestInterface(DRInterface):
         print(current_time)
         print(self.shift_counter_dict)
 
-        shift_horizon_time = self.shift_horizon_time * 4
+        shift_horizon_time = self.shift_horizon_time * (3600/step)
 
         # Read baseline setpoint values        
         baseline_df = pd.read_csv(self.baseline_path) 
