@@ -1,0 +1,12 @@
+rdflib
+pandas
+numpy
+matplotlib
+pyyaml
+requests
+typing
+notebook
+ipykernel
+pipenv
+pyshacl
+python-dotenv
