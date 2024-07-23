@@ -19,8 +19,7 @@ from dflexlibs.hvac.functions import (
     shed_savings_mode,
     zone_qualification_check,
     shed_single_step_adj_zone,
-    shed_demand_target,
-    shed_incr_temp_ratch_zone, 
+    shed_perform_target_ratch,
     rebound_management_zone
 )
 
@@ -31,8 +30,7 @@ class BOPTestControlFunctions(DRControlFunctions):
         self.shed_savings_mode = shed_savings_mode
         self.zone_qualification_check = zone_qualification_check
         self.shed_single_step_adj_zone = shed_single_step_adj_zone
-        self.shed_demand_target = shed_demand_target
-        self.shed_incr_temp_ratch_zone = shed_incr_temp_ratch_zone
+        self.shed_perform_target_ratch = shed_perform_target_ratch
         self.rebound_management_zone = rebound_management_zone
         
 
@@ -301,7 +299,7 @@ class BOPTestInterface(DRInterface):
                 # Call selected control strategy 
                 shed_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
                     self.control_functions.shed_price_event, self.control_functions.shed_savings_mode, self.control_functions.zone_qualification_check, self.control_functions.shed_single_step_adj_zone,  
-                    self.control_functions.shed_demand_target, self.control_functions.shed_incr_temp_ratch_zone, self.control_functions.rebound_management_zone, zone_temp, 
+                    self.control_functions.shed_perform_target_ratch, self.control_functions.rebound_management_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
                     self.occ_flex_set_temp_max, self.non_occ_flex_set_temp_min, self.non_occ_flex_set_temp_max, operation_mode, 
                     zone_set_temp_heat_name, zone_set_temp_cool_name, self.shed_counter_dict, zone, self.shed_initial_adjust, 

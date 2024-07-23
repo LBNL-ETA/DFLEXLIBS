@@ -1,5 +1,5 @@
-def compute_control(shed_price_event, shed_savings_mode, zone_qualification_check, shed_single_step_adj_zone, shed_demand_target,
-                    shed_incr_temp_ratch_zone, rebound_management_zone, zone_temp, 
+def compute_control(shed_price_event, shed_savings_mode, zone_qualification_check, shed_single_step_adj_zone, shed_perform_target_ratch,
+                    rebound_management_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, occ_flex_set_temp_min, 
                     occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max, operation_mode, 
                     zone_set_temp_heat_name, zone_set_temp_cool_name, shed_counter_dict, zone, shed_initial_adjust, 
@@ -23,14 +23,11 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         shed_savings_mode : function
             Function that triggers a savings mode when there is no occupancy.
 
-        shed_demand_target : function
-            Function that checks if current demand has reach the target.
-        
         shed_single_step_adj_zone : function
             Function that controls the shedding of heating and cooling loads.
 
-        shed_incr_temp_ratch_zone : function
-            Function that applies a ratchet mechanism to progressively increase the shed amount for heating and cooling based on predefined conditions.
+        shed_perform_target_ratch : function
+            Function that applies a ratchet mechanism to progressively increase the shed amount for heating and cooling based on predefined conditions if current demand has reach the target.
 
         zone_qualification_check : function
             Function used to determine which zones qualify for shedding based on current conditions.
@@ -261,21 +258,15 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
                 shed_counter_dict[zone] = shed_counter
             
-            elif shed_demand_target (demand_decrease_cap, demand_decrease, demand_decrease_error, demand_decrease_error_min):
-                new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list = shed_incr_temp_ratch_zone (operation_mode, zone_temp, zone_set_temp_heat, zone_set_temp_cool, 
+            else:
+                new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list = shed_perform_target_ratch (demand_decrease_cap, demand_decrease, demand_decrease_error, demand_decrease_error_min,
+                                operation_mode, zone_temp, zone_set_temp_heat, zone_set_temp_cool, 
                                 occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                                shed_dev_threshold, shed_delta_ratchet, ratcheting_list, zone_set_temp_cool_name, zone_set_temp_heat_name)
                 if zone_set_temp_heat is not None:
                     control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
                 if zone_set_temp_cool is not None:
                     control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool
-            
-            else:
-                if zone_set_temp_heat is not None:
-                    control_results [zone_set_temp_heat_name] = zone_set_temp_heat 
-                if zone_set_temp_cool is not None:
-                    control_results [zone_set_temp_cool_name] = zone_set_temp_cool 
-                print("no ratchet, continue shed", control_results) 
 
         else:
             shed_counter_dict[zone] = 0
