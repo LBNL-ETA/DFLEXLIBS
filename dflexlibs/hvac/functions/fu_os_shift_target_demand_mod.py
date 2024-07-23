@@ -1,4 +1,4 @@
-def shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
+def shift_target_demand_mod (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
                          ratcheting_list_unshift, zone_set_temp_heat_name, zone_set_temp_cool_name, 
                          zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, shift_horizon_time):
 

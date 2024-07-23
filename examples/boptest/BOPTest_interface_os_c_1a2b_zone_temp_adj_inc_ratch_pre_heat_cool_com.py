@@ -24,7 +24,7 @@ from dflexlibs.hvac.functions import (
     shift_price_occ_event,
     shift_check_demand,
     shift_single_step_adjs_zone,
-    shift_demand_modulation
+    shift_target_demand_mod
 )
 
 class BOPTestControlFunctions(DRControlFunctions):
@@ -40,7 +40,7 @@ class BOPTestControlFunctions(DRControlFunctions):
         self.shift_price_occ_event = shift_price_occ_event
         self.shift_single_step_adjs_zone = shift_single_step_adjs_zone
         self.shift_check_demand = shift_check_demand
-        self.shift_demand_modulation = shift_demand_modulation
+        self.shift_target_demand_mod = shift_target_demand_mod
 
         
 
@@ -342,7 +342,7 @@ class BOPTestInterface(DRInterface):
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone,
-                    self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, self.deadband_peak_demand_diff_error_min, reduce_VAV, self.control_functions.shift_demand_modulation))
+                    self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, self.deadband_peak_demand_diff_error_min, reduce_VAV, self.control_functions.shift_target_demand_mod))
                 
                 control_results.update(results)  
                 self.shed_counter_dict[zone] = shed_counter

@@ -7,7 +7,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone,
-                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min, reduce_VAV, shift_demand_modulation ):
+                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min, reduce_VAV, shift_target_demand_mod ):
  
     '''Compute the control output based on measurement and forecast values.
     
@@ -149,7 +149,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         reduce_VAV: XXXXXXXXXXXXX
             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         
-        shift_demand_modulation : function
+        shift_target_demand_mod : function
             Function used to modulate the demand to a target demand decrease from baseline peak.
 
         
@@ -204,7 +204,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
             shift_counter_dict[zone] = shift_counter  
 
         elif reduce_VAV == 1:
-            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list_unshift = shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
+            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list_unshift = shift_target_demand_mod (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
                          ratcheting_list_unshift, zone_set_temp_heat_name, zone_set_temp_cool_name, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, shift_horizon_time)
             if zone_set_temp_heat is not None:
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat

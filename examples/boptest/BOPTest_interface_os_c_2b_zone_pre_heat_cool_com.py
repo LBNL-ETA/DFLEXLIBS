@@ -19,7 +19,7 @@ from dflexlibs.hvac.functions import (
     zone_qualification_check,
     shift_check_demand, 
     shift_single_step_adjs_zone,
-    shift_demand_modulation
+    shift_target_demand_mod
 )
 
 class BOPTestControlFunctions(DRControlFunctions):
@@ -29,7 +29,7 @@ class BOPTestControlFunctions(DRControlFunctions):
         self.zone_qualification_check = zone_qualification_check
         self.shift_single_step_adjs_zone = shift_single_step_adjs_zone
         self.shift_check_demand = shift_check_demand
-        self.shift_demand_modulation = shift_demand_modulation
+        self.shift_target_demand_mod = shift_target_demand_mod
 
 class BOPTestControls(DRControlStrategy):
     
@@ -308,7 +308,7 @@ class BOPTestInterface(DRInterface):
                 # Call selected control strategy 
                 shift_counter, ratchet_list, results, reduce_VAV, ratchet_list_unshift = (self.compute_control(
                     self.control_functions.shift_price_occ_event, self.control_functions.zone_qualification_check, self.control_functions.shift_single_step_adjs_zone,  
-                    self.control_functions.shift_check_demand, self.control_functions.shift_demand_modulation,
+                    self.control_functions.shift_check_demand, self.control_functions.shift_target_demand_mod,
                     zone_temp, zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
                     self.occ_flex_set_temp_max, self.non_occ_flex_set_temp_min, self.non_occ_flex_set_temp_max, operation_mode, 
                     zone_set_temp_heat_name, zone_set_temp_cool_name, self.shift_counter_dict, zone,

@@ -1,5 +1,5 @@
 def compute_control(shift_price_occ_event, zone_qualification_check, shift_single_step_adjs_zone, 
-                    shift_check_demand, shift_demand_modulation, zone_temp, 
+                    shift_check_demand, shift_target_demand_mod, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, occ_flex_set_temp_min, 
                     occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max, operation_mode, 
                     zone_set_temp_heat_name, zone_set_temp_cool_name, shift_counter_dict, zone, 
@@ -26,7 +26,7 @@ def compute_control(shift_price_occ_event, zone_qualification_check, shift_singl
         shift_check_demand : function 
             Function used to check if current demand requires modulation. 
         
-        shift_demand_modulation : function
+        shift_target_demand_mod : function
             Function used to modulate the demand to a target demand decrease from baseline peak.
         
         zone_temp : int or float
@@ -168,7 +168,7 @@ def compute_control(shift_price_occ_event, zone_qualification_check, shift_singl
             shift_counter_dict[zone] = shift_counter  
 
         elif reduce_VAV == 1:
-            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list_unshift = shift_demand_modulation (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
+            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list_unshift = shift_target_demand_mod (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, zone_temp,  
                          ratcheting_list_unshift, zone_set_temp_heat_name, zone_set_temp_cool_name, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, shift_horizon_time)
             if zone_set_temp_heat is not None:
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat

@@ -7,6 +7,6 @@ from .fu_os_shed_demand_target import *
 from .fu_os_shift_price_occ_event import *
 from .fu_os_shift_single_step_adjs_zone import *
 from .fu_os_shift_check_demand import *
-from .fu_os_shift_demand_modulation import *
+from .fu_os_shift_target_demand_mod import *
 from .fu_os_shed_single_step_adj_zone import *
 
