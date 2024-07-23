@@ -16,9 +16,9 @@ from dflexlibs.hvac.protocols_os_c_2b_zone_pre_heat_cool_com import (
 from dflexlibs.hvac.functions import (
     
     shift_price_occ_event,
-    qualify_zones,
+    zone_qualification_check,
     shift_check_demand, 
-    shift_heat_cool_temp_zone,
+    shift_single_step_adjs_zone,
     shift_demand_modulation
 )
 
@@ -26,8 +26,8 @@ class BOPTestControlFunctions(DRControlFunctions):
     
     def __init__(self):
         self.shift_price_occ_event = shift_price_occ_event
-        self.qualify_zones = qualify_zones
-        self.shift_heat_cool_temp_zone = shift_heat_cool_temp_zone
+        self.zone_qualification_check = zone_qualification_check
+        self.shift_single_step_adjs_zone = shift_single_step_adjs_zone
         self.shift_check_demand = shift_check_demand
         self.shift_demand_modulation = shift_demand_modulation
 
@@ -307,7 +307,7 @@ class BOPTestInterface(DRInterface):
                    
                 # Call selected control strategy 
                 shift_counter, ratchet_list, results, reduce_VAV, ratchet_list_unshift = (self.compute_control(
-                    self.control_functions.shift_price_occ_event, self.control_functions.qualify_zones, self.control_functions.shift_heat_cool_temp_zone,  
+                    self.control_functions.shift_price_occ_event, self.control_functions.zone_qualification_check, self.control_functions.shift_single_step_adjs_zone,  
                     self.control_functions.shift_check_demand, self.control_functions.shift_demand_modulation,
                     zone_temp, zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
                     self.occ_flex_set_temp_max, self.non_occ_flex_set_temp_min, self.non_occ_flex_set_temp_max, operation_mode, 

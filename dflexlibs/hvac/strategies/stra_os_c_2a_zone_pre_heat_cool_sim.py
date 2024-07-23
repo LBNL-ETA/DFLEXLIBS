@@ -1,4 +1,4 @@
-def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_zone, zone_temp, 
+def compute_control(shift_price_occ_event, zone_qualification_check, shift_single_step_adjs_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, occ_flex_set_temp_min, 
                     occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max, operation_mode, 
                     zone_set_temp_heat_name, zone_set_temp_cool_name, shift_counter_dict, zone, 
@@ -12,13 +12,13 @@ def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_z
         Parameters
         ----------
 
-        shed_price_event : function
+        shed_price_occ_event : function
             Function used to identify if DF shed control must be executed based on price event.
 
-        shift_heat_cool_temp_zone : function
+        shift_single_step_adjs_zone : function
             Function that controls the shifting of heating and cooling loads.
 
-        qualify_zones : function
+        zone_qualification_check : function
             Function used to determine which zones qualify for shedding based on current conditions.
         
         zone_temp : int or float
@@ -133,12 +133,12 @@ def compute_control(shift_price_occ_event, qualify_zones, shift_heat_cool_temp_z
 
     if shift_price_occ_event (schedule_price, schedule_occupancy, price_threshold_value, occ_min_threshold, shift_horizon_time):
 
-        if qualify_zones (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
+        if zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
                             hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set): 
             print("qualified zone")
                                                                        
             # Compute shift
-            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list, shift_counter = shift_heat_cool_temp_zone (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, shift_dev_threshold, zone_temp,  
+            new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list, shift_counter = shift_single_step_adjs_zone (operation_mode, zone_set_temp_heat, zone_set_temp_cool, shift_adjust, shift_dev_threshold, zone_temp,  
                         ratcheting_list, zone_set_temp_heat_name, zone_set_temp_cool_name, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, shift_horizon_time)
             if zone_set_temp_heat is not None:
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat

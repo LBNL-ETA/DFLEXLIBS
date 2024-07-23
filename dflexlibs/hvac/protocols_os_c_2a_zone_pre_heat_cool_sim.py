@@ -9,9 +9,9 @@ class DRControlFunctions(Protocol):
         
     def shift_price_occ_event(self):
         ... 
-    def qualify_zones(self):
+    def zone_qualification_check(self):
         ...
-    def shift_heat_cool_temp_zone(self):
+    def shift_single_step_adjs_zone(self):
         ...   
     
 # compute control will probably come from the 'strategies' module
