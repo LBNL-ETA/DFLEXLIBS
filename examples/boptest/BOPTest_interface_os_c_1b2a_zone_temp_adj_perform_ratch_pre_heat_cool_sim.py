@@ -20,7 +20,9 @@ from dflexlibs.hvac.functions import (
     zone_qualification_check,
     shed_single_step_adj_zone,
     shed_perform_target_ratch,
-    rebound_management_zone
+    rebound_management_zone,
+    shift_price_occ_event,
+    shift_single_step_adjs_zone
 )
 
 class BOPTestControlFunctions(DRControlFunctions):
@@ -32,6 +34,8 @@ class BOPTestControlFunctions(DRControlFunctions):
         self.shed_single_step_adj_zone = shed_single_step_adj_zone
         self.shed_perform_target_ratch = shed_perform_target_ratch
         self.rebound_management_zone = rebound_management_zone
+        self.shift_price_occ_event = shift_price_occ_event
+        self.shift_single_step_adjs_zone = shift_single_step_adjs_zone
         
 
 class BOPTestControls(DRControlStrategy):
@@ -85,10 +89,16 @@ class BOPTestInterface(DRInterface):
 
         self.demand_decrease_cap = config.get('demand_decrease_cap', None)
         self.demand_decrease_error_min = config.get('demand_decrease_error_min', None)
-
+        
+        # Define shift values
+        self.shift_adjust = config.get('shift_adjust', None)
+        self.shift_dev_threshold = config.get('shift_dev_threshold', None)
+        self.shift_horizon_time = config.get('shift_horizon_time', None)
+        
         # Define name of handsoff zones
         self.hands_off_zone = config.get('hands_off_zone', None)
 
+        self.shift_counter_dict = {}
         self.shed_counter_dict = {}
 
         self.sparql_results = sparql_query(self.graph_path, self.query_paths)
@@ -140,6 +150,8 @@ class BOPTestInterface(DRInterface):
         control_results = {}
         print(current_time)
         print(self.shed_counter_dict)
+
+        shift_horizon_time = self.shift_horizon_time * (3600/step)
 
         # Read baseline setpoint values        
         baseline_df = pd.read_csv(self.baseline_path) 
@@ -297,7 +309,7 @@ class BOPTestInterface(DRInterface):
                 print("price_schedule", schedule_price)
                    
                 # Call selected control strategy 
-                shed_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
+                shed_counter, shift_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
                     self.control_functions.shed_price_event, self.control_functions.shed_savings_mode, self.control_functions.zone_qualification_check, self.control_functions.shed_single_step_adj_zone,  
                     self.control_functions.shed_perform_target_ratch, self.control_functions.rebound_management_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
@@ -306,10 +318,13 @@ class BOPTestInterface(DRInterface):
                     self.shed_dev_threshold, self.shed_delta_ratchet, self.hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                    self.demand_decrease_cap, demand_decrease, demand_decrease_error, self.demand_decrease_error_min))
-                
+                    self.demand_decrease_cap, demand_decrease, demand_decrease_error, self.demand_decrease_error_min,
+                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone))
+  
                 
                 control_results.update(results)  
+                self.shift_counter_dict[zone] = shift_counter
+                print("new shift counter", self.shift_counter_dict[zone])
                 self.shed_counter_dict[zone] = shed_counter
                 print("new shed counter", self.shed_counter_dict[zone])
                 ratcheting_list.update(ratchet_list)   

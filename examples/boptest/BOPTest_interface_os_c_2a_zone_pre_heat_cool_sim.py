@@ -17,7 +17,7 @@ from dflexlibs.hvac.functions import (
     
     shift_price_occ_event,
     zone_qualification_check,
-    shift_single_step_adjs_zone,
+    shift_single_step_adjs_zone
 )
 
 class BOPTestControlFunctions(DRControlFunctions):

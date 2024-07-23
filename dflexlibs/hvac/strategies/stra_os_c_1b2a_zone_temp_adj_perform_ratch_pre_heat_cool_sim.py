@@ -264,7 +264,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         print("no shed/shift, baseline setpoint", control_results)       
     
     print(ratcheting_list)
-    return shed_counter_dict[zone], ratcheting_list, rebound_heat_list, rebound_cool_list, control_results
+    return shed_counter_dict[zone], shift_counter_dict[zone], ratcheting_list, rebound_heat_list, rebound_cool_list, control_results
                                             
 def sparql_query(graph_path, query_paths):
 

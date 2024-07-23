@@ -20,7 +20,11 @@ from dflexlibs.hvac.functions import (
     zone_qualification_check,
     shed_single_step_adj_zone,
     shed_perform_target_ratch,
-    rebound_management_zone
+    rebound_management_zone,
+    shift_price_occ_event,
+    shift_single_step_adjs_zone,
+    shift_check_demand, 
+    shift_target_demand_mod
 )
 
 class BOPTestControlFunctions(DRControlFunctions):
@@ -32,6 +36,11 @@ class BOPTestControlFunctions(DRControlFunctions):
         self.shed_single_step_adj_zone = shed_single_step_adj_zone
         self.shed_perform_target_ratch = shed_perform_target_ratch
         self.rebound_management_zone = rebound_management_zone
+        self.shift_price_occ_event = shift_price_occ_event
+        self.shift_single_step_adjs_zone = shift_single_step_adjs_zone
+        self.shift_check_demand = shift_check_demand
+        self.shift_target_demand_mod = shift_target_demand_mod
+
         
 
 class BOPTestControls(DRControlStrategy):
@@ -86,10 +95,20 @@ class BOPTestInterface(DRInterface):
         self.demand_decrease_cap = config.get('demand_decrease_cap', None)
         self.demand_decrease_error_min = config.get('demand_decrease_error_min', None)
 
+        # Define shift values
+        self.shift_adjust = config.get('shift_adjust', None)
+        self.shift_dev_threshold = config.get('shift_dev_threshold', None)
+        self.shift_horizon_time = config.get('shift_horizon_time', None)
+
+        self.peak_demand_diff_error_min = config.get('peak_demand_diff_error_min', None)
+        self.deadband_peak_demand_diff_error_min = config.get('deadband_peak_demand_diff_error_min', None)
+
         # Define name of handsoff zones
         self.hands_off_zone = config.get('hands_off_zone', None)
 
         self.shed_counter_dict = {}
+        self.shift_counter_dict = {}
+        self.reduce_VAV = 0
 
         self.sparql_results = sparql_query(self.graph_path, self.query_paths)
         self.compute_control = controls.compute_control
@@ -139,7 +158,9 @@ class BOPTestInterface(DRInterface):
         '''
         control_results = {}
         print(current_time)
-        print(self.shed_counter_dict)
+        print(self.shed_counter_dict, self.shift_counter_dict)
+
+        shift_horizon_time = self.shift_horizon_time * (3600/step)
 
         # Read baseline setpoint values        
         baseline_df = pd.read_csv(self.baseline_path) 
@@ -186,6 +207,29 @@ class BOPTestInterface(DRInterface):
         
         print("bas demand", baseline_demand, "cur demand", current_demand, "decr", demand_decrease, "error", demand_decrease_error)
 
+        
+        baseline_demand_df = pd.read_csv(self.baseline_path, parse_dates=['time'])
+
+        # Convert the 'time' column to datetime
+        baseline_demand_df['time'] = pd.to_datetime(baseline_demand_df['time'], unit='s')
+
+        # Set the 'time' column as the index
+        baseline_demand_df.set_index('time', inplace=True)
+
+        baseline_demand_df['Total'] = baseline_demand_df[power_points].sum(axis=1)
+
+        resampled_mean_total = baseline_demand_df['Total'].resample('15T').mean()
+
+        baseline_demand_peak = resampled_mean_total.max()
+        
+        current_demand = 0
+        for powSensorPointName in power_points:
+            #print(powSensorPointName)
+            if powSensorPointName in list(y):
+                #print(y[powSensorPointName])
+                current_demand += y[powSensorPointName]
+
+        print("baseline_demand_peak", baseline_demand_peak, "current_demand", current_demand)        
         
         if not zone_set_temp_heat_point or all(x is None for x in zone_set_temp_heat_point):
             zone_set_temp_heat_point = zone_set_temp_point
@@ -297,7 +341,7 @@ class BOPTestInterface(DRInterface):
                 print("price_schedule", schedule_price)
                    
                 # Call selected control strategy 
-                shed_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
+                shed_counter, shift_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
                     self.control_functions.shed_price_event, self.control_functions.shed_savings_mode, self.control_functions.zone_qualification_check, self.control_functions.shed_single_step_adj_zone,  
                     self.control_functions.shed_perform_target_ratch, self.control_functions.rebound_management_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
@@ -306,12 +350,19 @@ class BOPTestInterface(DRInterface):
                     self.shed_dev_threshold, self.shed_delta_ratchet, self.hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                    self.demand_decrease_cap, demand_decrease, demand_decrease_error, self.demand_decrease_error_min))
-                
+                    self.demand_decrease_cap, demand_decrease, demand_decrease_error, self.demand_decrease_error_min,
+                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, 
+                    self.control_functions.shift_single_step_adjs_zone,
+                    self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, 
+                    self.deadband_peak_demand_diff_error_min, self.reduce_VAV, self.control_functions.shift_target_demand_mod))
+  
                 
                 control_results.update(results)  
                 self.shed_counter_dict[zone] = shed_counter
                 print("new shed counter", self.shed_counter_dict[zone])
+                self.shift_counter_dict[zone] = shift_counter
+                print("new shift counter", self.shift_counter_dict[zone])
+                
                 ratcheting_list.update(ratchet_list)   
                 rebound_heat_list.update(rebound_h_list)                  
                 rebound_cool_list.update(rebound_c_list) 
