@@ -8,6 +8,7 @@ pyshacl = "*"
 python-dotenv = "*"
 ipykernel = "*"
 typing = "*"
+setuptools = "*"
 
 [packages]
 rdflib = "*"
