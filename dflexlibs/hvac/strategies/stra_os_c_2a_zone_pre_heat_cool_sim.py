@@ -6,7 +6,7 @@ def compute_control(shift_price_occ_event, zone_qualification_check, shift_singl
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     shift_adjust, shift_dev_threshold, shift_horizon_time):
- 
+     
     '''Compute the control output based on measurement and forecast values.
     
         Parameters

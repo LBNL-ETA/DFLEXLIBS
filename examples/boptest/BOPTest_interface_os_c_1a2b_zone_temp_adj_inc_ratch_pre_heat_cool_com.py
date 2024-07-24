@@ -159,8 +159,8 @@ class BOPTestInterface(DRInterface):
         print(self.shed_counter_dict)
         print(self.shift_counter_dict)
 
-        shift_horizon_time = self.shift_horizon_time * (3600/step)
-
+        shift_horizon_time = int(self.shift_horizon_time * (3600 / step))
+      
         # Read baseline setpoint values        
         baseline_df = pd.read_csv(self.baseline_path) 
 
