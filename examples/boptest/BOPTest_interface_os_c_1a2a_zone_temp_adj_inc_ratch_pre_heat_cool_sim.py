@@ -302,7 +302,8 @@ class BOPTestInterface(DRInterface):
                     self.shed_dev_threshold, self.shed_delta_ratchet, self.hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone))
+                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, self.control_functions.shift_single_step_adjs_zone,
+                    self.shift_adjust, self.shift_dev_threshold, shift_horizon_time))
                 
 
                 

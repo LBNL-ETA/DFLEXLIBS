@@ -6,7 +6,8 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     shed_dev_threshold, shed_delta_ratchet, hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                    shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone
+                    shift_counter_dict, shift_price_occ_event, shift_single_step_adjs_zone,
+                    shift_adjust, shift_dev_threshold, shift_horizon_time
                     ):
  
     '''Compute the control output based on measurement and forecast values.
