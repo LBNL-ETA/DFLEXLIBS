@@ -8,9 +8,8 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, 
                     demand_decrease_cap, demand_decrease, demand_decrease_error, demand_decrease_error_min,
                     shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone,
-                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min, reduce_VAV, shift_target_demand_mod):
-  
-  
+                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, 
+                    deadband_peak_demand_diff_error_min, reduce_VAV, shift_target_demand_mod, shift_adjust, shift_dev_threshold):
 
     '''Compute the control output based on measurement and forecast values.
     
@@ -167,6 +166,11 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         shift_target_demand_mod : function
             Function used to modulate the demand to a target demand decrease from baseline peak.
 
+        shift_adjust : int or float
+            Contains the current temperature adjusment value allowed for the shifting.
+
+        shift_dev_threshold : int or float
+            Contains the value of the shift threshold for zone temperature deviation from effective setpoint.
         
         Returns
         -------
@@ -192,6 +196,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
     ratcheting_list = {}
     rebound_heat_list = {}
     rebound_cool_list = {}
+    ratcheting_list_unshift = {}
 
     if zone not in shed_counter_dict:
         shed_counter_dict[zone] = 0
@@ -297,7 +302,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         print("no shed, baseline setpoint", control_results)       
     
     print(ratcheting_list)
-    return shed_counter_dict[zone], shift_counter_dict[zone], ratcheting_list, rebound_heat_list, rebound_cool_list, control_results
+    return shed_counter_dict[zone], shift_counter_dict[zone], ratcheting_list, rebound_heat_list, rebound_cool_list, control_results, reduce_VAV, ratcheting_list_unshift
                                             
 def sparql_query(graph_path, query_paths):
 

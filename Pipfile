@@ -8,6 +8,7 @@ pyshacl = "*"
 python-dotenv = "*"
 ipykernel = "*"
 typing = "*"
+setuptools = "*"
 
 [packages]
 rdflib = "*"
@@ -19,3 +20,4 @@ numpy = "*"
 pyyaml = "*"
 buildingmotif = "*"
 notebook = "*"
+setuptools = "*"

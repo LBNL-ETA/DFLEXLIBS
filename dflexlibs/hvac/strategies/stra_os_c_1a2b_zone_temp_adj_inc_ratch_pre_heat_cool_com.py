@@ -7,7 +7,8 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone,
-                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, deadband_peak_demand_diff_error_min, reduce_VAV, shift_target_demand_mod ):
+                    shift_check_demand, baseline_demand_peak, current_demand, peak_demand_diff_error_min, 
+                    deadband_peak_demand_diff_error_min, reduce_VAV, shift_target_demand_mod, shift_adjust, shift_dev_threshold):
  
     '''Compute the control output based on measurement and forecast values.
     
@@ -177,6 +178,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
     ratcheting_list = {}
     rebound_heat_list = {}
     rebound_cool_list = {}
+    ratcheting_list_unshift = {}
 
     if zone not in shed_counter_dict:
         shed_counter_dict[zone] = 0

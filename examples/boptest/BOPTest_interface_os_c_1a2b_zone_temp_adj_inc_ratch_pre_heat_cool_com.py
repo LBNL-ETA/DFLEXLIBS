@@ -189,7 +189,7 @@ class BOPTestInterface(DRInterface):
         print('price_threshold_value', price_threshold_value)
 
         # Initiliaze values from the SPARQL query module
-        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point, ele_pow_point, therm_pow_point = None
+        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = ele_pow_point = therm_pow_point = None
         number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point, ele_pow_point, therm_pow_point = self.sparql_results
         print(number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point, ele_pow_point, therm_pow_point)
 
@@ -342,7 +342,9 @@ class BOPTestInterface(DRInterface):
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone,
-                    self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, self.deadband_peak_demand_diff_error_min, reduce_VAV, self.control_functions.shift_target_demand_mod))
+                    self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, self.deadband_peak_demand_diff_error_min, 
+                    self.reduce_VAV, self.control_functions.shift_target_demand_mod,
+                    self.shift_adjust, self.shift_dev_threshold))
                 
                 control_results.update(results)  
                 self.shed_counter_dict[zone] = shed_counter

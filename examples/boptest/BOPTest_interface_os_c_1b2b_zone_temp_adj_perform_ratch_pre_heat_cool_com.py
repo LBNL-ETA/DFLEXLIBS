@@ -182,6 +182,7 @@ class BOPTestInterface(DRInterface):
         ratcheting_list = {}
         rebound_heat_list = {}
         rebound_cool_list = {}
+        ratcheting_list_unshift = {}
 
         # Get energy price  
         schedule_price = f[self.price_identifier]                            
@@ -341,7 +342,7 @@ class BOPTestInterface(DRInterface):
                 print("price_schedule", schedule_price)
                    
                 # Call selected control strategy 
-                shed_counter, shift_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
+                shed_counter, shift_counter, ratchet_list, rebound_h_list, rebound_c_list, results, reduce_VAV, ratchet_list_unshift = (self.compute_control(
                     self.control_functions.shed_price_event, self.control_functions.shed_savings_mode, self.control_functions.zone_qualification_check, self.control_functions.shed_single_step_adj_zone,  
                     self.control_functions.shed_perform_target_ratch, self.control_functions.rebound_management_zone, zone_temp, 
                     zone_set_temp_heat, zone_set_temp_cool, price_threshold_value, self.occ_flex_set_temp_min, 
@@ -354,7 +355,8 @@ class BOPTestInterface(DRInterface):
                     self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, 
                     self.control_functions.shift_single_step_adjs_zone,
                     self.control_functions.shift_check_demand, baseline_demand_peak, current_demand, self.peak_demand_diff_error_min, 
-                    self.deadband_peak_demand_diff_error_min, self.reduce_VAV, self.control_functions.shift_target_demand_mod))
+                    self.deadband_peak_demand_diff_error_min, self.reduce_VAV, self.control_functions.shift_target_demand_mod,
+                    self.shift_adjust, self.shift_dev_threshold))
   
                 
                 control_results.update(results)  
@@ -366,7 +368,9 @@ class BOPTestInterface(DRInterface):
                 ratcheting_list.update(ratchet_list)   
                 rebound_heat_list.update(rebound_h_list)                  
                 rebound_cool_list.update(rebound_c_list) 
+                ratcheting_list_unshift.update(ratchet_list_unshift) 
 
+        self.reduce_VAV = reduce_VAV
         print(control_results)
 
         # Adding enable keys "TSetXxxZon_name[:-1] + activate" to the control results
@@ -391,6 +395,9 @@ class BOPTestInterface(DRInterface):
         sorted_rebound_cool_zones = sorted(rebound_cool_list, key=rebound_cool_list.get, reverse=True)
         print("rebound", sorted_rebound_cool_zones)
 
+        sorted_ratchet_zones_unshift = sorted(ratcheting_list_unshift, key=ratcheting_list_unshift.get, reverse=True)
+        print("ratchet_unshift", sorted_ratchet_zones_unshift)
+        
         # Create a list of zones to filter out
         ratchet_zones_to_exclude = sorted_ratchet_zones[:-1]
         print(ratchet_zones_to_exclude)
@@ -401,8 +408,11 @@ class BOPTestInterface(DRInterface):
         rebound_cool_zones_to_exclude = sorted_rebound_cool_zones[:-1]
         print(rebound_cool_zones_to_exclude)
 
+        ratchet_zones_to_exclude_unshift = sorted_ratchet_zones_unshift[:-1]
+        print(ratchet_zones_to_exclude_unshift)
+        
         # Filter keys from control_results using keys_to_exclude
-        filtered_control_results = {key: control_results[key] for key in control_results if not any(exclude_zone in key for exclude_zone in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude))}
+        filtered_control_results = {key: control_results[key] for key in control_results if not any(exclude_zone in key for exclude_zone in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude or ratchet_zones_to_exclude_unshift))}
 
         print(filtered_control_results)
         return filtered_control_results
