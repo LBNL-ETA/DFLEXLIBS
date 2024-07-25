@@ -29,11 +29,11 @@ bldg1:reaPFan_y a brick:Electric_Power_Sensor ;
 bldg1:reaPHeaPum_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPHeaPum_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPHeaPum_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPHeaPum_y" ] .
 
