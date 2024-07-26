@@ -319,7 +319,8 @@ class BOPTestInterface(DRInterface):
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
                     self.demand_decrease_cap, demand_decrease, demand_decrease_error, self.demand_decrease_error_min,
-                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone))
+                    self.shift_counter_dict, self.control_functions.shift_price_occ_event, shift_horizon_time, self.control_functions.shift_single_step_adjs_zone,
+                    self.shift_adjust, self.shift_dev_threshold))
   
                 
                 control_results.update(results)  

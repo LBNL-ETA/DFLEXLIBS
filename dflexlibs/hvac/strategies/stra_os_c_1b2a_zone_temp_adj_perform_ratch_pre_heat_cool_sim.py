@@ -7,7 +7,8 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, 
                     demand_decrease_cap, demand_decrease, demand_decrease_error, demand_decrease_error_min,
-                    shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone):
+                    shift_counter_dict, shift_price_occ_event, shift_horizon_time, shift_single_step_adjs_zone,
+                    shift_adjust, shift_dev_threshold):
   
   
 
