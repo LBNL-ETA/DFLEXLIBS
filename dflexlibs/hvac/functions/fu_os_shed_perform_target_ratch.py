@@ -29,12 +29,11 @@ def shed_perform_target_ratch (demand_decrease_cap, demand_decrease, demand_decr
 
     '''    
     demand_decrease_error = demand_decrease_cap - demand_decrease 
-    
-    if  demand_decrease_error > demand_decrease_error_min:
-        
-        dev_heat = dev_cool = None
-        new_zone_set_temp_heat = None
-        new_zone_set_temp_cool = None
+    dev_heat = dev_cool = None
+    new_zone_set_temp_heat = None
+    new_zone_set_temp_cool = None
+
+    if  demand_decrease_error > demand_decrease_error_min:       
 
         # Check the HVAC operation (heating/cooling) mode
         if operation_mode == 'heat':
@@ -99,7 +98,7 @@ def shed_perform_target_ratch (demand_decrease_cap, demand_decrease, demand_decr
                 new_zone_set_temp_heat = zone_set_temp_heat_bas_schedule[0]
         
             if zone_set_temp_cool is not None:
-                    new_zone_set_temp_cool = zone_set_temp_cool
+                new_zone_set_temp_cool = zone_set_temp_cool
         print("no ratchet, continue shed cool")
 
     print(new_zone_set_temp_heat, new_zone_set_temp_cool, ratcheting_list)
