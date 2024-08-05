@@ -29,22 +29,22 @@ bldg1:reaPFan_y a brick:Electric_Power_Sensor ;
 bldg1:reaPHeaPum_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPHeaPum_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPHeaPum_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPHeaPum_y" ] .
 
 bldg1:reaPPumEmi_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPPumEmi_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPPumEmi_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPPumEmi_y" ] .
 
@@ -65,11 +65,11 @@ bldg1:occ a brick:Occupancy_Sensor ;
 bldg1:oveTSet_u a brick:Zone_Air_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "oveTSet_u" ] .
 
