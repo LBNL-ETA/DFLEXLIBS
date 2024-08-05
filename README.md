@@ -25,7 +25,7 @@ To access the library, follow these steps:
    pip install -r requirements.txt
    ``` 
 
-   Alternatively, create a virtual environment with the controls package and other required dependencies using `pipenv`. Run the following command:
+   Create a virtual environment with the controls package and other required dependencies using `pipenv`. Run the following command:
 
    ``` 
    pipenv install --dev

@@ -16,18 +16,7 @@ Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
-Requires-Dist: rdflib
-Requires-Dist: pandas
-Requires-Dist: numpy
-Requires-Dist: matplotlib
-Requires-Dist: pyyaml
-Requires-Dist: requests
-Requires-Dist: typing
-Requires-Dist: notebook
-Requires-Dist: ipykernel
-Requires-Dist: pipenv
-Requires-Dist: pyshacl
-Requires-Dist: python-dotenv
+License-File: License.txt
 
 # Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
 
@@ -56,7 +45,7 @@ To access the library, follow these steps:
    pip install -r requirements.txt
    ``` 
 
-   Alternatively, create a virtual environment with the controls package and other required dependencies using `pipenv`. Run the following command:
+   Create a virtual environment with the controls package and other required dependencies using `pipenv`. Run the following command:
 
    ``` 
    pipenv install --dev
@@ -124,7 +113,7 @@ The strategy works as follows
    - **Function object** based on the DRControlFunctions protocol
    - **Control object** based on the DRControlStrategy protocol
 
-* Call SPARQL query to instantiate the test cases’ control points (case-agnostic/control-specific routine)
+* Call SPARQL query to instantiate the test casesâ€™ control points (case-agnostic/control-specific routine)
     - **TZonPoint**: identifier for the temperature measurement point per zone
     - **TSetHeaZonPoint**: identifier for the heating temperature setpoint per zone
     - **TSetCooZonPoint**: identifier for the cooling temperature setpoint per zone
@@ -133,7 +122,7 @@ The strategy works as follows
     - **TSetMaxPoint**: identifier for the maximum temperature setpoint per zone (baseline)
     - **occSensorPoint**: identifier for the occupancy sensor per zone (baseline)
 
-The query can capture TSetZon as an alternative when there aren’t Heat and Cool setpoints, and then logic inside controller_agent defines if it corresponds to heating or cooling according to HVAC operation mode.
+The query can capture TSetZon as an alternative when there arenâ€™t Heat and Cool setpoints, and then logic inside controller_agent defines if it corresponds to heating or cooling according to HVAC operation mode.
 
 * Compute the control strategy (case-agnostic/control-specific routine)
 
@@ -192,5 +181,5 @@ DFLEXLIBS is available under the following open-source [license](https://github.
 
 Paul, Lazlo; De Andrade Pereira, Flavia; Ham, Sang woo;Pritoni, Marco; Brown, Rich; Feng, Jingjuan Dove. Open Building Operating System: an Open-Source Grid Responsive Control Platform for Buildings (2023). ASHRAE Annual Conference 2023.
 
-de Andrade Pereira, Flavia; Pritoni, Marco; Martín-Toral, Susana; Finn, Donal; O’Donnell, James. A semantics-driven framework for scalable demand flexibility control applications (2023). Proceedings of the 2023 European Conference on Computing in Construction and the 40th International CIB W78 Conference.
+de Andrade Pereira, Flavia; Pritoni, Marco; MartÃ­n-Toral, Susana; Finn, Donal; Oâ€™Donnell, James. A semantics-driven framework for scalable demand flexibility control applications (2023). Proceedings of the 2023 European Conference on Computing in Construction and the 40th International CIB W78 Conference.
 http://www.doi.org/10.35490/EC3.2023.341
