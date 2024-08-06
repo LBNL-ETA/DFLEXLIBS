@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "72777f9f76c94c3c5483b8a0dc79e36ad071e70f64e01cd0a2a0b2b743bc8954"
+            "sha256": "149bd6618cac200beb1ae393c6203a14e8bf07765c7b283fb4daa897e40d5e28"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -134,7 +134,6 @@
                 "sha256:f264a536c05adbb3a119a69c25e3cbb7752a4cf5674cc204207f3e88fe2b6734"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8' and python_version < '4.0'",
             "version": "==0.2.0b0"
         },
         "certifi": {
@@ -312,7 +311,7 @@
                 "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
                 "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
             ],
-            "markers": "platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32'",
             "version": "==0.4.6"
         },
         "comm": {
@@ -406,7 +405,8 @@
             "version": "==0.7.1"
         },
         "dflexlibs": {
-            "version": "==0.1.0"
+            "editable": true,
+            "path": "."
         },
         "distlib": {
             "hashes": [
@@ -690,9 +690,6 @@
             "version": "==3.0.0"
         },
         "jsonschema": {
-            "extras": [
-                "format-nongpl"
-            ],
             "hashes": [
                 "sha256:d71497fef26351a33265337fa77ffeb82423f3ea21283cd9467bb03999266bc4",
                 "sha256:fbadb6f8b144a8f8cf9f0b89ba94501d143e50411a1278633f56a7acf7fd5566"
@@ -997,7 +994,6 @@
                 "sha256:fe428e191ea016bb278758c8ee82a8129c51d81d8c4bc0846c09e7e8e9057241"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.9'",
             "version": "==3.9.0"
         },
         "matplotlib-inline": {
@@ -1070,7 +1066,6 @@
                 "sha256:f45489a3995746f2195a137e0773e2130960b51c9ac3ce257dbc2705aab3a6ca"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
             "version": "==7.2.1"
         },
         "notebook-shim": {
@@ -1130,7 +1125,6 @@
                 "sha256:f9cf5ea551aec449206954b075db819f52adc1638d46a6738253a712d553c7b4"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.9'",
             "version": "==2.0.1"
         },
         "overrides": {
@@ -1189,7 +1183,6 @@
                 "sha256:eee3a87076c0756de40b05c5e9a6069c035ba43e8dd71c379e68cab2c20f16ad"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.9'",
             "version": "==2.2.2"
         },
         "pandocfilters": {
@@ -1572,7 +1565,6 @@
                 "sha256:fd66fc5d0da6d9815ba2cebeb4205f95818ff4b79c3ebe268e75d961704af52f"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.6'",
             "version": "==6.0.1"
         },
         "pyzmq": {
@@ -1696,7 +1688,6 @@
                 "sha256:85c34a86dfc517a41e5f2425a41a0aceacc23983462b32e68610b9fad1383bca"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.7'",
             "version": "==6.2.0"
         },
         "rdflib-sqlalchemy": {
@@ -1720,7 +1711,6 @@
                 "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
             "version": "==2.32.3"
         },
         "rfc3339-validator": {
@@ -1868,7 +1858,6 @@
                 "sha256:4d3c92fac8f1118bb77a22181355e29c239cabfe2b9effdaa665c66b711136d7",
                 "sha256:8ab4f1dbf2b4a65f7eec5ad0c620e84c34111a68d3349833494b9088212214dd"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==65.7.0"
         },
@@ -2124,7 +2113,7 @@
                 "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44",
                 "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
             ],
-            "markers": "platform_system == 'Windows'",
+            "markers": "sys_platform == 'win32'",
             "version": "==0.4.6"
         },
         "comm": {
@@ -2167,7 +2156,6 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==1.1"
         },
-<<<<<<< HEAD
         "importlib-metadata": {
             "hashes": [
                 "sha256:11901fa0c2f97919b288679932bb64febaeacf289d18ac84dd68cb2e74213369",
@@ -2176,8 +2164,6 @@
             "markers": "python_version < '3.12'",
             "version": "==8.2.0"
         },
-=======
->>>>>>> c9be48ff4cfd9a204dc9667bc5000a49badc6ddd
         "ipykernel": {
             "hashes": [
                 "sha256:afdb66ba5aa354b09b91379bac28ae4afebbb30e8b39510c9690afb7a10421b5",
@@ -2499,7 +2485,6 @@
                 "sha256:85c34a86dfc517a41e5f2425a41a0aceacc23983462b32e68610b9fad1383bca"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.7'",
             "version": "==6.2.0"
         },
         "setuptools": {
@@ -2507,7 +2492,6 @@
                 "sha256:4d3c92fac8f1118bb77a22181355e29c239cabfe2b9effdaa665c66b711136d7",
                 "sha256:8ab4f1dbf2b4a65f7eec5ad0c620e84c34111a68d3349833494b9088212214dd"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.7'",
             "version": "==65.7.0"
         },
@@ -2559,6 +2543,14 @@
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==3.7.4.3"
         },
+        "typing-extensions": {
+            "hashes": [
+                "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d",
+                "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==4.12.2"
+        },
         "wcwidth": {
             "hashes": [
                 "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859",
@@ -2572,6 +2564,14 @@
                 "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"
             ],
             "version": "==0.5.1"
+        },
+        "zipp": {
+            "hashes": [
+                "sha256:bf1dcf6450f873a13e952a29504887c89e6de7506209e5b1bcc3460135d4de19",
+                "sha256:f091755f667055f2d02b32c53771a7a6c8b47e1fdbc4b72a8b9072b3eef8015c"
+            ],
+            "markers": "python_version >= '3.8'",
+            "version": "==3.19.2"
         }
     }
 }

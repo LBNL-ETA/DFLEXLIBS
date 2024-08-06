@@ -6,6 +6,7 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
 bldg:building a brick:Building ;
+brick:area [ brick:value "192"^^xsd:float ] ;
 brick:hasPart bldg:space .
 
 bldg:space a brick:Space .
@@ -32,3 +33,16 @@ bldg:upperSetp a brick:Max_Air_Temperature_Setpoint ;
 
 bldg:occ a brick:Occupancy_Sensor ;
     ref:hasExternalReference [ ref:hasTimeseriesId "Occupancy[1]" ] .
+
+
+
+bldg:reaPFan_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPFan_y" ] .
+
+
+bldg:reaPHeaPum_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPHeaPum_y" ] .
+
+
+bldg:reaPPumEmi_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "reaPPumEmi_y" ] .

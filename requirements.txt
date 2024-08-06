@@ -9,3 +9,7 @@ typing
 notebook
 ipykernel
 pipenv
+tabulate
+scipy
+duckdb
+seaborn

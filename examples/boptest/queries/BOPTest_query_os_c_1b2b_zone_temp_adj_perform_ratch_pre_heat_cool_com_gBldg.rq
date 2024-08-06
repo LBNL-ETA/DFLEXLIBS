@@ -1,0 +1,31 @@
+SELECT DISTINCT ?ahu_supply_temp_point ?ahu_supply_flow_point ?ahu_supply_flow_set_point ?ele_pow_point ?therm_pow_point
+WHERE {
+    
+    OPTIONAL {
+    ?ahu brick:feeds/brick:feeds ?zone ;
+         brick:hasPoint ?Ahu_TSup .
+    ?Ahu_TSup a brick:Supply_Air_Temperature_Sensor;
+        ref:hasExternalReference/ref:hasTimeseriesId ?ahu_supply_temp_point .}
+
+    OPTIONAL {
+    ?ahu brick:feeds/brick:feeds ?zone ;
+         brick:hasPoint ?Ahu_flowSup .
+    ?Ahu_flowSup a brick:Supply_Air_Flow_Sensor;
+        ref:hasExternalReference/ref:hasTimeseriesId ?ahu_supply_flow_point .}
+
+    OPTIONAL {
+    ?ahu brick:feeds/brick:feeds ?zone ;
+         brick:hasPoint ?Ahu_flowSupSet .
+    ?Ahu_flowSupSet a brick:Supply_Air_Flow_Setpoint;
+        ref:hasExternalReference/ref:hasTimeseriesId ?ahu_supply_flow_set_point .}
+
+    OPTIONAL {
+    ?Epower a brick:Electric_Power_Sensor ;
+               ref:hasExternalReference/ref:hasTimeseriesId ?ele_pow_point .}
+
+    OPTIONAL {
+    ?Tpower a brick:Thermal_Power_Sensor ;
+               ref:hasExternalReference/ref:hasTimeseriesId ?therm_pow_point .}
+
+
+}

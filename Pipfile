@@ -12,7 +12,7 @@ setuptools = "*"
 
 [packages]
 rdflib = "*"
-controls = {path = ".", editable = true}
+dflexlibs = {path = ".", editable = true}
 requests = "*"
 pandas = "*"
 matplotlib = "*"
@@ -20,4 +20,3 @@ numpy = "*"
 pyyaml = "*"
 buildingmotif = "*"
 notebook = "*"
-setuptools = "*"

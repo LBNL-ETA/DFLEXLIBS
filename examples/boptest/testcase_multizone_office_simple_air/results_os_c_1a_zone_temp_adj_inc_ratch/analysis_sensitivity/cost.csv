@@ -1,0 +1,7 @@
+variable,min,max,fixed,,
+Shed min (17.5 - 18.5 [C]),18.95487803,12.5522431,15.59
+Shed max (26.5 - 27.5 [C]),15.59 ,15.59 ,15.59
+Shed initial adjust (0.5 - 1.5 [C]),14.81,17.30,15.59
+Shed delta ratchet (0.0 - 1.0 [C]),8.05,17.01,15.59
+Shed dev threshold (0.0 - 1.0 [C]),14.90,15.59,15.59 
+

@@ -1,0 +1,31 @@
+# Note: ensure that the timestamp column of all files follows the %Y-%m-%d %I:%M:%S %p' format
+
+# Define path and file names
+database_file_name: 'database/kpis_bestest_air.db'
+brick_model_file_name: "bestest_air.ttl"
+updated_brick_model_file_name: "bestest_air_with_data.ttl"
+
+# Define the scenarios (csv file names) to analyse as baseline and flexible scenarios
+baseline_scenario: 'baseline_dataset'
+flexible_scenario: 'flexible_dataset'
+
+# Define a start and end time for the evaluation period 
+# Evaluation timestamp based on BOPTEST simulation scenario for peak_heat
+evaluation_timestamps:
+    start: '1970-12-01 00:00:00' #Y-M-D
+    end: '1970-12-14 23:59:59'
+
+# Define input parameters not available in the Brick model
+price_signal_file_name: "scheduleData_dataset.csv"
+thermal_price_identifier: 'PriceGasPower'
+price_signal_identifier: 'PriceElectricPowerHighlyDynamic'
+
+timestamp_identifier: 'time'
+shift_window: 3  # Set the number of hours for shift period
+rebound_window: 2  # Set the number of hours for rebound period
+
+## getting occ schedule based on the HVAC operation from baseline control 
+occ_file_name: "baseline_tempData_dataset.csv"
+occ_identifier: 'con_oveTSetHea_u'
+occ_min_threshold: 288.15
+
