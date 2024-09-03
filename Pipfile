@@ -19,3 +19,4 @@ matplotlib = "*"
 numpy = "*"
 pyyaml = "*"
 notebook = "*"
+buildingmotif = {ref = "develop", git = "https://github.com/NREL/buildingmotif.git"}
