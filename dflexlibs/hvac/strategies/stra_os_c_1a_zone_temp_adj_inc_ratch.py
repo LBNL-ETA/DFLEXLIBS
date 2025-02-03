@@ -146,9 +146,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         shed_counter_dict[zone] = 0
     print(zone, shed_counter_dict[zone])
 
-    if shed_price_event(schedule_price, price_threshold_value):
-
-        if schedule_occupancy [0] <= occ_min_threshold:
+    if schedule_occupancy [0] <= occ_min_threshold:
             print("savings mode")
             shed_counter_dict[zone] = 0
             new_zone_set_temp_heat, new_zone_set_temp_cool = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
@@ -156,8 +154,11 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
             if zone_set_temp_cool is not None:
                 control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+
+    elif shed_price_event(schedule_price, price_threshold_value):
+
         
-        elif zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
+        if zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
                             hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set): 
             print("qualified zone")
                                                                        
