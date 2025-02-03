@@ -1,0 +1,59 @@
+@prefix bldg: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+bldg:building a brick:Building ;
+brick:hasPart  bldg:space_tes_berg ,
+               bldg:space_exp_berg .
+
+bldg:tes_berg a brick:Space ;
+brick:area [ brick:value "37.16"^^xsd:float ].
+
+bldg:tes_berg_hvacZone a brick:Zone ;
+    brick:hasPart bldg:tes_berg ; 
+    brick:hasPoint 
+        bldg:sensibo_temp, 
+        bldg:sensibo_temp_stp, 
+        bldg:sensibo_on,
+        bldg:occ_tes_berg .
+
+bldg:sensibo_temp a brick:Zone_Air_Temperature_Sensor ; 
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/tes_berg/ptac/temperature" ] .
+
+bldg:sensibo_temp_stp  a brick:Zone_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/tes_berg/ptac/targetTemperature" ] .
+
+bldg:sensibo_on  a brick:On_Status ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/tes_berg/ptac/on" ] .
+
+bldg:occ_tes_berg  a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "occ_tes_berg" ] .
+
+
+bldg:exp_berg a brick:Space ;
+brick:area [ brick:value "37.16"^^xsd:float ].
+
+bldg:exp_berg_hvacZone a brick:Zone ;
+    brick:hasPart bldg:exp_berg ; 
+    brick:hasPoint 
+        bldg:sensibo_exp_temp, 
+        bldg:sensibo_exp_temp_stp, 
+        bldg:sensibo_exp_on,
+        bldg:occ_exp_berg .
+
+bldg:sensibo_exp_temp a brick:Zone_Air_Temperature_Sensor ; 
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/exp_berg/ptac/temperature" ] .
+
+bldg:sensibo_exp_temp_stp  a brick:Zone_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/exp_berg/ptac/targetTemperature" ] .
+
+bldg:sensibo_exp_on  a brick:On_Status ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "sensibo/exp_berg/ptac/on" ] .
+
+bldg:occ_exp_berg  a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "occ_exp_berg" ] .
+
+
+
