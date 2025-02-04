@@ -42,7 +42,6 @@ class VolttronControls(DRControlStrategy):
 
 class VolttronInterface(DRInterface):
 
-    # Can optionally use a config file for the things in __init__ or just pass inputs as parameters to class
     def __init__(self, controls, config_path):
 
         '''Interface for Volttron to run DR Control Strategies
@@ -96,7 +95,7 @@ class VolttronInterface(DRInterface):
     def get_price_threshold(self):
         ...
     
-    def control_agent(self, current_time, operation_mode, y):
+    def control_agent(self, step, current_time, operation_mode, y):
         '''Call compute_control function from the selected control strategy and functions based on measurement and forecast values.
     
         Parameters
@@ -118,10 +117,27 @@ class VolttronInterface(DRInterface):
         # Read baseline setpoint values        
         baseline_df = pd.read_csv(self.baseline_path) 
 
-        def get_value(df, current_time, point):
-            row = df[df["Time"] == current_time]
+        def get_value(df, time, point):
+            time = int(time)
+            
+            row = df[df["Time"] == time]
             if not row.empty:
                 return row[point].values[0]
+            return None
+            
+        def get_schedule (step, current_time, current_value, point):
+            schedule = []
+            num_steps = int(24 / step)
+            for i in range(num_steps):  
+                offset = step * i # list with values every hour
+                next_time = current_time + offset
+                if next_time >= 24:
+                    next_time -= 24
+                next_value = get_value(baseline_df, next_time, point)
+                if next_value is not None:
+                    current_value = next_value
+                schedule.append(float(current_value))
+            return schedule
 
         ratcheting_list = {}
         rebound_heat_list = {}
@@ -129,15 +145,8 @@ class VolttronInterface(DRInterface):
 
         # Get energy price schedule
         schedule_price = []
-        price_value = get_value(baseline_df, current_time, self.price_identifier)
-                    
-        for i in range(24):  
-            offset = (1) * i # list with values every hour
-            next_price_value = get_value(baseline_df, current_time + offset, self.price_identifier)
-            if next_price_value is not None:
-                price_value = next_price_value
-
-                schedule_price.append(float(price_value))
+        current_price_value = get_value(baseline_df, current_time, self.price_identifier)
+        schedule_price = get_schedule (step, current_time, current_price_value, self.price_identifier)
 
         price_threshold_value = self.get_price_threshold(baseline_df[self.price_identifier].tolist())
         print('price_threshold_value', price_threshold_value)
@@ -163,18 +172,6 @@ class VolttronInterface(DRInterface):
         # Get AHU measurements            
         ahu_supply_temp = ahu_supply_flow = ahu_supply_flow_set = None
 
-        # if ahu_supply_temp_point != None: 
-        #     ahu_supply_temp = y[ahu_supply_temp_point]
-
-        # if ahu_supply_flow_point != None: 
-        #     ahu_supply_flow = y[ahu_supply_flow_point]
-
-        # if ahu_supply_flow_set_point != None: 
-        #     ahu_supply_flow_set = y[ahu_supply_flow_set_point]    
-
-        # elif ahu_supply_flow_point != None:
-        #     ahu_supply_flow_set = y[ahu_supply_flow_point] # for when BOPTEST test case has no supply airflow setpoint
-
         if number_of_zones != None:
             # Iterate over each zone
             for zone in number_of_zones:  
@@ -192,17 +189,10 @@ class VolttronInterface(DRInterface):
                     zone_set_temp_heat = y[zone_set_temp_heat_point[zone]]                
                     zone_set_temp_heat_name = ' '.join([zone_set_temp_heat_point[zone]])
 
-                    # Get baseline setpoint schedule
-    
-                    baseline_value = get_value(baseline_df, current_time, zone_set_temp_heat_point[zone])
-                    
-                    for i in range(24):  
-                        offset = (1) * i # list with values every hour
-                        next_baseline_value = get_value(baseline_df, current_time + offset, zone_set_temp_heat_point[zone])
-                        if next_baseline_value is not None:
-                            baseline_value = next_baseline_value
+                    # Get baseline setpoint schedule    
+                    current_baseline_value = get_value(baseline_df, current_time, zone_set_temp_heat_point[zone])
+                    zone_set_temp_heat_bas_schedule = get_schedule (step, current_time, current_baseline_value, zone_set_temp_heat_point[zone])
 
-                        zone_set_temp_heat_bas_schedule.append(float(baseline_value))
 
                 if zone_set_temp_cool_point is not None:
                     # Get current setpoint
@@ -210,17 +200,9 @@ class VolttronInterface(DRInterface):
                     zone_set_temp_cool_name = ' '.join([zone_set_temp_cool_point[zone]])
 
                      # Get baseline setpoint schedule
-                    
-                    baseline_value = get_value(baseline_df, current_time, zone_set_temp_cool_point[zone])
+                    current_baseline_value = get_value(baseline_df, current_time, zone_set_temp_cool_point[zone])
+                    zone_set_temp_cool_bas_schedule = get_schedule (step, current_time, current_baseline_value, zone_set_temp_cool_point[zone])
 
-                    for i in range(24):  
-                        offset = (1) * i # list with values every hour
-                        next_baseline_value = get_value(baseline_df, current_time + offset, zone_set_temp_cool_point[zone])
-    
-                        if next_baseline_value is not None:
-                            baseline_value = next_baseline_value
-                        
-                        zone_set_temp_cool_bas_schedule.append(float(baseline_value))
                 
                 print('TSetHeaZon', zone_set_temp_heat, 'TSetHeaZon_baseline', zone_set_temp_heat_bas_schedule)
                 print('TSetCooZon', zone_set_temp_cool, 'TSetCooZon_baseline', zone_set_temp_cool_bas_schedule)
@@ -232,19 +214,9 @@ class VolttronInterface(DRInterface):
                 # Get VAV measurements
                 vav_damper_set = vav_discharge_temp = vav_reheat_command = None
 
-                # if vav_damper_set_point and zone < len(vav_damper_set_point) and vav_damper_set_point[zone]:
-                #     vav_damper_set = y[vav_damper_set_point[zone]]
-                    
-                # if vav_discharge_temp_point and zone < len(vav_discharge_temp_point) and vav_discharge_temp_point[zone]:
-                #     vav_discharge_temp = y[vav_discharge_temp_point[zone]]
-
-                # if vav_reheat_command_point and zone < len(vav_reheat_command_point) and vav_reheat_command_point[zone]:
-                #     vav_reheat_command = y[vav_reheat_command_point[zone]]
-
-                # print(vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set)
-
-                # To print occ schedule
-                schedule_occupancy = [1 if ele > baseline_df[zone_set_temp_heat_point[zone]].min() else 0 for ele in zone_set_temp_heat_bas_schedule]
+                # Get occ schedule
+                current_occ_value = get_value(baseline_df, current_time, occ_sensor_point[zone])
+                schedule_occupancy = get_schedule (step, current_time, current_occ_value, occ_sensor_point[zone])
                 print("occupancy_schedule", schedule_occupancy)
                 occ_min_threshold = 0
 
