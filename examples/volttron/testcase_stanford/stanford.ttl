@@ -8,11 +8,11 @@ bldg:building a brick:Building ;
 brick:hasPart  bldg:space_tes_berg ,
                bldg:space_exp_berg .
 
-bldg:tes_berg a brick:Space ;
+bldg:space_tes_berg a brick:Space ;
 brick:area [ brick:value "37.16"^^xsd:float ].
 
 bldg:tes_berg_hvacZone a brick:Zone ;
-    brick:hasPart bldg:tes_berg ; 
+    brick:hasPart bldg:space_tes_berg ; 
     brick:hasPoint 
         bldg:sensibo_temp, 
         bldg:sensibo_temp_stp, 
@@ -32,11 +32,11 @@ bldg:occ_tes_berg  a brick:Occupancy_Sensor ;
     ref:hasExternalReference [ ref:hasTimeseriesId "occ_tes_berg" ] .
 
 
-bldg:exp_berg a brick:Space ;
+bldg:space_exp_berg a brick:Space ;
 brick:area [ brick:value "37.16"^^xsd:float ].
 
 bldg:exp_berg_hvacZone a brick:Zone ;
-    brick:hasPart bldg:exp_berg ; 
+    brick:hasPart bldg:space_exp_berg ; 
     brick:hasPoint 
         bldg:sensibo_exp_temp, 
         bldg:sensibo_exp_temp_stp, 

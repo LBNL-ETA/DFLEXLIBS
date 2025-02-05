@@ -1,7 +1,7 @@
 sparql_query: [queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gBldg.rq, queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gZone.rq] #path to interface query.
-graph_path: stanford_tes_berg\stanford_tes_berg.ttl #path to each test case Brick graph.
+graph_path: testcase_stanford\stanford.ttl #path to each test case Brick graph.
 
-baseline_path: stanford_tes_berg\baseline.csv #path to baseline csv file
+baseline_path: testcase_stanford\baseline.csv #path to baseline csv file
 
 price_identifier: price #identifier to get the price signal.
 
