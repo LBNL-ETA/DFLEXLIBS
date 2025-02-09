@@ -143,6 +143,7 @@ class VolttronInterface(DRInterface):
         ratcheting_list = {}
         rebound_heat_list = {}
         rebound_cool_list = {}
+        occ_cmd_results = {}
 
         # Get energy price schedule
         schedule_price = []
@@ -177,30 +178,22 @@ class VolttronInterface(DRInterface):
                 occ_min_threshold = 0
 
                 print("price_schedule", schedule_price)
-
-                print('zone_set_temp_point', zone_set_temp_heat_point)
-                print('occ_zone_set_temp_heat_point', occ_zone_set_temp_heat_point)
                 
                 #check if only zone_set_temp_point is available
                 if (zone_set_temp_point) and operation_mode == 'heat':
-                    print('loop1')
                     zone_set_temp_heat_point = zone_set_temp_point
                     zone_set_temp_cool_point = None
                 elif (zone_set_temp_point) and operation_mode == 'cool':
-                    print('loop2')
                     zone_set_temp_heat_point = None
                     zone_set_temp_cool_point = zone_set_temp_point
                 #check if occ and unocc points are available
                 elif current_occ_value == 1 and (occ_zone_set_temp_heat_point) and (occ_zone_set_temp_cool_point):
-                    print('loop3')
                     zone_set_temp_heat_point = occ_zone_set_temp_heat_point
                     zone_set_temp_cool_point = occ_zone_set_temp_cool_point
                 elif current_occ_value == 0 and (occ_zone_set_temp_heat_point) and (occ_zone_set_temp_cool_point):
-                    print('loop4')
                     zone_set_temp_heat_point = unocc_zone_set_temp_heat_point
                     zone_set_temp_cool_point = unocc_zone_set_temp_cool_point
                 else:
-                    print('loop5')
                     # Retain the existing values as they are not None or empty
                     zone_set_temp_heat_point = zone_set_temp_heat_point
                     zone_set_temp_cool_point = zone_set_temp_cool_point
@@ -254,6 +247,10 @@ class VolttronInterface(DRInterface):
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, self.degree_unit))
                 
+                if occ_cmd_point and current_occ_value == 0:
+                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = 1
+                elif occ_cmd_point and current_occ_value == 1:
+                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = 2
                 
                 control_results.update(results)  
                 self.shed_counter_dict[zone] = shed_counter
@@ -262,6 +259,8 @@ class VolttronInterface(DRInterface):
                 rebound_heat_list.update(rebound_h_list)                  
                 rebound_cool_list.update(rebound_c_list) 
 
+        print(control_results)
+        control_results.update(occ_cmd_results)
         print(control_results)
 
         # Sort lists of zones    
