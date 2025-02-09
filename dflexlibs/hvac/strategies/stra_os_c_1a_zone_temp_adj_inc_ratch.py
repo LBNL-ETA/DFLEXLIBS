@@ -5,7 +5,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     zone_set_temp_heat_name, zone_set_temp_cool_name, shed_counter_dict, zone, shed_initial_adjust, 
                     shed_dev_threshold, shed_delta_ratchet, hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
-                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule):
+                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, degree_unit):
  
     '''Compute the control output based on measurement and forecast values.
     
@@ -146,7 +146,9 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         shed_counter_dict[zone] = 0
     print(zone, shed_counter_dict[zone])
 
-    if schedule_occupancy [0] <= occ_min_threshold:
+    if shed_price_event(schedule_price, price_threshold_value):
+        
+        if schedule_occupancy [0] <= occ_min_threshold:
             print("savings mode")
             shed_counter_dict[zone] = 0
             new_zone_set_temp_heat, new_zone_set_temp_cool = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
@@ -154,12 +156,9 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
             if zone_set_temp_cool is not None:
                 control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
-
-    elif shed_price_event(schedule_price, price_threshold_value):
-
         
-        if zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
-                            hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set): 
+        elif zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
+                            hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
             print("qualified zone")
                                                                        
             if shed_counter_dict[zone] == 0:
@@ -188,15 +187,26 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
             print("no qualify, baseline setpoint", control_results) 
 
     elif shed_counter_dict[zone] == 1:
-        # Compute rebound management
-        new_zone_set_temp_heat, new_zone_set_temp_cool, rebound_heat_list, rebound_cool_list, shed_counter = rebound_management_zone (zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                                   rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet)
-        if zone_set_temp_heat is not None:
-            control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
-        if zone_set_temp_cool is not None:
-            control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
-        shed_counter_dict[zone] = shed_counter 
-        print("rebound shed", control_results)
+
+        if schedule_occupancy [0] <= occ_min_threshold:
+            print("rebound savings mode")
+            shed_counter_dict[zone] = 0
+            new_zone_set_temp_heat, new_zone_set_temp_cool = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
+            if zone_set_temp_heat is not None:
+                control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
+            if zone_set_temp_cool is not None:
+                control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+
+        else:        
+            # Compute rebound management
+            new_zone_set_temp_heat, new_zone_set_temp_cool, rebound_heat_list, rebound_cool_list, shed_counter = rebound_management_zone (zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
+                                    rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet)
+            if zone_set_temp_heat is not None:
+                control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
+            if zone_set_temp_cool is not None:
+                control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+            shed_counter_dict[zone] = shed_counter 
+            print("rebound shed", control_results)
 
     else:
         # Compute baseline min/max temperature sepoints
@@ -286,9 +296,14 @@ def sparql_query(graph_path, query_paths):
     zone_set_temp_point = []
     zone_set_temp_heat_point = []
     zone_set_temp_cool_point = []
+    unocc_zone_set_temp_heat_point = []
+    unocc_zone_set_temp_cool_point = []
+    occ_zone_set_temp_heat_point = []
+    occ_zone_set_temp_cool_point = []
     set_temp_min_point = []
     set_temp_max_point  = []
     occ_sensor_point  = []    
+    occ_cmd_point  = []    
     zone_names = []
     vav_damper_set_point = []
     vav_discharge_temp_point = [] 
@@ -316,16 +331,24 @@ def sparql_query(graph_path, query_paths):
             zone_set_temp_heat_point_value = getattr(row, 'zone_set_temp_heat_point', None)
             zone_set_temp_cool_point_value = getattr(row, 'zone_set_temp_cool_point', None)
 
+            unocc_zone_set_temp_heat_point_value = getattr(row, 'unocc_zone_set_temp_heat_point', None)
+            unocc_zone_set_temp_cool_point_value = getattr(row, 'unocc_zone_set_temp_cool_point', None)
+
+            occ_zone_set_temp_heat_point_value = getattr(row, 'occ_zone_set_temp_heat_point', None)
+            occ_zone_set_temp_cool_point_value = getattr(row, 'occ_zone_set_temp_cool_point', None)
+
             set_temp_min_point_value = getattr(row, 'set_temp_min_point', None)
             set_temp_max_point_value = getattr(row, 'set_temp_max_point', None)
 
             occ_sensor_point_value = getattr(row, 'occ_sensor_point', None)
+            occ_cmd_point_value = getattr(row, 'occ_cmd_point', None)
+            
             vav_damper_set_point_value = getattr(row, 'vav_damper_set_point', None)
 
             vav_discharge_temp_point_value = getattr(row, 'vav_discharge_temp_point', None)
             vav_reheat_command_point_value = getattr(row, 'vav_reheat_command_point', None)
 
-            zone_names_value = getattr(row, 'zone', None)
+            zone_names_value = getattr(row, 'zone_name', None)
 
             ahu_supply_temp_point_value = getattr(row, 'ahu_supply_temp_point', None)
             ahu_supply_flow_point_value = getattr(row, 'ahu_supply_flow_point', None)
@@ -341,6 +364,16 @@ def sparql_query(graph_path, query_paths):
             if zone_set_temp_cool_point_value is not None:
                 zone_set_temp_cool_point.append(str(zone_set_temp_cool_point_value))
 
+            if unocc_zone_set_temp_heat_point_value is not None:
+                unocc_zone_set_temp_heat_point.append(str(unocc_zone_set_temp_heat_point_value))
+            if unocc_zone_set_temp_cool_point_value is not None:
+                unocc_zone_set_temp_cool_point.append(str(unocc_zone_set_temp_cool_point_value))
+
+            if occ_zone_set_temp_heat_point_value is not None:
+                occ_zone_set_temp_heat_point.append(str(occ_zone_set_temp_heat_point_value))
+            if occ_zone_set_temp_cool_point_value is not None:
+                occ_zone_set_temp_cool_point.append(str(occ_zone_set_temp_cool_point_value))
+
             if set_temp_min_point_value is not None:
                 set_temp_min_point.append(str(set_temp_min_point_value))
             if set_temp_max_point_value is not None:
@@ -348,6 +381,9 @@ def sparql_query(graph_path, query_paths):
             
             if occ_sensor_point_value is not None:
                 occ_sensor_point.append(str(occ_sensor_point_value))
+
+            if occ_cmd_point_value is not None:
+                occ_cmd_point.append(str(occ_cmd_point_value))
 
             if vav_damper_set_point_value is not None:
                 vav_damper_set_point.append(str(vav_damper_set_point_value))
@@ -367,4 +403,5 @@ def sparql_query(graph_path, query_paths):
                 ahu_supply_flow_set_point = (str(ahu_supply_flow_set_point_value))
             
     number_of_zones = range(len(zone_names))
-    return number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point
+    return number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, occ_cmd_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point
+

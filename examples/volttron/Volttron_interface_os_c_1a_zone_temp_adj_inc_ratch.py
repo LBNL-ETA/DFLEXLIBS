@@ -91,7 +91,8 @@ class VolttronInterface(DRInterface):
         self.compute_control = controls.compute_control
         self.control_functions = controls.control_functions
 
-    
+        self.degree_unit = config.get('degree_unit', None)
+
     def get_price_threshold(self):
         ...
     
@@ -152,22 +153,12 @@ class VolttronInterface(DRInterface):
         print('price_threshold_value', price_threshold_value)
 
         # Initiliaze values from the SPARQL query module
-        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = None
-        number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point = self.sparql_results
-        print(number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point)
+        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = unocc_zone_set_temp_heat_point = unocc_zone_set_temp_cool_point = occ_zone_set_temp_heat_point = occ_zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = occ_cmd_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = None        
+        number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, occ_cmd_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point = self.sparql_results
 
-        if not zone_set_temp_heat_point or all(x is None for x in zone_set_temp_heat_point):
-            zone_set_temp_heat_point = zone_set_temp_point
-            zone_set_temp_cool_point = None
-        elif not zone_set_temp_cool_point or all(x is None for x in zone_set_temp_cool_point):
-            zone_set_temp_heat_point = None
-            zone_set_temp_cool_point = zone_set_temp_point
-        else:
-            # Retain the existing values as they are not None or empty
-            zone_set_temp_heat_point = zone_set_temp_heat_point
-            zone_set_temp_cool_point = zone_set_temp_cool_point
+        print(number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, occ_cmd_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point)
 
-        print(operation_mode)     #'heat' or 'cool'    
+        print(operation_mode) #'heat' or 'cool'    
 
         # Get AHU measurements            
         ahu_supply_temp = ahu_supply_flow = ahu_supply_flow_set = None
@@ -177,7 +168,45 @@ class VolttronInterface(DRInterface):
             for zone in number_of_zones:  
                 # Get zone name
                 zone_name = ' '.join([zone_names[zone]])
+                print(zone_name)
+
+                # Get occ schedule
+                current_occ_value = get_value(baseline_df, current_time, occ_sensor_point[zone])
+                schedule_occupancy = get_schedule (step, current_time, current_occ_value, occ_sensor_point[zone])
+                print("occupancy_schedule", schedule_occupancy)
+                occ_min_threshold = 0
+
+                print("price_schedule", schedule_price)
+
+                print('zone_set_temp_point', zone_set_temp_heat_point)
+                print('occ_zone_set_temp_heat_point', occ_zone_set_temp_heat_point)
                 
+                #check if only zone_set_temp_point is available
+                if (zone_set_temp_point) and operation_mode == 'heat':
+                    print('loop1')
+                    zone_set_temp_heat_point = zone_set_temp_point
+                    zone_set_temp_cool_point = None
+                elif (zone_set_temp_point) and operation_mode == 'cool':
+                    print('loop2')
+                    zone_set_temp_heat_point = None
+                    zone_set_temp_cool_point = zone_set_temp_point
+                #check if occ and unocc points are available
+                elif current_occ_value == 1 and (occ_zone_set_temp_heat_point) and (occ_zone_set_temp_cool_point):
+                    print('loop3')
+                    zone_set_temp_heat_point = occ_zone_set_temp_heat_point
+                    zone_set_temp_cool_point = occ_zone_set_temp_cool_point
+                elif current_occ_value == 0 and (occ_zone_set_temp_heat_point) and (occ_zone_set_temp_cool_point):
+                    print('loop4')
+                    zone_set_temp_heat_point = unocc_zone_set_temp_heat_point
+                    zone_set_temp_cool_point = unocc_zone_set_temp_cool_point
+                else:
+                    print('loop5')
+                    # Retain the existing values as they are not None or empty
+                    zone_set_temp_heat_point = zone_set_temp_heat_point
+                    zone_set_temp_cool_point = zone_set_temp_cool_point
+                
+                print(zone_set_temp_heat_point)
+                print(zone_set_temp_cool_point)
                 # Get temperature heating and cooling setpoints per zone
                 zone_set_temp_heat = zone_set_temp_heat_name = zone_set_temp_cool = zone_set_temp_cool_name = None
 
@@ -186,7 +215,7 @@ class VolttronInterface(DRInterface):
 
                 if zone_set_temp_heat_point is not None:
                     # Get current setpoint
-                    zone_set_temp_heat = y[zone_set_temp_heat_point[zone]]                
+                    zone_set_temp_heat = y[zone_set_temp_heat_point[zone]]  
                     zone_set_temp_heat_name = ' '.join([zone_set_temp_heat_point[zone]])
 
                     # Get baseline setpoint schedule    
@@ -214,14 +243,6 @@ class VolttronInterface(DRInterface):
                 # Get VAV measurements
                 vav_damper_set = vav_discharge_temp = vav_reheat_command = None
 
-                # Get occ schedule
-                current_occ_value = get_value(baseline_df, current_time, occ_sensor_point[zone])
-                schedule_occupancy = get_schedule (step, current_time, current_occ_value, occ_sensor_point[zone])
-                print("occupancy_schedule", schedule_occupancy)
-                occ_min_threshold = 0
-
-                print("price_schedule", schedule_price)
-                   
                 # Call selected control strategy 
                 shed_counter, ratchet_list, rebound_h_list, rebound_c_list, results = (self.compute_control(
                     self.control_functions.shed_price_event, self.control_functions.shed_savings_mode, self.control_functions.zone_qualification_check, self.control_functions.shed_single_step_adj_zone,  
@@ -231,7 +252,7 @@ class VolttronInterface(DRInterface):
                     zone_set_temp_heat_name, zone_set_temp_cool_name, self.shed_counter_dict, zone, self.shed_initial_adjust, 
                     self.shed_dev_threshold, self.shed_delta_ratchet, self.hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
-                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule))
+                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, self.degree_unit))
                 
                 
                 control_results.update(results)  

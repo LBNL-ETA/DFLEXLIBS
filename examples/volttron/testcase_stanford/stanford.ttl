@@ -11,7 +11,8 @@ brick:hasPart  bldg:space_tes_berg ,
 bldg:space_tes_berg a brick:Space ;
 brick:area [ brick:value "37.16"^^xsd:float ].
 
-bldg:tes_berg_hvacZone a brick:Zone ;
+bldg:tes_berg_hvacZone a brick:HVAC_Zone ;
+    rdfs:label "tes_berg" ;
     brick:hasPart bldg:space_tes_berg ; 
     brick:hasPoint 
         bldg:sensibo_temp, 
@@ -35,7 +36,8 @@ bldg:occ_tes_berg  a brick:Occupancy_Sensor ;
 bldg:space_exp_berg a brick:Space ;
 brick:area [ brick:value "37.16"^^xsd:float ].
 
-bldg:exp_berg_hvacZone a brick:Zone ;
+bldg:exp_berg_hvacZone a brick:HVAC_Zone ;
+    rdfs:label "exp_berg" ;
     brick:hasPart bldg:space_exp_berg ; 
     brick:hasPoint 
         bldg:sensibo_exp_temp, 

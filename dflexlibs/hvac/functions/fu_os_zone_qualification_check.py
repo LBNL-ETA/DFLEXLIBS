@@ -1,5 +1,5 @@
 def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
-                    hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set): 
+                    hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
              
     '''Define whether to qualify the zone to compute DF shed control
     
@@ -59,6 +59,14 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
             Contains a value to define whether to qualify the zone to compute DF control.
 
         '''   
+    
+    def convert_temperature(temp_c):
+        if degree_unit == "fahrenheit":
+            return (temp_c * 9/5) + 32
+        elif degree_unit == "kelvin":
+            return temp_c + 273.15
+        return temp_c  # Default is Celsius
+
     #Check current Min and Max setpoints
     if schedule_occupancy[0] > occ_min_threshold:
         TSetMin = occ_flex_set_temp_min
@@ -105,7 +113,7 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
     elif zone_set_temp_cool is None: 
         qualify = True 
         #print("cannot verify TSetCooZon value for rogue zone")
-    elif zone_set_temp_cool < 22.2 + 273.15:
+    elif zone_set_temp_cool < convert_temperature(22.2): 
         qualify = False                     
     else:
         qualify = True
@@ -117,7 +125,7 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
     elif zone_set_temp_heat is None: 
         qualify = True 
         #print("cannot verify TSetHeaZon value for rogue zone")
-    elif zone_set_temp_heat > 27.8 + 273.15:
+    elif zone_set_temp_heat > convert_temperature(27.8):
         qualify = False                     
     else:
         qualify = True
@@ -133,7 +141,7 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
         elif vav_reheat_command is None: 
             qualify = True 
             #print("cannot verify low discharge temperature for rogue zone")
-        elif vav_discharge_temp < 23.9 + 273.15 and vav_reheat_command >= 0.90: 
+        elif vav_discharge_temp < convert_temperature(23.9) and vav_reheat_command >= 0.90:
             qualify = False 
         else:
             qualify = True

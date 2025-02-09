@@ -1,4 +1,4 @@
-sparql_query: [queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gBldg.rq, queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gZone.rq] #path to interface query.
+sparql_query: [queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gBldg.rq, queries\Volttron_brick_query_os_c_1a_zone_temp_adj_inc_ratch_gZone.rq] #path to interface query.
 graph_path: testcase_stanford\stanford.ttl #path to each test case Brick graph.
 
 baseline_path: testcase_stanford\baseline.csv #path to baseline csv file
@@ -20,3 +20,4 @@ shed_dev_threshold: 0.5 #shed threshold for zone temperature deviation from effe
 
 hands_off_zone: [] #list of zones that should not execute DF control
 
+degree_unit: "celsius"
