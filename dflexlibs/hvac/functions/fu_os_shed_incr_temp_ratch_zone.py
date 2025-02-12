@@ -75,7 +75,7 @@ def shed_incr_temp_ratch_zone (operation_mode, zone_temp, zone_set_temp_heat, zo
                     
             if dev_heat < shed_dev_threshold: 
                 if not zone_set_temp_heat == occ_flex_set_temp_min:
-                    ratcheting_list [zone_set_temp_heat_name[:-1]] = dev_heat    
+                    ratcheting_list [zone_set_temp_heat_name] = dev_heat    
                 if zone_set_temp_heat  - shed_delta_ratchet >= occ_flex_set_temp_min: 
                     new_zone_set_temp_heat =  zone_set_temp_heat  - shed_delta_ratchet
                     print("ratcheting shed heat")
@@ -99,7 +99,7 @@ def shed_incr_temp_ratch_zone (operation_mode, zone_temp, zone_set_temp_heat, zo
            
             if dev_cool < shed_dev_threshold:
                 if not zone_set_temp_cool == occ_flex_set_temp_max:
-                    ratcheting_list [zone_set_temp_cool_name[:-1]] = dev_cool
+                    ratcheting_list [zone_set_temp_cool_name] = dev_cool
                 if zone_set_temp_cool + shed_delta_ratchet <= occ_flex_set_temp_max: 
                     new_zone_set_temp_cool =  zone_set_temp_cool  + shed_delta_ratchet
                     print("ratcheting shed cool")

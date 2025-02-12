@@ -59,7 +59,7 @@ def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, z
         dev_heat = zone_temp - zone_set_temp_heat
         
         if not zone_set_temp_heat == zone_set_temp_heat_bas_schedule[0]:
-            rebound_heat_list [zone_set_temp_heat_name[:-1]] = dev_heat  
+            rebound_heat_list [zone_set_temp_heat_name] = dev_heat  
             if zone_set_temp_heat + shed_delta_ratchet < zone_set_temp_heat_bas_schedule[0]:
                 new_zone_set_temp_heat = zone_set_temp_heat + shed_delta_ratchet
                 heat_shed_counter = 1
@@ -74,7 +74,7 @@ def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, z
     if zone_set_temp_cool is not None:
         dev_cool = zone_set_temp_cool - zone_temp
         if not zone_set_temp_cool == zone_set_temp_cool_bas_schedule[0]:
-            rebound_cool_list [zone_set_temp_cool_name[:-1]] = dev_cool
+            rebound_cool_list [zone_set_temp_cool_name] = dev_cool
             if zone_set_temp_cool - shed_delta_ratchet > zone_set_temp_cool_bas_schedule[0]:
                 new_zone_set_temp_cool = zone_set_temp_cool - shed_delta_ratchet
                 cool_shed_counter = 0
