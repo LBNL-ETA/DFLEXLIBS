@@ -1,0 +1,88 @@
+SELECT ?zone_name ?zone_temp_point ?set_temp_min_point ?set_temp_max_point ?occ_sensor_point ?occ_cmd_point 
+?zone_set_temp_heat_point  ?zone_set_temp_cool_point ?unocc_zone_set_temp_heat_point ?unocc_zone_set_temp_cool_point 
+?occ_zone_set_temp_heat_point ?occ_zone_set_temp_cool_point  ?zone_set_temp_point ?vav_damper_set_point ?vav_discharge_temp_point 
+?vav_reheat_command_point
+
+WHERE {
+        ?zone a brick:HVAC_Zone  ;
+        rdfs:label ?zone_name.
+   
+    OPTIONAL { 
+    ?zone     brick:hasPoint ?TZon.
+    ?TZon a brick:Zone_Air_Temperature_Sensor ;
+          ref:hasExternalReference/ref:hasTimeseriesId ?zone_temp_point .}
+    
+            OPTIONAL {
+        ?zone brick:hasPoint ?TSetMin .
+        ?TSetMin a brick:Min_Air_Temperature_Setpoint ;
+                 ref:hasExternalReference/ref:hasTimeseriesId ?set_temp_min_point .}
+    
+        OPTIONAL {
+        ?zone brick:hasPoint ?TSetMax .
+        ?TSetMax a brick:Max_Air_Temperature_Setpoint ;
+                 ref:hasExternalReference/ref:hasTimeseriesId ?set_temp_max_point .}
+    
+     OPTIONAL {
+        ?zone brick:hasPoint ?TSetHeaZon .
+        ?TSetHeaZon a brick:Zone_Air_Heating_Temperature_Setpoint;
+                    ref:hasExternalReference/ref:hasTimeseriesId ?zone_set_temp_heat_point .}
+
+    OPTIONAL {
+        ?zone brick:hasPoint ?TSetCooZon .
+        ?TSetCooZon a brick:Zone_Air_Cooling_Temperature_Setpoint;
+                    ref:hasExternalReference/ref:hasTimeseriesId ?zone_set_temp_cool_point .}
+
+
+    OPTIONAL {
+        ?zone brick:hasPoint ?OccSensor.
+        ?OccSensor a brick:Occupancy_Sensor ;
+                   ref:hasExternalReference/ref:hasTimeseriesId ?occ_sensor_point .}
+OPTIONAL {
+        ?zone brick:hasPoint ?OccCmd .
+        ?OccCmd a brick:Occupancy_Command ;
+                ref:hasExternalReference/ref:hasTimeseriesId ?occ_cmd_point .}
+    
+       OPTIONAL { 
+         ?zone     brick:hasPoint ?UnOccTSetCooZon.
+        ?UnOccTSetCooZon a brick:Unoccupied_Cooling_Temperature_Setpoint ;
+                          ref:hasExternalReference/ref:hasTimeseriesId ?unocc_zone_set_temp_cool_point . 
+    }
+        OPTIONAL {
+        ?zone brick:hasPoint ?UnOccTSetHeaZon .
+        ?UnOccTSetHeaZon a brick:Unoccupied_Heating_Temperature_Setpoint;
+                         ref:hasExternalReference/ref:hasTimeseriesId ?unocc_zone_set_temp_heat_point .}
+    OPTIONAL {
+        ?zone brick:hasPoint ?OccTSetCooZon .
+        ?OccTSetCooZon a brick:Occupied_Cooling_Temperature_Setpoint;
+                       ref:hasExternalReference/ref:hasTimeseriesId ?occ_zone_set_temp_cool_point .}
+
+OPTIONAL { 
+        ?zone brick:hasPoint ?OccTSetHeaZon . 
+        ?OccTSetHeaZon a brick:Occupied_Heating_Temperature_Setpoint ;
+                        ref:hasExternalReference/ref:hasTimeseriesId ?occ_zone_set_temp_heat_point . 
+    }
+    OPTIONAL {
+        ?zone brick:hasPoint ?TSetZon .
+        ?TSetZon a brick:Zone_Air_Temperature_Setpoint;
+                 ref:hasExternalReference/ref:hasTimeseriesId ?zone_set_temp_point .}
+    
+     OPTIONAL {
+        ?vav brick:feeds ?zone ;
+             brick:hasPoint ?Vav_DamSet .
+        ?Vav_DamSet a brick:Damper_Position_Setpoint;
+                    ref:hasExternalReference/ref:hasTimeseriesId ?vav_damper_set_point .}
+
+    OPTIONAL {
+        ?vav brick:feeds ?zone ;
+             brick:hasPoint ?Vav_DisTemp .
+        ?Vav_DisTemp a brick:Discharge_Air_Temperature_Sensor;
+                     ref:hasExternalReference/ref:hasTimeseriesId ?vav_discharge_temp_point .}
+    
+        OPTIONAL {
+        ?vav brick:feeds ?zone ;
+             brick:hasPoint ?Vav_ReheatCmd .
+        ?Vav_ReheatCmd a brick:Valve_Command;
+                       ref:hasExternalReference/ref:hasTimeseriesId ?vav_reheat_command_point .}
+
+
+}    

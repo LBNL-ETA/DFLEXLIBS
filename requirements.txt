@@ -4,8 +4,11 @@ numpy
 matplotlib
 pyyaml
 requests
-buildingmotif
 typing
 notebook
 ipykernel
 pipenv
+tabulate
+scipy
+duckdb
+seaborn

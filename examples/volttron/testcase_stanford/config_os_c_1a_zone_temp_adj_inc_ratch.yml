@@ -1,0 +1,23 @@
+sparql_query: [queries\Volttron_query_os_c_1a_zone_temp_adj_inc_ratch_gBldg.rq, queries\Volttron_brick_query_os_c_1a_zone_temp_adj_inc_ratch_gZone.rq] #path to interface query.
+graph_path: testcase_stanford\stanford.ttl #path to each test case Brick graph.
+
+baseline_path: testcase_stanford\baseline.csv #path to baseline csv file
+
+price_identifier: price #identifier to get the price signal.
+
+hvac_mode_identifier: #identifier to get control signal (for test cases in which HVAC mode estimation is based on a single control signal.
+heat_signal_identifier: #identifier to get heating control signal (for test cases which have a heating control signal).
+cool_signal_identifier: #identifier to get cooling control signal (for test cases which have a cooling control signal).
+
+occ_flex_set_temp_min: 18 # min temperature setpoint during df
+occ_flex_set_temp_max: 27 # max temperature setpoint during df
+non_occ_flex_set_temp_min: 16  # min temperature setpoint during df
+non_occ_flex_set_temp_max: 29  # max temperature setpoint during df
+
+shed_initial_adjust: 1 #adjustment factor for the temperature setpoint during first shed 
+shed_delta_ratchet: 0.5 #incremental delta for ratcheting zone temperature setpoint
+shed_dev_threshold: 0.5 #shed threshold for zone temperature deviation from effective setpoint
+
+hands_off_zone: [] #list of zones that should not execute DF control
+
+degree_unit: "celsius"

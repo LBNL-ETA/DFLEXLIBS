@@ -8,14 +8,15 @@ pyshacl = "*"
 python-dotenv = "*"
 ipykernel = "*"
 typing = "*"
+setuptools = ">=70.0.0"
 
 [packages]
 rdflib = "*"
-controls = {path = ".", editable = true}
+dflexlibs = {path = ".", editable = true}
 requests = "*"
 pandas = "*"
 matplotlib = "*"
 numpy = "*"
 pyyaml = "*"
-buildingmotif = "*"
 notebook = "*"
+buildingmotif = {ref = "develop", git = "https://github.com/NREL/buildingmotif.git"}

@@ -1,0 +1,27 @@
+@prefix bldg: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+bldg:building a brick:Building ;
+brick:hasPart  bldg:space_x .
+
+bldg:space_x a brick:Space .
+
+bldg:zone_x a brick:Zone ;
+    brick:hasPart bldg:space_x ; 
+    brick:hasPoint 
+        bldg:temp_x, 
+        bldg:setpoint_x, 
+        bldg:occ_x .
+
+bldg:temp_x a brick:Zone_Air_Temperature_Sensor ; 
+    ref:hasExternalReference [ ref:hasTimeseriesId "temp_x" ] .
+
+bldg:setpoint_x  a brick:Zone_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "setpoint_x" ] .
+
+bldg:occ_x  a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "occ_x" ] .
+

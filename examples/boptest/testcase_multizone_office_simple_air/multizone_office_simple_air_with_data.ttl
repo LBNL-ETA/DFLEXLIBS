@@ -1,0 +1,588 @@
+@prefix bldg1: <urn:bldg/> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bldg1:Building a brick:Building ;
+    brick:area [ brick:value "1662.66"^^xsd:float ] ;
+    brick:hasPart bldg1:hvac_cor_zone,
+        bldg1:hvac_eas_zone,
+        bldg1:hvac_nor_zone,
+        bldg1:hvac_sou_zone,
+        bldg1:hvac_wes_zone .
+
+bldg1:hvac_ahu a brick:AHU ;
+    brick:feeds bldg1:vav_cor,
+        bldg1:vav_eas,
+        bldg1:vav_nor,
+        bldg1:vav_sou,
+        bldg1:vav_wes ;
+    brick:hasPart bldg1:cooling_coil,
+        bldg1:heating_coil,
+        bldg1:hvac_fanSup ;
+    brick:hasPoint bldg1:hvac_oveAhu_TSupSet_u,
+        bldg1:hvac_reaAhu_TMix_y,
+        bldg1:hvac_reaAhu_TRet_y,
+        bldg1:hvac_reaAhu_TSup_y,
+        bldg1:hvac_reaAhu_V_flow_ret_y,
+        bldg1:hvac_reaAhu_V_flow_sup_y .
+
+bldg1:LowerSetp_cor a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "LowerSetp[cor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "LowerSetp[cor]" ] .
+
+bldg1:LowerSetp_eas a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "LowerSetp[eas]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "LowerSetp[eas]" ] .
+
+bldg1:LowerSetp_nor a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "LowerSetp[nor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "LowerSetp[nor]" ] .
+
+bldg1:LowerSetp_sou a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "LowerSetp[sou]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "LowerSetp[sou]" ] .
+
+bldg1:LowerSetp_wes a brick:Min_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "LowerSetp[wes]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "LowerSetp[wes]" ] .
+
+bldg1:UpperSetp_cor a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "UpperSetp[cor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "UpperSetp[cor]" ] .
+
+bldg1:UpperSetp_eas a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "UpperSetp[eas]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "UpperSetp[eas]" ] .
+
+bldg1:UpperSetp_nor a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "UpperSetp[nor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "UpperSetp[nor]" ] .
+
+bldg1:UpperSetp_sou a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "UpperSetp[sou]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "UpperSetp[sou]" ] .
+
+bldg1:UpperSetp_wes a brick:Max_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "UpperSetp[wes]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "UpperSetp[wes]" ] .
+
+bldg1:chi_pump a brick:Pump ;
+    brick:hasPoint bldg1:chi_reaPPumDis_y .
+
+bldg1:chi_reaPChi_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "chi_reaPChi_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "chi_reaPChi_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "chi_reaPChi_y" ] .
+
+bldg1:chi_reaPPumDis_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "chi_reaPPumDis_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "chi_reaPPumDis_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "chi_reaPPumDis_y" ] .
+
+bldg1:chi_reaTRet_y a brick:Chilled_Water_Return_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "chi_reaTRet_y" ] .
+
+bldg1:chi_reaTSup_y a brick:Chilled_Water_Supply_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "chi_reaTSup_y" ] .
+
+bldg1:chiller a brick:Chiller ;
+    brick:feeds bldg1:chi_pump ;
+    brick:hasPoint bldg1:chi_reaPChi_y,
+        bldg1:chi_reaTRet_y,
+        bldg1:chi_reaTSup_y .
+
+bldg1:cooling_coil a brick:Cooling_Coil ;
+    brick:hasPoint bldg1:hvac_reaAhu_PPumCoo_y ;
+    brick:isFedBy bldg1:chiller .
+
+bldg1:heaPum_reaPHeaPum_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "heaPum_reaPHeaPum_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "heaPum_reaPHeaPum_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "heaPum_reaPHeaPum_y" ] .
+
+bldg1:heaPum_reaPPumDis_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "heaPum_reaPPumDis_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "heaPum_reaPPumDis_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "heaPum_reaPPumDis_y" ] .
+
+bldg1:heat_pump a brick:Pump ;
+    brick:feeds bldg1:hwd_pump ;
+    brick:hasPoint bldg1:heaPum_reaPHeaPum_y .
+
+bldg1:heating_coil a brick:Heating_Coil ;
+    brick:hasPoint bldg1:hvac_reaAhu_PPumHea_y,
+        bldg1:hvac_reaAhu_THeaCoiRet_y,
+        bldg1:hvac_reaAhu_THeaCoiSup_y ;
+    brick:isFedBy bldg1:heat_pump .
+
+bldg1:hvac_fanSup a brick:Supply_Fan ;
+    brick:hasPoint bldg1:hvac_reaAhu_PFanSup_y,
+        bldg1:hvac_reaAhu_dp_sup_y .
+
+bldg1:hvac_oveAhu_TSupSet_u a brick:Supply_Air_Temperature_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveAhu_TSupSet_u" ] .
+
+bldg1:hvac_oveZonActCor_yDam_u a brick:Damper_Position_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActCor_yDam_u" ] .
+
+bldg1:hvac_oveZonActCor_yReaHea_u a brick:Valve_Command ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActCor_yReaHea_u" ] .
+
+bldg1:hvac_oveZonActEas_yDam_u a brick:Damper_Position_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActEas_yDam_u" ] .
+
+bldg1:hvac_oveZonActEas_yReaHea_u a brick:Valve_Command ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActEas_yReaHea_u" ] .
+
+bldg1:hvac_oveZonActNor_yDam_u a brick:Damper_Position_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActNor_yDam_u" ] .
+
+bldg1:hvac_oveZonActNor_yReaHea_u a brick:Valve_Command ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActNor_yReaHea_u" ] .
+
+bldg1:hvac_oveZonActSou_yDam_u a brick:Damper_Position_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActSou_yDam_u" ] .
+
+bldg1:hvac_oveZonActSou_yReaHea_u a brick:Valve_Command ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActSou_yReaHea_u" ] .
+
+bldg1:hvac_oveZonActWes_yDam_u a brick:Damper_Position_Setpoint ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActWes_yDam_u" ] .
+
+bldg1:hvac_oveZonActWes_yReaHea_u a brick:Valve_Command ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_oveZonActWes_yReaHea_u" ] .
+
+bldg1:hvac_oveZonSupCor_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ] .
+
+bldg1:hvac_oveZonSupCor_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupCor_TZonHeaSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupCor_TZonHeaSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupCor_TZonHeaSet_u" ] .
+
+bldg1:hvac_oveZonSupEas_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupEas_TZonCooSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupEas_TZonCooSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupEas_TZonCooSet_u" ] .
+
+bldg1:hvac_oveZonSupEas_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupEas_TZonHeaSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupEas_TZonHeaSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupEas_TZonHeaSet_u" ] .
+
+bldg1:hvac_oveZonSupNor_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ] .
+
+bldg1:hvac_oveZonSupNor_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ] .
+
+bldg1:hvac_oveZonSupSou_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupSou_TZonCooSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupSou_TZonCooSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupSou_TZonCooSet_u" ] .
+
+bldg1:hvac_oveZonSupSou_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ] .
+
+bldg1:hvac_oveZonSupWes_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ] .
+
+bldg1:hvac_oveZonSupWes_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ] .
+
+bldg1:hvac_reaAhu_PFanSup_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ] .
+
+bldg1:hvac_reaAhu_PPumCoo_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ] .
+
+bldg1:hvac_reaAhu_PPumHea_y a brick:Electric_Power_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ;
+            ref:onTable "baseline_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ;
+            ref:onTable "flexible_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ] .
+
+bldg1:hvac_reaAhu_TMix_y a brick:Mixed_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_TMix_y" ] .
+
+bldg1:hvac_reaAhu_TRet_y a brick:Return_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_TRet_y" ] .
+
+bldg1:hvac_reaAhu_TSup_y a brick:Supply_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_TSup_y" ] .
+
+bldg1:hvac_reaAhu_V_flow_ret_y a brick:Return_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_V_flow_ret_y" ] .
+
+bldg1:hvac_reaAhu_V_flow_sup_y a brick:Supply_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_V_flow_sup_y" ] .
+
+bldg1:hvac_reaAhu_dp_sup_y a brick:Discharge_Air_Static_Pressure_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaAhu_dp_sup_y" ] .
+
+bldg1:hvac_reaZonCor_CO2Zon_y a brick:CO2_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonCor_CO2Zon_y" ] .
+
+bldg1:hvac_reaZonCor_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonCor_TSup_y" ] .
+
+bldg1:hvac_reaZonCor_TZon_y a brick:Zone_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ] .
+
+bldg1:hvac_reaZonCor_V_flow_y a brick:Discharge_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonCor_V_flow_y" ] .
+
+bldg1:hvac_reaZonEas_CO2Zon_y a brick:CO2_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonEas_CO2Zon_y" ] .
+
+bldg1:hvac_reaZonEas_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonEas_TSup_y" ] .
+
+bldg1:hvac_reaZonEas_TZon_y a brick:Zone_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ] .
+
+bldg1:hvac_reaZonEas_V_flow_y a brick:Discharge_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonEas_V_flow_y" ] .
+
+bldg1:hvac_reaZonNor_CO2Zon_y a brick:CO2_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonNor_CO2Zon_y" ] .
+
+bldg1:hvac_reaZonNor_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonNor_TSup_y" ] .
+
+bldg1:hvac_reaZonNor_TZon_y a brick:Zone_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonNor_TZon_y" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonNor_TZon_y" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaZonNor_TZon_y" ] .
+
+bldg1:hvac_reaZonNor_V_flow_y a brick:Discharge_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonNor_V_flow_y" ] .
+
+bldg1:hvac_reaZonSou_CO2Zon_y a brick:CO2_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonSou_CO2Zon_y" ] .
+
+bldg1:hvac_reaZonSou_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonSou_TSup_y" ] .
+
+bldg1:hvac_reaZonSou_TZon_y a brick:Zone_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonSou_TZon_y" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonSou_TZon_y" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaZonSou_TZon_y" ] .
+
+bldg1:hvac_reaZonSou_V_flow_y a brick:Discharge_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonSou_V_flow_y" ] .
+
+bldg1:hvac_reaZonWes_CO2Zon_y a brick:CO2_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonWes_CO2Zon_y" ] .
+
+bldg1:hvac_reaZonWes_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonWes_TSup_y" ] .
+
+bldg1:hvac_reaZonWes_TZon_y a brick:Zone_Air_Temperature_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ;
+            ref:onTable "flexible_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ;
+            ref:onTable "baseline_tempData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ] .
+
+bldg1:hvac_reaZonWes_V_flow_y a brick:Discharge_Air_Flow_Sensor ;
+    ref:hasExternalReference [ ref:hasTimeseriesId "hvac_reaZonWes_V_flow_y" ] .
+
+bldg1:hwd_pump a brick:Hot_Water_Pump ;
+    brick:hasPoint bldg1:heaPum_reaPPumDis_y .
+
+bldg1:occ_cor a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "Occupancy[cor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "Occupancy[cor]" ] .
+
+bldg1:occ_eas a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "Occupancy[eas]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "Occupancy[eas]" ] .
+
+bldg1:occ_nor a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "Occupancy[nor]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "Occupancy[nor]" ] .
+
+bldg1:occ_sou a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "Occupancy[sou]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "Occupancy[sou]" ] .
+
+bldg1:occ_wes a brick:Occupancy_Sensor ;
+    ref:hasExternalReference [ a ref:TimeseriesReference ;
+            ref:hasTimeseriesId "Occupancy[wes]" ;
+            ref:onTable "scheduleData_dataset" ;
+            ref:storedAt "data.db" ],
+        [ ref:hasTimeseriesId "Occupancy[wes]" ] .
+
+bldg1:vav_cor a brick:Variable_Air_Volume_Box_With_Reheat ;
+    brick:feeds bldg1:hvac_cor_zone ;
+    brick:hasPoint bldg1:hvac_oveZonActCor_yDam_u,
+        bldg1:hvac_oveZonActCor_yReaHea_u,
+        bldg1:hvac_reaZonCor_TSup_y .
+
+bldg1:vav_eas a brick:Variable_Air_Volume_Box_With_Reheat ;
+    brick:feeds bldg1:hvac_eas_zone ;
+    brick:hasPoint bldg1:hvac_oveZonActEas_yDam_u,
+        bldg1:hvac_oveZonActEas_yReaHea_u,
+        bldg1:hvac_reaZonEas_TSup_y .
+
+bldg1:vav_nor a brick:Variable_Air_Volume_Box_With_Reheat ;
+    brick:feeds bldg1:hvac_nor_zone ;
+    brick:hasPoint bldg1:hvac_oveZonActNor_yDam_u,
+        bldg1:hvac_oveZonActNor_yReaHea_u,
+        bldg1:hvac_reaZonNor_TSup_y .
+
+bldg1:vav_sou a brick:Variable_Air_Volume_Box_With_Reheat ;
+    brick:feeds bldg1:hvac_sou_zone ;
+    brick:hasPoint bldg1:hvac_oveZonActSou_yDam_u,
+        bldg1:hvac_oveZonActSou_yReaHea_u,
+        bldg1:hvac_reaZonSou_TSup_y .
+
+bldg1:vav_wes a brick:Variable_Air_Volume_Box_With_Reheat ;
+    brick:feeds bldg1:hvac_wes_zone ;
+    brick:hasPoint bldg1:hvac_oveZonActWes_yDam_u,
+        bldg1:hvac_oveZonActWes_yReaHea_u,
+        bldg1:hvac_reaZonWes_TSup_y .
+
+bldg1:hvac_cor_zone a brick:Zone ;
+    brick:hasPoint bldg1:LowerSetp_cor,
+        bldg1:UpperSetp_cor,
+        bldg1:hvac_oveZonSupCor_TZonCooSet_u,
+        bldg1:hvac_oveZonSupCor_TZonHeaSet_u,
+        bldg1:hvac_reaZonCor_CO2Zon_y,
+        bldg1:hvac_reaZonCor_TZon_y,
+        bldg1:hvac_reaZonCor_V_flow_y,
+        bldg1:occ_cor .
+
+bldg1:hvac_eas_zone a brick:Zone ;
+    brick:hasPoint bldg1:LowerSetp_eas,
+        bldg1:UpperSetp_eas,
+        bldg1:hvac_oveZonSupEas_TZonCooSet_u,
+        bldg1:hvac_oveZonSupEas_TZonHeaSet_u,
+        bldg1:hvac_reaZonEas_CO2Zon_y,
+        bldg1:hvac_reaZonEas_TZon_y,
+        bldg1:hvac_reaZonEas_V_flow_y,
+        bldg1:occ_eas .
+
+bldg1:hvac_nor_zone a brick:Zone ;
+    brick:hasPoint bldg1:LowerSetp_nor,
+        bldg1:UpperSetp_nor,
+        bldg1:hvac_oveZonSupNor_TZonCooSet_u,
+        bldg1:hvac_oveZonSupNor_TZonHeaSet_u,
+        bldg1:hvac_reaZonNor_CO2Zon_y,
+        bldg1:hvac_reaZonNor_TZon_y,
+        bldg1:hvac_reaZonNor_V_flow_y,
+        bldg1:occ_nor .
+
+bldg1:hvac_sou_zone a brick:Zone ;
+    brick:hasPoint bldg1:LowerSetp_sou,
+        bldg1:UpperSetp_sou,
+        bldg1:hvac_oveZonSupSou_TZonCooSet_u,
+        bldg1:hvac_oveZonSupSou_TZonHeaSet_u,
+        bldg1:hvac_reaZonSou_CO2Zon_y,
+        bldg1:hvac_reaZonSou_TZon_y,
+        bldg1:hvac_reaZonSou_V_flow_y,
+        bldg1:occ_sou .
+
+bldg1:hvac_wes_zone a brick:Zone ;
+    brick:hasPoint bldg1:LowerSetp_wes,
+        bldg1:UpperSetp_wes,
+        bldg1:hvac_oveZonSupWes_TZonCooSet_u,
+        bldg1:hvac_oveZonSupWes_TZonHeaSet_u,
+        bldg1:hvac_reaZonWes_CO2Zon_y,
+        bldg1:hvac_reaZonWes_TZon_y,
+        bldg1:hvac_reaZonWes_V_flow_y,
+        bldg1:occ_wes .
+
