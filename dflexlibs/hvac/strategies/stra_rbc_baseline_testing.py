@@ -53,6 +53,13 @@ def sparql_query(graph_path, query_paths):
     zone_set_temp_heat_point = []
     zone_set_temp_cool_point = []
     zone_names = []
+    unocc_zone_set_temp_heat_point = []
+    unocc_zone_set_temp_cool_point = []
+    occ_zone_set_temp_heat_point = []
+    occ_zone_set_temp_cool_point = []
+    occ_sensor_point  = []    
+    occ_cmd_point  = []    
+
     
     # Iterate over the query paths and execute each query
     for query_path in query_paths:
@@ -74,6 +81,15 @@ def sparql_query(graph_path, query_paths):
 
             zone_names_value = getattr(row, 'zone_name', None)
 
+            unocc_zone_set_temp_heat_point_value = getattr(row, 'unocc_zone_set_temp_heat_point', None)
+            unocc_zone_set_temp_cool_point_value = getattr(row, 'unocc_zone_set_temp_cool_point', None)
+
+            occ_zone_set_temp_heat_point_value = getattr(row, 'occ_zone_set_temp_heat_point', None)
+            occ_zone_set_temp_cool_point_value = getattr(row, 'occ_zone_set_temp_cool_point', None)
+
+            occ_sensor_point_value = getattr(row, 'occ_sensor_point', None)
+            occ_cmd_point_value = getattr(row, 'occ_cmd_point', None)
+
             if zone_set_temp_point_value is not None:
                 zone_set_temp_point.append(str(zone_set_temp_point_value))
             
@@ -84,7 +100,24 @@ def sparql_query(graph_path, query_paths):
 
             if zone_names_value is not None:
                 zone_names.append(str(zone_names_value))
-            
+
+            if unocc_zone_set_temp_heat_point_value is not None:
+                unocc_zone_set_temp_heat_point.append(str(unocc_zone_set_temp_heat_point_value))
+            if unocc_zone_set_temp_cool_point_value is not None:
+                unocc_zone_set_temp_cool_point.append(str(unocc_zone_set_temp_cool_point_value))
+
+            if occ_zone_set_temp_heat_point_value is not None:
+                occ_zone_set_temp_heat_point.append(str(occ_zone_set_temp_heat_point_value))
+            if occ_zone_set_temp_cool_point_value is not None:
+                occ_zone_set_temp_cool_point.append(str(occ_zone_set_temp_cool_point_value))
+
+            if occ_sensor_point_value is not None:
+                occ_sensor_point.append(str(occ_sensor_point_value))
+
+            if occ_cmd_point_value is not None:
+                occ_cmd_point.append(str(occ_cmd_point_value))
+
+
     number_of_zones = range(len(zone_names))
-    return number_of_zones, zone_names, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point
+    return number_of_zones, zone_names, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, occ_sensor_point, occ_cmd_point
 
