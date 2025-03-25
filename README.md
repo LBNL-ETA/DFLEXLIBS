@@ -1,6 +1,6 @@
 # Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
 
-DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several control and analytic applications and has been demonstrated in two interfaces (for BOPTEST and VOLTTRON) across five heterogeneous buildings.
+DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several control and analytic applications and has been demonstrated in two interfaces (for BOPTEST and VOLTTRON) across six heterogeneous buildings.
 
 ## Getting Started 
 
@@ -98,6 +98,8 @@ DFLEXLIBS is available under the following open-source [license](https://github.
 
 ## Related Publications
 
+Paul, Lazlo; De Andrade Pereira, Flavia; Prakash, Anand; Ham, Sang woo; Brown, Rich; Feng, Jingjuan Dove; Pritoni, Marco. Open Building Operating System: a Grid-Responsive Semantics-Driven Control Platform for Buildings. Science and Technology for the Built Environment, 2024. https://doi.org/10.1080/23744731.2024.2444819
+
 de Andrade Pereira, Flavia; Paul, Lazlo; Pritoni, Marco; Casillas, Armando; Prakash, Anand; Huang, Weiping; Shaw, Conor;  Martín-Toral, Susana; Finn, Donal; O’Donnell, James.
 Enabling portable demand flexibility control applications in virtual and real buildings, Journal of Building Engineering,
 Volume 86, 2024. https://doi.org/10.1016/j.jobe.2024.108645.
@@ -106,3 +108,5 @@ Paul, Lazlo; De Andrade Pereira, Flavia; Ham, Sang woo;Pritoni, Marco; Brown, Ri
 
 de Andrade Pereira, Flavia; Pritoni, Marco; Martín-Toral, Susana; Finn, Donal; O’Donnell, James. A semantics-driven framework for scalable demand flexibility control applications (2023). Proceedings of the 2023 European Conference on Computing in Construction and the 40th International CIB W78 Conference.
 http://www.doi.org/10.35490/EC3.2023.341
+
+
