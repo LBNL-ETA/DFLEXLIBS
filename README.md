@@ -49,7 +49,7 @@ To run BOPTEST examples, follow these steps:
 
    Select a testcase and a control application that is suitable for the test case and run the `simulation.ipynb` module. It will first run the test case baseline control and generate datasets (csv). Then it will run the proposed DF control application and generate datasets (csv). You can see the datasets and generate plots of the tested applications in the `results` directories for each test case. 
 
-## Generating KPIs from [Annex 81 Energy Flexibility KPIs](https://github.com/HichamJohra/energy_flexibility_kpis)
+## Calculating KPIs from [Annex 81 Energy Flexibility KPIs](https://github.com/HichamJohra/energy_flexibility_kpis)
 
 1. Open the `_analytics` directory.
 
