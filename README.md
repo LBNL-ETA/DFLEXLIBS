@@ -31,6 +31,12 @@ To access the library, follow these steps:
    pipenv install --dev
    ```
 
+3. (For the analytics scritp) Initialize and update the library's submodules from `energy_flexibility_kpis repo`
+
+   ``` 
+   git submodule update --init --recursive
+   ```
+
 ## Validating BOPTEST Examples
 
 To run BOPTEST examples, follow these steps:
