@@ -85,6 +85,9 @@ class VolttronInterface(DRInterface):
         # Define name of handsoff zones
         self.hands_off_zone = config.get('hands_off_zone', None)
 
+        self.occ_cmd_encoding = config.get('occ_cmd_encoding', None)
+        self.non_occ_cmd_encoding = config.get('non_occ_cmd_encoding', None)
+
         self.shed_counter_dict = {}
 
         self.sparql_results = sparql_query(self.graph_path, self.query_paths)
@@ -92,11 +95,15 @@ class VolttronInterface(DRInterface):
         self.control_functions = controls.control_functions
 
         self.degree_unit = config.get('degree_unit', None)
+        self.CFH_rate_url = config.get('CFH_rate_url', None)
 
     def get_price_threshold(self):
         ...
     
-    def control_agent(self, step, current_time, operation_mode, y):
+    def get_CFH_rate(self):
+        ...
+    
+    def control_agent(self, step, current_time, operation_mode, y, prev_output):
         '''Call compute_control function from the selected control strategy and functions based on measurement and forecast values.
     
         Parameters
@@ -120,13 +127,13 @@ class VolttronInterface(DRInterface):
 
         def get_value(df, time, point):
             time = int(time)
+            row = df[(df["Time"] == time)]
             
-            row = df[df["Time"] == time]
             if not row.empty:
                 return row[point].values[0]
             return None
             
-        def get_schedule (step, current_time, current_value, point):
+        def get_schedule (step, df, current_time, current_value, point):
             schedule = []
             num_steps = int(24 / step)
             for i in range(num_steps):  
@@ -134,7 +141,7 @@ class VolttronInterface(DRInterface):
                 next_time = current_time + offset
                 if next_time >= 24:
                     next_time -= 24
-                next_value = get_value(baseline_df, next_time, point)
+                next_value = get_value(df, next_time, point)
                 if next_value is not None:
                     current_value = next_value
                 schedule.append(float(current_value))
@@ -144,14 +151,27 @@ class VolttronInterface(DRInterface):
         rebound_heat_list = {}
         rebound_cool_list = {}
         occ_cmd_results = {}
+        baseline_values = {}
 
         # Get energy price schedule
         schedule_price = []
+        
         current_price_value = get_value(baseline_df, current_time, self.price_identifier)
-        schedule_price = get_schedule (step, current_time, current_price_value, self.price_identifier)
-
+        print('current_price_value', current_price_value)
+        schedule_price = get_schedule (step, baseline_df, current_time, current_price_value, self.price_identifier)
         price_threshold_value = self.get_price_threshold(baseline_df[self.price_identifier].tolist())
         print('price_threshold_value', price_threshold_value)
+
+        # CalFlexHub prices - uncomment if we want to call the API in every step
+        # only works in real time (as APi call uses its current time to get new values)
+        # print(self.CFH_rate_url)
+        # price_df = self.get_CFH_rate(self.CFH_rate_url)
+        # current_price_value = price_df.iloc[0][self.price_identifier]
+        # print('CFH current_price_value', current_price_value)
+        # schedule_price = price_df[self.price_identifier].tolist()
+        # print('CFH schedule_price1', schedule_price)
+        # price_threshold_value = self.get_price_threshold(price_df[self.price_identifier].tolist())
+        # print('price_threshold_value', price_threshold_value)
 
         # Initiliaze values from the SPARQL query module
         number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = unocc_zone_set_temp_heat_point = unocc_zone_set_temp_cool_point = occ_zone_set_temp_heat_point = occ_zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = occ_cmd_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = None        
@@ -173,7 +193,7 @@ class VolttronInterface(DRInterface):
 
                 # Get occ schedule
                 current_occ_value = get_value(baseline_df, current_time, occ_sensor_point[zone])
-                schedule_occupancy = get_schedule (step, current_time, current_occ_value, occ_sensor_point[zone])
+                schedule_occupancy = get_schedule (step, baseline_df, current_time, current_occ_value, occ_sensor_point[zone])
                 print("occupancy_schedule", schedule_occupancy)
                 occ_min_threshold = 0
 
@@ -213,7 +233,8 @@ class VolttronInterface(DRInterface):
 
                     # Get baseline setpoint schedule    
                     current_baseline_value = get_value(baseline_df, current_time, zone_set_temp_heat_point[zone])
-                    zone_set_temp_heat_bas_schedule = get_schedule (step, current_time, current_baseline_value, zone_set_temp_heat_point[zone])
+                    zone_set_temp_heat_bas_schedule = get_schedule (step, baseline_df, current_time, current_baseline_value, zone_set_temp_heat_point[zone])
+                    zone_set_temp_heat_bas_schedule = [int(x) for x in zone_set_temp_heat_bas_schedule]
 
 
                 if zone_set_temp_cool_point is not None:
@@ -223,8 +244,8 @@ class VolttronInterface(DRInterface):
 
                      # Get baseline setpoint schedule
                     current_baseline_value = get_value(baseline_df, current_time, zone_set_temp_cool_point[zone])
-                    zone_set_temp_cool_bas_schedule = get_schedule (step, current_time, current_baseline_value, zone_set_temp_cool_point[zone])
-
+                    zone_set_temp_cool_bas_schedule = get_schedule (step, baseline_df, current_time, current_baseline_value, zone_set_temp_cool_point[zone])
+                    zone_set_temp_cool_bas_schedule = [int(x) for x in zone_set_temp_cool_bas_schedule]
                 
                 print('TSetHeaZon', zone_set_temp_heat, 'TSetHeaZon_baseline', zone_set_temp_heat_bas_schedule)
                 print('TSetCooZon', zone_set_temp_cool, 'TSetCooZon_baseline', zone_set_temp_cool_bas_schedule)
@@ -247,10 +268,22 @@ class VolttronInterface(DRInterface):
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
                     occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, self.degree_unit))
                 
+                # if unoccupied
                 if occ_cmd_point and current_occ_value == 0:
-                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = 1
+                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = self.non_occ_cmd_encoding
+
+                    # get baseline values for occ period as the unoccupied setpoints will be changed by the control
+                    baseline_values[' '.join([occ_zone_set_temp_heat_point[zone]])] = get_value(baseline_df, current_time, occ_zone_set_temp_heat_point[zone])
+                    baseline_values[' '.join([occ_zone_set_temp_cool_point[zone]])] = get_value(baseline_df, current_time, occ_zone_set_temp_cool_point[zone])
+
+                # if occupied
                 elif occ_cmd_point and current_occ_value == 1:
-                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = 2
+                    occ_cmd_results[' '.join([occ_cmd_point[zone]])] = self.occ_cmd_encoding
+
+                    # get baseline values for unocc period as the occupied setpoints will be changed by the control
+                    baseline_values[' '.join([unocc_zone_set_temp_heat_point[zone]])] = get_value(baseline_df, current_time, unocc_zone_set_temp_heat_point[zone])
+                    baseline_values[' '.join([unocc_zone_set_temp_cool_point[zone]])] = get_value(baseline_df, current_time, unocc_zone_set_temp_cool_point[zone])
+
                 
                 control_results.update(results)  
                 self.shed_counter_dict[zone] = shed_counter
@@ -261,9 +294,11 @@ class VolttronInterface(DRInterface):
 
         print(control_results)
         control_results.update(occ_cmd_results)
+        control_results.update(baseline_values)
         print(control_results)
 
         # Sort lists of zones    
+        print("complete ratchet", ratcheting_list)
         sorted_ratchet_zones = sorted(ratcheting_list, key=ratcheting_list.get, reverse=True)
         print("ratchet", sorted_ratchet_zones)
 
@@ -286,5 +321,9 @@ class VolttronInterface(DRInterface):
         # Filter keys from control_results using keys_to_exclude
         filtered_control_results = {key: control_results[key] for key in control_results if not any(exclude_zone in key for exclude_zone in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude))}
 
+        previous_control_results = {key: prev_output[key] for key in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude) if key in prev_output}
+        
+        filtered_control_results.update(previous_control_results)
+        
         print(filtered_control_results)
         return filtered_control_results
