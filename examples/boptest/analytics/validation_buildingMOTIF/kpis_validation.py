@@ -53,8 +53,11 @@ class ValidationInterface:
 
             # load manifest into BuildingMOTIF as its own library!
             manifest = Library.load(ontology_graph=manifest_path)
+            # set it as the manifest for the model
+            # model.update_manifest(manifest.get_shape_collection())
             #print(manifest_path)
             #print(manifest)
+            # gather shape collections into a list for ease of use
             # gather shape collections into a list for ease of use
             shape_collections = [
                 brick.get_shape_collection(),
@@ -64,19 +67,24 @@ class ValidationInterface:
 
             # pass a list of shape collections to .validate()
             validation_result = model.validate(shape_collections)
-            #print(validation_result)
+
+            print(validation_result)
 
             # Append a row to the table with validation result and key
             row = [key, validation_result.valid]
+            print(row)
 
             if validation_result.valid == True:
                 suitable_kpis.append({key})
-            
-            # Add reasons for each diff if available
-            for entity, errors in validation_result.diffset.items():
-                #print(entity)
-                for err in errors:
-                    print (f" For KPI {key} - {err.reason()}") 
+           
+            # print reasons
+            if validation_result.diffset:
+                for entity, errors in validation_result.diffset.items():
+                    print(entity)
+                    for err in errors:
+                        print(err)
+            else:
+                print("No validation errors found!")
 
             #print(f"KPI: {key}, Validation Result: {validation_result.valid}")
 
