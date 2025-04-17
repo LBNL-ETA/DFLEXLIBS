@@ -169,16 +169,16 @@ class VolttronInterface(DRInterface):
                     occ_cmd_results[' '.join([occ_cmd_point[zone]])] = self.non_occ_cmd_encoding
                     
                     # get baseline values for occ period as the unoccupied setpoints will be changed by the control
-                    baseline_values[' '.join([occ_zone_set_temp_heat_point[zone]])] = get_value(baseline_df, current_time, occ_zone_set_temp_heat_point[zone])
-                    baseline_values[' '.join([occ_zone_set_temp_cool_point[zone]])] = get_value(baseline_df, current_time, occ_zone_set_temp_cool_point[zone])
+                    baseline_values[' '.join([occ_zone_set_temp_heat_point[zone]])] = int(get_value(baseline_df, current_time, occ_zone_set_temp_heat_point[zone]))
+                    baseline_values[' '.join([occ_zone_set_temp_cool_point[zone]])] = int(get_value(baseline_df, current_time, occ_zone_set_temp_cool_point[zone]))
 
                 # if occupied
                 elif occ_cmd_point and current_occ_value == 1:
                     occ_cmd_results[' '.join([occ_cmd_point[zone]])] = self.occ_cmd_encoding
 
                     # get baseline values for unocc period as the occupied setpoints will be changed by the control
-                    baseline_values[' '.join([unocc_zone_set_temp_heat_point[zone]])] = get_value(baseline_df, current_time, unocc_zone_set_temp_heat_point[zone])
-                    baseline_values[' '.join([unocc_zone_set_temp_cool_point[zone]])] = get_value(baseline_df, current_time, unocc_zone_set_temp_cool_point[zone])
+                    baseline_values[' '.join([unocc_zone_set_temp_heat_point[zone]])] = int(get_value(baseline_df, current_time, unocc_zone_set_temp_heat_point[zone]))
+                    baseline_values[' '.join([unocc_zone_set_temp_cool_point[zone]])] = int(get_value(baseline_df, current_time, unocc_zone_set_temp_cool_point[zone]))
 
               
         control_results.update(occ_cmd_results)
