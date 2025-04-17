@@ -11,7 +11,8 @@ brick:hasPart bldg:space .
 
 bldg:space a brick:Space .
 
-bldg:hvacZone a brick:Zone ;
+bldg:hvacZone a brick:HVAC_Zone ;
+    rdfs:label "hvacZone" ;
     brick:hasPart bldg:space ; 
     brick:isFedBy bldg:fcu ;
     brick:hasPoint 

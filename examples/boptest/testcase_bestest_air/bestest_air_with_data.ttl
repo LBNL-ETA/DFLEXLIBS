@@ -1,5 +1,6 @@
 @prefix bldg1: <urn:bldg/> .
 @prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ref: <https://brickschema.org/schema/Brick/ref#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -61,11 +62,11 @@ bldg1:fcu_reaPCoo_y a brick:Electric_Power_Sensor ;
 bldg1:fcu_reaPFan_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPFan_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "fcu_reaPFan_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "fcu_reaPFan_y" ] .
 
@@ -83,7 +84,8 @@ bldg1:fcu_reaPHea_y a brick:Thermal_Power_Sensor ;
 bldg1:heating_coil a brick:Heating_Coil ;
     brick:isFedBy bldg1:boiler .
 
-bldg1:hvacZone a brick:Zone ;
+bldg1:hvacZone a brick:HVAC_Zone ;
+    rdfs:label "hvacZone" ;
     brick:hasPart bldg1:space ;
     brick:hasPoint bldg1:con_oveTSetCoo_u,
         bldg1:con_oveTSetHea_u,

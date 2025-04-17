@@ -15,7 +15,8 @@ brick:hasPart
 	bldg:hvac_sou_zone,	
 	bldg:hvac_wes_zone.
 
-bldg:hvac_wes_zone a brick:Zone ;
+bldg:hvac_wes_zone a brick:HVAC_Zone ;
+    rdfs:label "hvac_wes_zone" ;
 brick:hasPoint 
         bldg:hvac_oveZonSupWes_TZonCooSet_u,
         bldg:hvac_oveZonSupWes_TZonHeaSet_u,
@@ -26,7 +27,8 @@ brick:hasPoint
         bldg:hvac_reaZonWes_CO2Zon_y ,
         bldg:hvac_reaZonWes_V_flow_y .
 
-bldg:hvac_cor_zone a brick:Zone ;
+bldg:hvac_cor_zone a brick:HVAC_Zone ;
+    rdfs:label "hvac_cor_zone" ;
 brick:hasPoint 
         bldg:hvac_oveZonSupCor_TZonCooSet_u,
         bldg:hvac_oveZonSupCor_TZonHeaSet_u,
@@ -37,7 +39,8 @@ brick:hasPoint
         bldg:hvac_reaZonCor_CO2Zon_y ,
         bldg:hvac_reaZonCor_V_flow_y .
 
-bldg:hvac_eas_zone a brick:Zone ;
+bldg:hvac_eas_zone a brick:HVAC_Zone ;
+    rdfs:label "hvac_eas_zone" ;
 brick:hasPoint 
         bldg:hvac_oveZonSupEas_TZonCooSet_u,
         bldg:hvac_oveZonSupEas_TZonHeaSet_u,
@@ -48,7 +51,8 @@ brick:hasPoint
         bldg:hvac_reaZonEas_CO2Zon_y ,
         bldg:hvac_reaZonEas_V_flow_y .
 
-bldg:hvac_nor_zone a brick:Zone ;
+bldg:hvac_nor_zone a brick:HVAC_Zone ;
+    rdfs:label "hvac_nor_zone" ;
 brick:hasPoint  
         bldg:hvac_oveZonSupNor_TZonCooSet_u,
         bldg:hvac_oveZonSupNor_TZonHeaSet_u,
@@ -59,7 +63,8 @@ brick:hasPoint
         bldg:hvac_reaZonNor_CO2Zon_y ,
         bldg:hvac_reaZonNor_V_flow_y .
 
-bldg:hvac_sou_zone a brick:Zone ;
+bldg:hvac_sou_zone a brick:HVAC_Zone ;
+    rdfs:label "hvac_sou_zone" ;
 brick:hasPoint
         bldg:hvac_oveZonSupSou_TZonCooSet_u,
         bldg:hvac_oveZonSupSou_TZonHeaSet_u,

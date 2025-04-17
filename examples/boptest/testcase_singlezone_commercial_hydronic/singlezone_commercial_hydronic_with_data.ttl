@@ -1,5 +1,6 @@
 @prefix bldg1: <urn:bldg/> .
 @prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ref: <https://brickschema.org/schema/Brick/ref#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -17,11 +18,11 @@ bldg1:ahu_reaPFanRet_y a brick:Electric_Power_Sensor ;
 bldg1:ahu_reaPFanSup_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "ahu_reaPFanSup_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "ahu_reaPFanSup_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "ahu_reaPFanSup_y" ] .
 
@@ -29,7 +30,8 @@ bldg1:building a brick:Building ;
     brick:area [ brick:value "8500.0"^^xsd:float ] ;
     brick:hasPart bldg1:space .
 
-bldg1:hvacZone a brick:Zone ;
+bldg1:hvacZone a brick:HVAC_Zone ;
+    rdfs:label "hvacZone" ;
     brick:hasPart bldg1:space ;
     brick:hasPoint bldg1:lowerSetp,
         bldg1:occ,
@@ -40,44 +42,44 @@ bldg1:hvacZone a brick:Zone ;
 bldg1:reaPEle_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPEle_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPEle_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPEle_y" ] .
 
 bldg1:reaPFan_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPFan_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPFan_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPFan_y" ] .
 
 bldg1:reaPPum_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPPum_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaPPum_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaPPum_y" ] .
 
 bldg1:reaQHea_y a brick:Thermal_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaQHea_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaQHea_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaQHea_y" ] .
 
@@ -98,22 +100,22 @@ bldg1:occ a brick:Occupancy_Sensor ;
 bldg1:oveTZonSet_u a brick:Zone_Air_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTZonSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTZonSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "oveTZonSet_u" ] .
 
 bldg1:reaTZon_y a brick:Zone_Air_Temperature_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaTZon_y" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "reaTZon_y" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "reaTZon_y" ] .
 
