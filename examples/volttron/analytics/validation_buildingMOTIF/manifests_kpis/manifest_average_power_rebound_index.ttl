@@ -1,0 +1,30 @@
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ref: <https://brickschema.org/schema/Brick/ref#> .
+@prefix constraint: <https://nrel.gov/BuildingMOTIF/constraints#> .
+@prefix : <urn:kpi_average_power_rebound_index/> .
+
+: a owl:Ontology ;
+    owl:imports <https://brickschema.org/schema/1.3/Brick> .
+
+:electric-power-sensor a sh:NodeShape ;
+    sh:targetNode : ;
+    constraint:minCount 1 ;
+    constraint:class brick:Electric_Power_Sensor .
+
+:timeseries-identifier a sh:NodeShape ;
+    sh:targetClass brick:Electric_Power_Sensor;
+    sh:property [
+		sh:path ref:hasExternalReference ; 
+        sh:minCount 1;
+		sh:nodeKind sh:BlankNode ;
+        sh:property [
+            sh:path ref:hasTimeseriesId ; 
+            sh:minCount 1;
+            sh:maxCount 1;
+            sh:datatype xsd:string ;
+        ] ;	
+    ] ;
+.
