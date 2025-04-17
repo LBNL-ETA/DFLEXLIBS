@@ -28,3 +28,5 @@ peak_demand_diff_error_min: 35000 # minimum allowable difference between peak an
 deadband_peak_demand_diff_error_min: 500 #deadband value for minimum allowable difference between peak and current current 
 
 hands_off_zone: [] #list of zones that should not execute DF control
+
+degree_unit: "kelvin"

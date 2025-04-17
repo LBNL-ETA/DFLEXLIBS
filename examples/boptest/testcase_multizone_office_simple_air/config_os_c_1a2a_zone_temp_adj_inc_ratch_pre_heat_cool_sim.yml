@@ -22,3 +22,5 @@ shift_horizon_time: 3 # hours ahead to start shift period
 shift_dev_threshold: 2 #shift threshold for zone temperature deviation from effective setpoint
 
 hands_off_zone: [] #list of zones that should not execute DF control
+
+degree_unit: "kelvin"

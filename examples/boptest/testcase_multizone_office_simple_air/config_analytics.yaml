@@ -12,9 +12,11 @@ flexible_scenario: 'flexible_dataset'
 # Define a start and end time for the evaluation period 
 # Evaluation timestamp based on BOPTEST simulation scenario for peak_heat
 evaluation_timestamps:
-    start: '1970-01-20 00:00:00' #Y-M-D
-    end: '1970-02-02 23:59:59'
+    start: '1970-01-28 00:00:00' #Y-M-D
+    end: '1970-01-28 23:59:59'
 
+# start: '1970-01-20 00:00:00' #Y-M-D
+#     end: '1970-02-02 23:59:59'
 # Define input parameters not available in the Brick model
 price_signal_file_name: "scheduleData_dataset.csv"
 price_signal_identifier: 'PriceElectricPowerHighlyDynamic'

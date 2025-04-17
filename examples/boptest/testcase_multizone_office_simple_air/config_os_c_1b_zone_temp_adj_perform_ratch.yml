@@ -21,3 +21,5 @@ demand_decrease_cap: 7500 #objective electrical demand decrease (DDcap)
 demand_decrease_error_min: 75 #minimum allowable difference between DDcap and DDbldg
 
 hands_off_zone: [] #list of zones that should not execute DF control
+
+degree_unit: "kelvin"
