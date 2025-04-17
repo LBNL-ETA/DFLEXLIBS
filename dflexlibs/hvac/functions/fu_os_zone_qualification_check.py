@@ -1,5 +1,6 @@
-def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
-                    hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
+def zone_qualification_check (operation_mode, zone_temp,  occ_flex_set_temp_min, occ_flex_set_temp_max, 
+                    hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, 
+                    vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
              
     '''Define whether to qualify the zone to compute DF shed control
     
@@ -53,6 +54,9 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
         Ahu_flowSupSet : int or float
             Contains the value of the current iteration for the VAV airflow setpoint.
 
+        degree_unit: str
+            Contains the measurement unit for temperature
+
         Returns
         -------
         qualify : boolean
@@ -67,13 +71,8 @@ def zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, oc
             return temp_c + 273.15
         return temp_c  # Default is Celsius
 
-    #Check current Min and Max setpoints
-    if schedule_occupancy[0] > occ_min_threshold:
-        TSetMin = occ_flex_set_temp_min
-        TSetMax = occ_flex_set_temp_max
-    else:
-        TSetMin = non_occ_flex_set_temp_min 
-        TSetMax = non_occ_flex_set_temp_max    
+    TSetMin = occ_flex_set_temp_min
+    TSetMax = occ_flex_set_temp_max
     
     #Out of comfort
     qualify = False

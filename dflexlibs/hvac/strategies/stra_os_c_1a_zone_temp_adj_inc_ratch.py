@@ -117,6 +117,9 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         zone_set_temp_cool_bas_schedule : list
             Contains the baseline schedule value for cooling setpoint in the zone.
         
+        degree_unit: str
+            Contains the measurement unit for temperature
+            
         Returns
         -------
         
@@ -146,18 +149,22 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
         shed_counter_dict[zone] = 0
     print(zone, shed_counter_dict[zone])
 
+    if schedule_occupancy [0] <= occ_min_threshold:
+        occupied = False
+    else: occupied = True
+
     if shed_price_event(schedule_price, price_threshold_value):
         
-        if schedule_occupancy [0] <= occ_min_threshold:
+        if not occupied:
             print("savings mode")
-            shed_counter_dict[zone] = 0
-            new_zone_set_temp_heat, new_zone_set_temp_cool = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
+            new_zone_set_temp_heat, new_zone_set_temp_cool, shed_counter = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
             if zone_set_temp_heat is not None:
                 control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
             if zone_set_temp_cool is not None:
                 control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+            shed_counter_dict[zone] = shed_counter
         
-        elif zone_qualification_check (operation_mode, zone_temp,  schedule_occupancy, occ_min_threshold, occ_flex_set_temp_min, occ_flex_set_temp_max, non_occ_flex_set_temp_min, non_occ_flex_set_temp_max,
+        elif zone_qualification_check (operation_mode, zone_temp,  occ_flex_set_temp_min, occ_flex_set_temp_max, 
                             hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
             print("qualified zone")
                                                                        
@@ -178,6 +185,18 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                     control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
                 if zone_set_temp_cool is not None:
                     control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool
+        
+        elif shed_counter_dict[zone] == 1:
+            # Compute rebound management
+            new_zone_set_temp_heat, new_zone_set_temp_cool, rebound_heat_list, rebound_cool_list, shed_counter = rebound_management_zone (zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
+                                    rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet, occupied)
+            if zone_set_temp_heat is not None:
+                control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
+            if zone_set_temp_cool is not None:
+                control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+            shed_counter_dict[zone] = shed_counter 
+            print("rebound shed", control_results)
+
         else:
             shed_counter_dict[zone] = 0
             if zone_set_temp_heat is not None:
@@ -188,25 +207,15 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
 
     elif shed_counter_dict[zone] == 1:
 
-        if schedule_occupancy [0] <= occ_min_threshold:
-            print("rebound savings mode")
-            shed_counter_dict[zone] = 0
-            new_zone_set_temp_heat, new_zone_set_temp_cool = shed_savings_mode (zone_set_temp_heat, zone_set_temp_cool, occ_flex_set_temp_min, occ_flex_set_temp_max, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule)
-            if zone_set_temp_heat is not None:
-                control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
-            if zone_set_temp_cool is not None:
-                control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
-
-        else:        
-            # Compute rebound management
-            new_zone_set_temp_heat, new_zone_set_temp_cool, rebound_heat_list, rebound_cool_list, shed_counter = rebound_management_zone (zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                                    rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet)
-            if zone_set_temp_heat is not None:
-                control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
-            if zone_set_temp_cool is not None:
-                control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
-            shed_counter_dict[zone] = shed_counter 
-            print("rebound shed", control_results)
+        # Compute rebound management
+        new_zone_set_temp_heat, new_zone_set_temp_cool, rebound_heat_list, rebound_cool_list, shed_counter = rebound_management_zone (zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
+                                rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet, occupied)
+        if zone_set_temp_heat is not None:
+            control_results [zone_set_temp_heat_name] = new_zone_set_temp_heat
+        if zone_set_temp_cool is not None:
+            control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
+        shed_counter_dict[zone] = shed_counter 
+        print("rebound shed", control_results)
 
     else:
         # Compute baseline min/max temperature sepoints
@@ -248,6 +257,18 @@ def sparql_query(graph_path, query_paths):
         zone_set_temp_point : str
             Contains the identifier for the setpoint temperature measurement per zone.
 
+        unocc_zone_set_temp_heat_point : str
+            Contains the identifier for the unoccupied heating setpoint temperature measurement per zone.
+
+        unocc_zone_set_temp_cool_point : str
+            Contains the identifier for the unoccupied cooling setpoint temperature measurement per zone.
+
+        occ_zone_set_temp_heat_point : str
+            Contains the identifier for the occupied heating setpoint temperature measurement per zone.
+
+        occ_zone_set_temp_cool_point : str
+            Contains the identifier for the occupied cooling setpoint temperature measurement per zone.
+        
         zone_set_temp_heat_point : str
             Contains the identifier for the heating setpoint temperature measurement per zone.
 
@@ -262,6 +283,9 @@ def sparql_query(graph_path, query_paths):
 
         occ_sensor_point : str
             Contains the identifier for the occupancy sensor point.
+
+        occ_cmd_point : str
+            Contains the identifier for the occupancy command point.
 
         vav_damper_set_point : str
             Contains the identifier for the VAV damper setpoint.

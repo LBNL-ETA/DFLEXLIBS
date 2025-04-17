@@ -1,5 +1,5 @@
 def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule,
-                                   rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet):
+                                   rebound_heat_list, rebound_cool_list, zone_set_temp_heat_name, zone_set_temp_cool_name, shed_delta_ratchet, occupied):
 
 
     '''Compute a rebound strategy when shed event is finished.
@@ -33,6 +33,9 @@ def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, z
         shed_delta_ratchet : int or float
             Contains the value of the incremental delta for ratcheting the zone temperature setpoint.
             
+        occupied: Boolean
+            Contains the status of the occupancy
+        
         Returns
         -------
         new_zone_set_temp_heat : int or float
@@ -59,14 +62,16 @@ def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, z
         dev_heat = zone_temp - zone_set_temp_heat
         
         if not zone_set_temp_heat == zone_set_temp_heat_bas_schedule[0]:
-            rebound_heat_list [zone_set_temp_heat_name] = dev_heat  
+            if occupied:
+                rebound_heat_list [zone_set_temp_heat_name] = dev_heat  
+            
             if zone_set_temp_heat + shed_delta_ratchet < zone_set_temp_heat_bas_schedule[0]:
                 new_zone_set_temp_heat = zone_set_temp_heat + shed_delta_ratchet
                 heat_shed_counter = 1
             else:
                 new_zone_set_temp_heat = zone_set_temp_heat_bas_schedule[0]
                 heat_shed_counter = 0 
-            
+       
         else:
             heat_shed_counter = 0
             new_zone_set_temp_heat = zone_set_temp_heat           
@@ -74,7 +79,8 @@ def rebound_management_zone(zone_temp, zone_set_temp_heat, zone_set_temp_cool, z
     if zone_set_temp_cool is not None:
         dev_cool = zone_set_temp_cool - zone_temp
         if not zone_set_temp_cool == zone_set_temp_cool_bas_schedule[0]:
-            rebound_cool_list [zone_set_temp_cool_name] = dev_cool
+            if occupied:
+                rebound_cool_list [zone_set_temp_cool_name] = dev_cool
             if zone_set_temp_cool - shed_delta_ratchet > zone_set_temp_cool_bas_schedule[0]:
                 new_zone_set_temp_cool = zone_set_temp_cool - shed_delta_ratchet
                 cool_shed_counter = 0
