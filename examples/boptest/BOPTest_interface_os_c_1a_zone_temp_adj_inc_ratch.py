@@ -60,7 +60,8 @@ class BOPTestInterface(DRInterface):
         self.graph_path = os.path.join(current_dir, config.get('graph_path'))
 
          # Define baseline path
-        self.baseline_path = os.path.join(current_dir, config.get('baseline_path'))     
+        self.baseline_path = os.path.join(current_dir, config.get('baseline_path'))   
+        self.schedule_path = os.path.join(current_dir, config.get('schedule_path'))     
 
         # Define price identifier and threshold
         self.price_identifier = config.get('price_identifier', None)
@@ -71,10 +72,10 @@ class BOPTestInterface(DRInterface):
         self.cool_signal_identifier = config.get('cool_signal_identifier', None) # for cooling control signal
         
         # Define values for min and max temperature setpoints during shed
-        self.occ_flex_set_temp_min = config.get('occ_flex_set_temp_min') + 273  
-        self.occ_flex_set_temp_max = config.get('occ_flex_set_temp_max') + 273  
-        self.non_occ_flex_set_temp_min = config.get('non_occ_flex_set_temp_min') + 273  
-        self.non_occ_flex_set_temp_max = config.get('non_occ_flex_set_temp_max') + 273 
+        self.occ_flex_set_temp_min = config.get('occ_flex_set_temp_min') + 273.15  
+        self.occ_flex_set_temp_max = config.get('occ_flex_set_temp_max') + 273.15  
+        self.non_occ_flex_set_temp_min = config.get('non_occ_flex_set_temp_min') + 273.15  
+        self.non_occ_flex_set_temp_max = config.get('non_occ_flex_set_temp_max') + 273.15 
 
         # Define adjustment factor for the temperature setpoint during first shed
         self.shed_initial_adjust = config.get('shed_initial_adjust', None)
@@ -85,6 +86,8 @@ class BOPTestInterface(DRInterface):
 
         # Define name of handsoff zones
         self.hands_off_zone = config.get('hands_off_zone', None)
+
+        self.degree_unit = config.get('degree_unit', None)
 
         self.shed_counter_dict = {}
 
@@ -99,7 +102,7 @@ class BOPTestInterface(DRInterface):
     def get_price_threshold(self):
         ...
     
-    def control_agent(self, y, f, step, start_time_days, current_time, f_price):
+    def control_agent(self, y, f, step, start_time_days, current_time, f_price, prev_output):
         '''Call compute_control function from the selected control strategy and functions based on measurement and forecast values.
     
         Parameters
@@ -161,13 +164,29 @@ class BOPTestInterface(DRInterface):
 
         # Get energy price  
         schedule_price = f[self.price_identifier]                            
-        price_threshold_value = self.get_price_threshold(f_price[self.price_identifier])
+        
+        from datetime import datetime
+        import pytz
+
+        def convert_epoch_to_datetime(epoch_time):
+            return datetime.fromtimestamp(epoch_time, pytz.utc).strftime('%Y-%m-%d')
+        current_date = convert_epoch_to_datetime(current_time)
+
+        schedule_df = pd.read_csv(self.schedule_path)
+        schedule_df['time'] = pd.to_datetime(schedule_df['time'])
+        schedule_resampled_df = schedule_df.set_index('time').resample('1H').ffill().reset_index()
+        schedule_df_selected_day = schedule_resampled_df[schedule_resampled_df['time'].dt.strftime('%Y-%m-%d') == current_date]
+
+        price_values = schedule_df_selected_day[self.price_identifier].tolist()
+
+        price_threshold_value = self.get_price_threshold(price_values)
         print('price_threshold_value', price_threshold_value)
 
         # Initiliaze values from the SPARQL query module
-        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = None
-        number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point = self.sparql_results
-        print(number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point)
+        number_of_zones = zone_names = zone_temp_point = zone_set_temp_point = zone_set_temp_heat_point = zone_set_temp_cool_point = unocc_zone_set_temp_heat_point = unocc_zone_set_temp_cool_point = occ_zone_set_temp_heat_point = occ_zone_set_temp_cool_point = set_temp_min_point = set_temp_max_point = occ_sensor_point = occ_cmd_point = vav_damper_set_point = vav_discharge_temp_point = vav_reheat_command_point = ahu_supply_temp_point = ahu_supply_flow_point = ahu_supply_flow_set_point = None        
+        number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, occ_cmd_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point = self.sparql_results
+
+        print(number_of_zones, zone_names, zone_temp_point, zone_set_temp_point, zone_set_temp_heat_point, zone_set_temp_cool_point, unocc_zone_set_temp_heat_point, unocc_zone_set_temp_cool_point, occ_zone_set_temp_heat_point, occ_zone_set_temp_cool_point, set_temp_min_point, set_temp_max_point, occ_sensor_point, occ_cmd_point, vav_damper_set_point, vav_discharge_temp_point, vav_reheat_command_point, ahu_supply_temp_point, ahu_supply_flow_point, ahu_supply_flow_set_point)
 
         if not zone_set_temp_heat_point or all(x is None for x in zone_set_temp_heat_point):
             zone_set_temp_heat_point = zone_set_temp_point
@@ -213,7 +232,7 @@ class BOPTestInterface(DRInterface):
 
                 if zone_set_temp_heat_point is not None:
                     # Get current setpoint
-                    zone_set_temp_heat = y[zone_set_temp_heat_point[zone]]                
+                    zone_set_temp_heat = y[zone_set_temp_heat_point[zone]]     
                     zone_set_temp_heat_name = ' '.join([zone_set_temp_heat_point[zone]])
 
                     # Get baseline setpoint schedule
@@ -287,7 +306,7 @@ class BOPTestInterface(DRInterface):
                     zone_set_temp_heat_name, zone_set_temp_cool_name, self.shed_counter_dict, zone, self.shed_initial_adjust, 
                     self.shed_dev_threshold, self.shed_delta_ratchet, self.hands_off_zone, zone_name, vav_damper_set, vav_discharge_temp, 
                     vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, schedule_price, schedule_occupancy, 
-                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule))
+                    occ_min_threshold, zone_set_temp_heat_bas_schedule, zone_set_temp_cool_bas_schedule, self.degree_unit))
                 
                 
                 control_results.update(results)  
@@ -334,5 +353,9 @@ class BOPTestInterface(DRInterface):
         # Filter keys from control_results using keys_to_exclude
         filtered_control_results = {key: control_results[key] for key in control_results if not any(exclude_zone in key for exclude_zone in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude))}
 
+        previous_control_results = {key: prev_output[key] for key in (ratchet_zones_to_exclude or rebound_heat_zones_to_exclude or rebound_cool_zones_to_exclude) if key in prev_output}
+        
+        filtered_control_results.update(previous_control_results)
+        
         print(filtered_control_results)
         return filtered_control_results
