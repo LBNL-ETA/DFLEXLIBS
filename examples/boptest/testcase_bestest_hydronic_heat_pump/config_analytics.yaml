@@ -9,13 +9,15 @@ updated_brick_model_file_name: "bestest_hydronic_heat_pump_with_data.ttl"
 baseline_scenario: 'baseline_dataset'
 flexible_scenario: 'flexible_dataset'
 
+baseline_temp_scenario: 'baseline_tempData_dataset'
+flexible_temp_scenario: 'flexible_tempData_dataset'
+schedule_scenario: 'scheduleData_dataset'
+
 # Define a start and end time for the evaluation period 
 # Evaluation timestamp based on BOPTEST simulation scenario for peak_heat
 evaluation_timestamps:
     start: '1970-01-22 00:00:00' #Y-M-D
     end: '1970-01-22 23:59:59'
-
-
     # start: '1970-01-17 00:00:00' #Y-M-D
     # end: '1970-01-30 23:59:59'
 

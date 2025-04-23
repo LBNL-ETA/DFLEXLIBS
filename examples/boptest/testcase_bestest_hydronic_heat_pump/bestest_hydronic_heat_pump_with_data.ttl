@@ -67,11 +67,11 @@ bldg1:occ a brick:Occupancy_Sensor ;
 bldg1:oveTSet_u a brick:Zone_Air_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "oveTSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "oveTSet_u" ] .
 

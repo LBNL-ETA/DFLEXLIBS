@@ -9,6 +9,10 @@ updated_brick_model_file_name: "multizone_office_simple_air_with_data.ttl"
 baseline_scenario: 'baseline_dataset'
 flexible_scenario: 'flexible_dataset'
 
+baseline_temp_scenario: 'baseline_tempData_dataset'
+flexible_temp_scenario: 'flexible_tempData_dataset'
+schedule_scenario: 'scheduleData_dataset'
+
 # Define a start and end time for the evaluation period 
 # Evaluation timestamp based on BOPTEST simulation scenario for peak_heat
 evaluation_timestamps:
