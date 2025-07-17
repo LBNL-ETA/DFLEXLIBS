@@ -1,4 +1,4 @@
-def zone_qualification_check (operation_mode, zone_temp,  occ_flex_set_temp_min, occ_flex_set_temp_max, 
+def zone_qualification_check (operation_mode, zone_temp,  TSetMin, TSetMax, 
                     hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, 
                     vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
              
@@ -70,9 +70,6 @@ def zone_qualification_check (operation_mode, zone_temp,  occ_flex_set_temp_min,
         elif degree_unit == "kelvin":
             return temp_c + 273.15
         return temp_c  # Default is Celsius
-
-    TSetMin = occ_flex_set_temp_min
-    TSetMax = occ_flex_set_temp_max
     
     #Out of comfort
     qualify = False

@@ -78,7 +78,7 @@ def shift_target_demand_mod (operation_mode, zone_set_temp_heat, zone_set_temp_c
                 new_zone_set_temp_heat = zone_set_temp_heat
                 print("continue")
         
-        if new_zone_set_temp_cool is not None:
+        if zone_set_temp_cool is not None:
             new_zone_set_temp_cool = zone_set_temp_cool_bas_schedule[0]
 
     else:
