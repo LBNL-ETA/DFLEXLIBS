@@ -1,6 +1,7 @@
 sparql_query: [queries\BOPTest_query_os_c_1b2a_zone_temp_adj_perform_ratch_pre_heat_cool_sim_gBldg.rq, queries\BOPTest_query_os_c_1b2a_zone_temp_adj_perform_ratch_pre_heat_cool_sim_gZone.rq] #path to interface query.
 graph_path: testcase_multizone_office_simple_air\multizone_office_simple_air.ttl #path to each test case Brick graph.
 baseline_path: testcase_multizone_office_simple_air\results_os_c_1b2a_zone_temp_adj_perform_ratch_pre_heat_cool_sim\default_scenario\baseline.csv #path to baseline csv file
+schedule_path: testcase_multizone_office_simple_air\results_os_c_1b2a_zone_temp_adj_perform_ratch_pre_heat_cool_sim\default_scenario\scheduleData_dataset.csv
 
 price_identifier: PriceElectricPowerHighlyDynamic #identifier to get the price signal.
 
