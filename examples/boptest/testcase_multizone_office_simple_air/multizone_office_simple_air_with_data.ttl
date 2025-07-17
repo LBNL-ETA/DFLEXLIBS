@@ -211,11 +211,11 @@ bldg1:hvac_oveZonActWes_yReaHea_u a brick:Valve_Command ;
 bldg1:hvac_oveZonSupCor_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupCor_TZonCooSet_u" ] .
 
@@ -255,22 +255,22 @@ bldg1:hvac_oveZonSupEas_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoi
 bldg1:hvac_oveZonSupNor_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupNor_TZonCooSet_u" ] .
 
 bldg1:hvac_oveZonSupNor_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupNor_TZonHeaSet_u" ] .
 
@@ -288,66 +288,66 @@ bldg1:hvac_oveZonSupSou_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoi
 bldg1:hvac_oveZonSupSou_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupSou_TZonHeaSet_u" ] .
 
 bldg1:hvac_oveZonSupWes_TZonCooSet_u a brick:Zone_Air_Cooling_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupWes_TZonCooSet_u" ] .
 
 bldg1:hvac_oveZonSupWes_TZonHeaSet_u a brick:Zone_Air_Heating_Temperature_Setpoint ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_oveZonSupWes_TZonHeaSet_u" ] .
 
 bldg1:hvac_reaAhu_PFanSup_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaAhu_PFanSup_y" ] .
 
 bldg1:hvac_reaAhu_PPumCoo_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaAhu_PPumCoo_y" ] .
 
 bldg1:hvac_reaAhu_PPumHea_y a brick:Electric_Power_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ;
-            ref:onTable "flexible_dataset" ;
+            ref:onTable "baseline_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ;
-            ref:onTable "baseline_dataset" ;
+            ref:onTable "flexible_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaAhu_PPumHea_y" ] .
 
@@ -378,11 +378,11 @@ bldg1:hvac_reaZonCor_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
 bldg1:hvac_reaZonCor_TZon_y a brick:Zone_Air_Temperature_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaZonCor_TZon_y" ] .
 
@@ -398,11 +398,11 @@ bldg1:hvac_reaZonEas_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
 bldg1:hvac_reaZonEas_TZon_y a brick:Zone_Air_Temperature_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaZonEas_TZon_y" ] .
 
@@ -458,11 +458,11 @@ bldg1:hvac_reaZonWes_TSup_y a brick:Discharge_Air_Temperature_Sensor ;
 bldg1:hvac_reaZonWes_TZon_y a brick:Zone_Air_Temperature_Sensor ;
     ref:hasExternalReference [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ;
-            ref:onTable "baseline_tempData_dataset" ;
+            ref:onTable "flexible_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ a ref:TimeseriesReference ;
             ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ;
-            ref:onTable "flexible_tempData_dataset" ;
+            ref:onTable "baseline_tempData_dataset" ;
             ref:storedAt "data.db" ],
         [ ref:hasTimeseriesId "hvac_reaZonWes_TZon_y" ] .
 
