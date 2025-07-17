@@ -151,7 +151,13 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
 
     if schedule_occupancy [0] <= occ_min_threshold:
         occupied = False
-    else: occupied = True
+        TSetMin = non_occ_flex_set_temp_min
+        TSetMax = non_occ_flex_set_temp_max
+    else: 
+        occupied = True
+        TSetMin = occ_flex_set_temp_min
+        TSetMax = occ_flex_set_temp_max
+
 
     if shed_price_event(schedule_price, price_threshold_value):
         
@@ -164,7 +170,7 @@ def compute_control(shed_price_event, shed_savings_mode, zone_qualification_chec
                 control_results [zone_set_temp_cool_name] = new_zone_set_temp_cool 
             shed_counter_dict[zone] = shed_counter
         
-        elif zone_qualification_check (operation_mode, zone_temp,  occ_flex_set_temp_min, occ_flex_set_temp_max, 
+        elif zone_qualification_check (operation_mode, zone_temp,  TSetMin, TSetMax, 
                             hands_off_zone, zone_name, zone_set_temp_heat, zone_set_temp_cool, vav_damper_set, vav_discharge_temp, vav_reheat_command, ahu_supply_temp, ahu_supply_flow, ahu_supply_flow_set, degree_unit): 
             print("qualified zone")
                                                                        
