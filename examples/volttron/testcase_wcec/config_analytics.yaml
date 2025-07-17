@@ -1,0 +1,33 @@
+# Note: ensure that the timestamp column of all files follows the %Y-%m-%d %I:%M:%S %p' format
+
+# Define path and file names
+database_file_name: 'database/kpis_wcec.db'
+brick_model_file_name: "wcec-223-brick-model-v5.ttl"
+updated_brick_model_file_name: "wcec-223-brick-model-v5_with_data.ttl"
+
+# Define the scenarios (csv file names) to analyse as baseline and flexible scenarios
+baseline_scenario: 'baseline_dataset'
+flexible_scenario: 'flexible_dataset'
+
+baseline_temp_scenario: 'baseline_tempData_dataset'
+flexible_temp_scenario: 'flexible_tempData_dataset'
+schedule_scenario: 'scheduleData_dataset'
+
+# Define a start and end time for the evaluation period 
+evaluation_timestamps:
+    start: '00:00:00' #Y-M-D
+    end: '23:59:59'
+
+# Define input parameters not available in the Brick model
+price_signal_file_name: "scheduleData_dataset.csv"
+price_signal_identifier: 'price'
+
+timestamp_identifier: 'time'
+shift_window: 3  # Set the number of hours for shift period
+rebound_window: 2  # Set the number of hours for rebound period
+
+## getting occ schedule for one zone 
+occ_file_name: "scheduleData_dataset.csv"
+occ_identifier: 'wcec/53101/Occupancy Schedule'
+occ_min_threshold: 0
+
