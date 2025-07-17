@@ -1,6 +1,7 @@
 sparql_query: [queries\BOPTest_query_os_c_1a2a_zone_temp_adj_inc_ratch_pre_heat_cool_sim_gBldg.rq, queries\BOPTest_query_os_c_1a2a_zone_temp_adj_inc_ratch_pre_heat_cool_sim_gZone.rq] #path to interface query.
 graph_path: testcase_bestest_air\bestest_air.ttl #path to each test case Brick graph.
 baseline_path: testcase_bestest_air\results_os_c_1a2a_zone_temp_adj_inc_ratch_pre_heat_cool_sim\default_scenario\baseline.csv #path to baseline csv file
+schedule_path: testcase_bestest_air\results_os_c_1a2a_zone_temp_adj_inc_ratch_pre_heat_cool_sim\default_scenario\scheduleData_dataset.csv
 
 price_identifier: PriceElectricPowerHighlyDynamic #identifier to get the price signal.
 
@@ -22,4 +23,6 @@ shift_horizon_time: 3 #start time of the shift period (#hours ahead)
 shift_dev_threshold: 3 #shift threshold for zone temperature deviation from effective setpoint
 
 hands_off_zone: [] #list of zones that should not execute DF control
+
+degree_unit: "kelvin"
 
