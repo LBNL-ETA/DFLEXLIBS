@@ -16,8 +16,8 @@ schedule_scenario: 'scheduleData_dataset'
 # Define a start and end time for the evaluation period 
 # Evaluation timestamp based on BOPTEST simulation scenario for peak_heat
 evaluation_timestamps:
-    start: '1970-01-09 00:00:00' #Y-M-D
-    end: '1970-01-09 23:59:59'
+    start: '1970-02-08 00:00:00' #Y-M-D 
+    end: '1970-02-08 23:59:59'
 
     # end: '1970-01-22 23:59:59'
 
