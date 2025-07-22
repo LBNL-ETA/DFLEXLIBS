@@ -1,14 +1,5 @@
 # Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
 
-DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several:
-
-- Control applications (based on the [Open DF Conntrol Sequence Specifications](https://doi.org/10.1016/j.enbuild.2025.115616)) and 
-- Analytic applications to analyse the controls performance and variability (leveraging the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis))
-
-DFLEXLIBS controls and analytics have been successfully tested across four virtual buildings via [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master) and three real buildings via [VOLTTRON](https://volttron.readthedocs.io/en/main/).
-
-# Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
-
 **DFLEXLIBS** is a Python library for developing and deploying **HVAC-based demand flexibility control applications**. It focuses on **portable** control applications that exclusively contain control logic and are abstract to specific building implementations, such as point names and communication protocols.
 
 The library uses **semantic models** and **control platform-oriented interfaces** to configure and run controls in real or virtual buildings.
