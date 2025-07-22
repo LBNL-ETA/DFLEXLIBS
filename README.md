@@ -1,6 +1,35 @@
 # Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
 
-DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several control applications (based on the [Open DF Conntrol Sequence Specifications](https://doi.org/10.1016/j.enbuild.2025.115616)) and analytic applications (leveraging the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis)), and has been demonstrated across four virtual buildings via [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master) and three real buildings via [VOLTTRON](https://volttron.readthedocs.io/en/main/).
+DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several:
+
+- Control applications (based on the [Open DF Conntrol Sequence Specifications](https://doi.org/10.1016/j.enbuild.2025.115616)) and 
+- Analytic applications to analyse the controls performance and variability (leveraging the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis))
+
+DFLEXLIBS controls and analytics have been successfully tested across four virtual buildings via [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master) and three real buildings via [VOLTTRON](https://volttron.readthedocs.io/en/main/).
+
+# Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
+
+**DFLEXLIBS** is a Python library for developing and deploying **HVAC-based demand flexibility control applications**. It focuses on **portable** control applications that exclusively contain control logic and are abstract to specific building implementations, such as point names and communication protocols.
+
+The library uses **semantic models** and **control platform-oriented interfaces** to configure and run controls in real or virtual buildings.
+
+
+## Features
+
+- 🛠️ **Control Applications**  
+  Available controls are based on the [Open DF Control Sequence Specification](https://doi.org/10.1016/j.enbuild.2025.115616)
+
+- 📊 **Analytics Applications (to evaluate controls performance and variability)**  
+  Available analytics are based on the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis)
+
+
+## Tested Control Platforms
+
+DFLEXLIBS has been tested on:
+
+- 🏢 Four **virtual buildings** via [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master)  
+- 🏠 Three **real buildings** via [VOLTTRON](https://volttron.readthedocs.io/en/main/)
+
 
 ## Getting Started 
 
@@ -36,7 +65,7 @@ To access the library, follow these steps:
    ``` 
    git submodule update --init --recursive
    ```
-
+   
 ## Validating BOPTEST Examples
 
 To run BOPTEST examples, follow these steps:
@@ -68,7 +97,6 @@ To run BOPTEST examples, follow these steps:
    Open the `_analytics/results` directory and check the results from each test case for each control application.
    Individual analytic results is saved within each testcase directory for each control. 
 
-
 ## Contributing
 
 If you are interested in contributing to the library:
@@ -78,7 +106,6 @@ If you are interested in contributing to the library:
    - Creating new control functions and applications
    - Running the control applications reusing the available interfaces (BOPTEST and VOLTTRON)
    - Creating new interfaces to run the applications in other control platforms/environments
-
 
 ## Copyright Notice
 
@@ -98,17 +125,19 @@ its behalf a paid-up, nonexclusive, irrevocable, worldwide license in the
 Software to reproduce, distribute copies to the public, prepare derivative 
 works, and perform publicly and display publicly, and to permit others to do so.
 
+
 ## License
 
 DFLEXLIBS is available under the following open-source [license](https://github.com/LBNL-ETA/DFLEXLIBS/edit/main/License.txt).
 
-## Related Publications
 
-Paul, Lazlo; De Andrade Pereira, Flavia; Prakash, Anand; Ham, Sang woo; Brown, Rich; Feng, Jingjuan Dove; Pritoni, Marco. Open Building Operating System: a Grid-Responsive Semantics-Driven Control Platform for Buildings. Science and Technology for the Built Environment, 2024. https://doi.org/10.1080/23744731.2024.2444819
+## Related Publications
 
 de Andrade Pereira, Flavia; Paul, Lazlo; Pritoni, Marco; Casillas, Armando; Prakash, Anand; Huang, Weiping; Shaw, Conor;  Martín-Toral, Susana; Finn, Donal; O’Donnell, James.
 Enabling portable demand flexibility control applications in virtual and real buildings, Journal of Building Engineering,
 Volume 86, 2024. https://doi.org/10.1016/j.jobe.2024.108645.
+
+Paul, Lazlo; De Andrade Pereira, Flavia; Prakash, Anand; Ham, Sang woo; Brown, Rich; Feng, Jingjuan Dove; Pritoni, Marco. Open Building Operating System: a Grid-Responsive Semantics-Driven Control Platform for Buildings. Science and Technology for the Built Environment, 2024. https://doi.org/10.1080/23744731.2024.2444819
 
 Paul, Lazlo; De Andrade Pereira, Flavia; Ham, Sang woo;Pritoni, Marco; Brown, Rich; Feng, Jingjuan Dove. Open Building Operating System: an Open-Source Grid Responsive Control Platform for Buildings (2023). ASHRAE Annual Conference 2023.
 
