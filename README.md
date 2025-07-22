@@ -1,6 +1,6 @@
 # Demand Flexibility Controls Library using Semantics (DFLEXLIBS)
 
-DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several control and analytic applications and has been demonstrated in two interfaces (for [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master) and [VOLTTRON](https://volttron.readthedocs.io/en/main/)) across four virtual and three real buildings.
+DFLEXLIBS is a library/repository of HVAC-based demand flexibility control applications developed using Python. The library is based on portable control applications that exclusively contain control logic and are abstract to building details, such as point names and communication protocols. The library leverages semantic models and control platform-oriented interfaces to configure and run the controls in specific buildings. The library contains several control applications (based on the [Open DF Conntrol Sequence Specifications](https://doi.org/10.1016/j.enbuild.2025.115616)) and analytic applications (leveraging the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis)), and has been demonstrated across four virtual buildings via [BOPTEST](https://github.com/ibpsa/project1-boptest/tree/master) and three real buildings via [VOLTTRON](https://volttron.readthedocs.io/en/main/).
 
 ## Getting Started 
 
@@ -55,7 +55,7 @@ To run BOPTEST examples, follow these steps:
 
    Select a testcase and a control application that is suitable for the test case and run the `simulation.ipynb` module. It will first run the test case baseline control and generate datasets (csv). Then it will run the proposed DF control application and generate datasets (csv). You can see the datasets and generate plots of the tested applications in the `results` directories for each test case. 
 
-## Calculating KPIs from [Annex 81 Energy Flexibility KPIs](https://github.com/HichamJohra/energy_flexibility_kpis)
+## Calculating KPIs 
 
 1. Open the `_analytics` directory.
 
