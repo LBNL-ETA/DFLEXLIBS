@@ -14,6 +14,10 @@ The library uses **semantic models** and **control platform-oriented interfaces*
   Available analytics are based on the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis)
 
 
+## Available Controls
+
+![controls](images/DF_control_strategies.png)
+
 ## Tested Control Platforms
 
 DFLEXLIBS has been tested on:
