@@ -10,13 +10,13 @@ The library uses **semantic models** and **control platform-oriented interfaces*
 - 🛠️ **Control Applications**  
   Available controls are based on the [Open DF Control Sequence Specification](https://doi.org/10.1016/j.enbuild.2025.115616)
 
+  The controls range from zone-level to plant-level strategies. Zone-level strategies (C.1 and C.2) suit all building typologies that count on writable temperature setpoints at the zone level. They include shedding controls, such as temperature adjustments with incremental temperature and performance target-based ratcheting; shifting controls with both simple and complex modulation for pre-cooling and heating; and composite controls that combine shifting and shedding controls derived from the aforementioned strategies. In contrast, the plant-level strategy (C.3) is tailored specifically for large commercial buildings with built-up chiller systems, focusing on chiller water temperature reset (only for load shedding). 
+
+![controls](images/DF_control_strategies.png)
+
 - 📊 **Analytics Applications (to evaluate controls performance variability)**  
   Available analytics are based on the [Annex 81 Energy Flexibility KPIs Python Package](https://github.com/HichamJohra/energy_flexibility_kpis)
 
-
-## Available Controls
-
-![controls](images/DF_control_strategies.png)
 
 ## Tested Control Platforms
 
