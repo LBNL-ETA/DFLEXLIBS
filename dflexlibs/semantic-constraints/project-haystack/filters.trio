@@ -1,0 +1,94 @@
+//
+// Binding filters for
+// Buildings.Controls.OBC.DemandFlexibility.ZoneTemperatureSetpointChange.HeatingOrCooling
+//
+// One record per CDL connector. These are the operative artifact on SkySpark 3:
+// the equip defs in lib/equips.trio document what a conforming zone looks like,
+// but nothing enforces them, so binding runs these filters.
+//
+// `scope` says what the filter is evaluated against:
+//   zoneEquip  - the points of one dfHeatingOrCooling equip (one per zone)
+//   site       - the whole project, expected to resolve to exactly one point
+//
+// Each filter must resolve to exactly one point within its scope. Zero means
+// the sequence cannot be deployed; more than one means the model is ambiguous
+// and needs tagging fixed. validate.axon checks both conditions.
+//
+
+--------------------------------------------------------------------------
+connector: "TCurZon"
+dir: "in"
+dis: "Current zone temperature"
+scope: "zoneEquip"
+filter: "point and sensor and zone and air and temp"
+--------------------------------------------------------------------------
+connector: "TCurZonSet"
+dir: "in"
+dis: "Current zone temperature setpoint"
+scope: "zoneEquip"
+filter: "point and sp and zone and air and temp and not dfTarget"
+doc:
+  The `not dfTarget` term is what keeps the three event targets below from
+  matching here -- they are zone air temp setpoints too. Add `and effective`
+  if the model tags it; it is not required because many BAS models do not.
+--------------------------------------------------------------------------
+connector: "TComZonSet"
+dir: "out"
+dis: "Commanded zone temperature setpoint"
+scope: "zoneEquip"
+filter: "point and sp and zone and air and temp and not dfTarget and writable"
+doc:
+  Same point as TCurZonSet in most buildings -- the sequence reads the active
+  setpoint and writes it back. The only difference is `writable`, since this
+  connector is an output.
+--------------------------------------------------------------------------
+connector: "TPreTarSet"
+dir: "in"
+dis: "Pre-conditioning target temperature setpoint"
+scope: "zoneEquip"
+filter: "point and sp and zone and air and temp and dfTarget and dfPreCondition"
+--------------------------------------------------------------------------
+connector: "TSheTarSet"
+dir: "in"
+dis: "Load-shed target temperature setpoint"
+scope: "zoneEquip"
+filter: "point and sp and zone and air and temp and dfTarget and dfLoadShed"
+--------------------------------------------------------------------------
+connector: "TDefSet"
+dir: "in"
+dis: "Default temperature setpoint"
+scope: "zoneEquip"
+filter: "point and sp and zone and air and temp and dfTarget and dfDefault"
+--------------------------------------------------------------------------
+connector: "rouZonFla"
+dir: "in"
+dis: "Rogue zone flag"
+scope: "zoneEquip"
+filter: "point and sp and zone and dfRogueZone"
+--------------------------------------------------------------------------
+connector: "PBui"
+dir: "in"
+dis: "Building electricity demand"
+scope: "site"
+filter: "point and sensor and elec and power and equipRef->siteMeter"
+doc:
+  Scoped to the site, not the zone equip. `siteMeter` is the stock Haystack
+  tag for a site's main meter, so the ref traversal pins this to
+  whole-building demand rather than a submeter. Only needed for
+  ZoneControlVariant 3 and 4.
+--------------------------------------------------------------------------
+connector: "PBuiThrVar"
+dir: "in"
+dis: "Variable building electricity demand threshold"
+scope: "site"
+filter: "point and sp and elec and power and dfThreshold"
+doc: "Only needed for ZoneControlVariant 4."
+--------------------------------------------------------------------------
+connector: "demFleMod"
+dir: "in"
+dis: "Demand flexibility mode"
+scope: "site"
+filter: "point and sp and dfMode"
+doc:
+  Building-level, published by the dfSupervisor equip, not per zone.
+--------------------------------------------------------------------------

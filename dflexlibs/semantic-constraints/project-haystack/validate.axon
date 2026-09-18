@@ -1,0 +1,71 @@
+//
+// Check a SkySpark project against the HeatingOrCooling binding filters.
+//
+// The filter table is duplicated from filters.trio so this file is
+// self-contained and can be pasted into an Axon shell. filters.trio remains
+// the source of truth; keep the two in sync.
+//
+// Verified against Haxall 4.0.6's Axon shell using examples/. Not yet run
+// against a live SkySpark 3 project -- see README.md.
+//
+
+// Filter table, one row per CDL connector.
+dfHocConnectors: () => [
+  {connector:"TCurZon",    dir:"in",  scope:"zoneEquip",
+   filter:"point and sensor and zone and air and temp"},
+  {connector:"TCurZonSet",  dir:"in",  scope:"zoneEquip",
+   filter:"point and sp and zone and air and temp and not dfTarget"},
+  {connector:"TComZonSet",  dir:"out", scope:"zoneEquip",
+   filter:"point and sp and zone and air and temp and not dfTarget and writable"},
+  {connector:"TPreTarSet",  dir:"in",  scope:"zoneEquip",
+   filter:"point and sp and zone and air and temp and dfTarget and dfPreCondition"},
+  {connector:"TSheTarSet",  dir:"in",  scope:"zoneEquip",
+   filter:"point and sp and zone and air and temp and dfTarget and dfLoadShed"},
+  {connector:"TDefSet",     dir:"in",  scope:"zoneEquip",
+   filter:"point and sp and zone and air and temp and dfTarget and dfDefault"},
+  {connector:"rouZonFla",   dir:"in",  scope:"zoneEquip",
+   filter:"point and sp and zone and dfRogueZone"},
+  {connector:"PBui",        dir:"in",  scope:"site",
+   filter:"point and sensor and elec and power and equipRef->siteMeter"},
+  {connector:"PBuiThrVar",  dir:"in",  scope:"site",
+   filter:"point and sp and elec and power and dfThreshold"},
+  {connector:"demFleMod",   dir:"in",  scope:"site",
+   filter:"point and sp and dfMode"},
+]
+
+// Resolve one connector and report how many points matched.
+// Exactly one is a pass: zero means the sequence cannot be deployed, more
+// than one means the model is ambiguous and needs its tagging fixed.
+dfHocResolve: (row, eqId) => do
+  hits: readAll(parseFilter(row->filter)).toRecList
+  scoped: if (row->scope == "zoneEquip" and eqId != null)
+            hits.findAll(r => r.has("equipRef") and r->equipRef == eqId)
+          else
+            hits
+  n: scoped.size
+  {
+    connector: row->connector,
+    dir: row->dir,
+    count: n,
+    status: if (n == 1) "ok" else if (n == 0) "MISSING" else "AMBIGUOUS",
+    pointId: if (n == 1) scoped.first->id else null,
+  }
+end
+
+// Check every dfHeatingOrCooling zone equip in the project.
+dfHocCheckZones: () => do
+  rows: dfHocConnectors().findAll(r => r->scope == "zoneEquip")
+  readAll(equip and dfHeatingOrCooling).toRecList.map(eq =>
+    rows.map(r => dfHocResolve(r, eq->id).set("zone", eq->dis))
+  ).flatten.toGrid
+end
+
+// Check the building-level connectors once for the project.
+dfHocCheckSite: () => do
+  dfHocConnectors().findAll(r => r->scope == "site")
+    .map(r => dfHocResolve(r, null).set("zone", "(site)")).toGrid
+end
+
+// Everything in one grid.
+dfHocCheck: () => dfHocCheckZones().toRecList
+                    .addAll(dfHocCheckSite().toRecList).toGrid

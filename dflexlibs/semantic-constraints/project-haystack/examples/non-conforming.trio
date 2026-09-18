@@ -1,0 +1,81 @@
+// Records exercising each failure mode.
+id: @site
+dis: "Example Site"
+site
+---
+id: @zone2
+dis: "Zone 2"
+space
+zone
+siteRef: @site
+---
+// Zone 2: has the temperature and active setpoint and a pre-conditioning
+// target, but is missing the load-shed target, the default target and the
+// rogue zone flag.
+id: @zone2Equip
+dis: "Zone 2 DF Controller"
+equip
+dfHeatingOrCooling
+siteRef: @site
+spaceRef: @zone2
+---
+id: @zone2TCurZon
+dis: "Zone 2 Air Temp"
+point
+sensor
+zone
+air
+temp
+kind: "Number"
+unit: "°F"
+equipRef: @zone2Equip
+siteRef: @site
+---
+// Not writable, so it cannot serve the TComZonSet output connector.
+id: @zone2TCurZonSet
+dis: "Zone 2 Air Temp Sp"
+point
+sp
+zone
+air
+temp
+kind: "Number"
+unit: "°F"
+equipRef: @zone2Equip
+siteRef: @site
+---
+id: @zone2TPreTarSet
+dis: "Zone 2 Pre-Conditioning Target"
+point
+sp
+zone
+air
+temp
+dfTarget
+dfPreCondition
+writable
+kind: "Number"
+unit: "°F"
+equipRef: @zone2Equip
+siteRef: @site
+---
+// A chiller submeter. Its equip has no `siteMeter` tag, so the PBui filter's
+// equipRef->siteMeter traversal must not pick this up as building demand.
+id: @submeter
+dis: "Chiller Submeter"
+equip
+elec
+meter
+submeter
+siteRef: @site
+---
+id: @chillerPower
+dis: "Chiller Power"
+point
+sensor
+elec
+power
+kind: "Number"
+unit: "kW"
+equipRef: @submeter
+siteRef: @site

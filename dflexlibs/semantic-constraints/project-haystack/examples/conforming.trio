@@ -1,0 +1,167 @@
+// Haystack records that should resolve every HeatingOrCooling connector.
+// Plain Haystack 3 style tagging -- no spec tags, no Xeto.
+id: @site
+dis: "Example Site"
+site
+area: 50000ft²
+tz: "Los_Angeles"
+---
+id: @zone1
+dis: "Zone 1"
+space
+zone
+siteRef: @site
+---
+id: @zone1Equip
+dis: "Zone 1 DF Controller"
+equip
+dfHeatingOrCooling
+siteRef: @site
+spaceRef: @zone1
+---
+// TCurZon
+id: @zone1TCurZon
+dis: "Zone 1 Air Temp"
+point
+sensor
+zone
+air
+temp
+cur
+his
+kind: "Number"
+unit: "°F"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// TCurZonSet and TComZonSet both bind here. `writable` is what lets it
+// serve the output connector as well.
+id: @zone1TCurZonSet
+dis: "Zone 1 Air Temp Sp"
+point
+sp
+zone
+air
+temp
+effective
+cur
+writable
+kind: "Number"
+unit: "°F"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// TPreTarSet
+id: @zone1TPreTarSet
+dis: "Zone 1 Pre-Conditioning Target"
+point
+sp
+zone
+air
+temp
+dfTarget
+dfPreCondition
+writable
+kind: "Number"
+unit: "°F"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// TSheTarSet
+id: @zone1TSheTarSet
+dis: "Zone 1 Load Shed Target"
+point
+sp
+zone
+air
+temp
+dfTarget
+dfLoadShed
+writable
+kind: "Number"
+unit: "°F"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// TDefSet
+id: @zone1TDefSet
+dis: "Zone 1 Default Target"
+point
+sp
+zone
+air
+temp
+dfTarget
+dfDefault
+writable
+kind: "Number"
+unit: "°F"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// rouZonFla
+id: @zone1RouZonFla
+dis: "Zone 1 Rogue Zone Flag"
+point
+sp
+zone
+dfRogueZone
+writable
+kind: "Bool"
+equipRef: @zone1Equip
+siteRef: @site
+---
+// Building electrical meter. `siteMeter` is what PBui's filter traverses to.
+id: @meter
+dis: "Building Electrical Meter"
+equip
+elec
+meter
+siteMeter
+siteRef: @site
+---
+// PBui
+id: @PBui
+dis: "Building Electric Demand"
+point
+sensor
+elec
+power
+cur
+his
+kind: "Number"
+unit: "kW"
+equipRef: @meter
+siteRef: @site
+---
+// PBuiThrVar
+id: @PBuiThrVar
+dis: "Building Demand Threshold"
+point
+sp
+elec
+power
+dfThreshold
+writable
+kind: "Number"
+unit: "kW"
+equipRef: @meter
+siteRef: @site
+---
+id: @dfSup
+dis: "DF Supervisor"
+equip
+dfSupervisor
+siteRef: @site
+---
+// demFleMod
+id: @demFleMod
+dis: "Demand Flexibility Mode"
+point
+sp
+dfMode
+writable
+kind: "Str"
+enum: "preCondition,default,loadShed,loadRebound"
+equipRef: @dfSup
+siteRef: @site

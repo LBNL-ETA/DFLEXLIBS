@@ -1,0 +1,21 @@
+// Why the TCurZonSet filter carries `not dfTarget`.
+//
+// The three demand flexibility targets are zone air temperature setpoints too.
+// Without the exclusion the active-setpoint filter matches all four, and the
+// binder has no way to choose. This is the same collision that needed an
+// explicit exclusion in ../s223 and ../brick, and that made the Xeto version
+// switch to ZoneAirTempEffectiveSp.
+load(`examples/conforming.trio`)
+
+[
+  {variant:"without 'not dfTarget'",
+   filter:"point and sp and zone and air and temp"},
+  {variant:"with 'not dfTarget'",
+   filter:"point and sp and zone and air and temp and not dfTarget"},
+  {variant:"with 'and effective'",
+   filter:"point and sp and zone and air and temp and effective"},
+].map(row => do
+  n: readAll(parseFilter(row->filter)).toRecList.size
+  {variant: row->variant, count: n,
+   status: if (n == 1) "ok" else "AMBIGUOUS"}
+end).toGrid
