@@ -1,0 +1,422 @@
+# ASHRAE 223P semantic constraints for
+# Buildings.Controls.OBC.DemandFlexibility.ZoneTemperatureSetpointChange.HeatingOrCooling
+#
+# One shape per CDL connector, plus a shape for the control target (the zone),
+# the building electrical service, and the sequence itself as an s223:Function.
+#
+# Each requirement shape is paired with an "Annotation" node shape carrying a
+# sh:TripleRule, so that running inference over a building model labels every
+# conforming node with the shape's class. Binding then resolves a CDL connector
+# to a node of the class its obc:binds annotation names.
+#
+# Requires: obc-extensions.ttl
+
+@prefix obc:          <urn:hpflex/shapes#> .
+@prefix s223:         <http://data.ashrae.org/standard223#> .
+@prefix qudt:         <http://qudt.org/schema/qudt/> .
+@prefix unit:         <http://qudt.org/vocab/unit/> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+@prefix rdf:          <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:         <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:           <http://www.w3.org/ns/shacl#> .
+
+#################################################################
+# Shared property shapes
+#################################################################
+
+# Every connector must resolve to something addressable in the BAS. Drop this
+# from the point shapes below if you want to match models that do not yet carry
+# external references.
+obc:has-external-ref a sh:PropertyShape ;
+    rdfs:label "has a BACnet external reference" ;
+    sh:path s223:hasExternalReference ;
+    sh:qualifiedValueShape [ sh:class s223:BACnetExternalReference ] ;
+    sh:minCount 1 ;
+    sh:qualifiedMinCount 1 ;
+    sh:message "Point must carry at least one s223:BACnetExternalReference." .
+
+obc:is-temperature a sh:PropertyShape ;
+    sh:path qudt:hasQuantityKind ;
+    sh:hasValue quantitykind:Temperature ;
+    sh:minCount 1 ;
+    sh:message "Property must have quantity kind Temperature." .
+
+# CDL works internally in kelvin; real BAS points are commonly degC or degF.
+# Unit conversion is the translator's job, so accept all three here.
+obc:temperature-unit a sh:PropertyShape ;
+    sh:path qudt:hasUnit ;
+    sh:in ( unit:K unit:DEG_C unit:DEG_F ) ;
+    sh:minCount 1 ;
+    sh:message "Temperature must be in K, degC or degF." .
+
+obc:is-power a sh:PropertyShape ;
+    sh:path qudt:hasQuantityKind ;
+    sh:in ( quantitykind:Power quantitykind:ActivePower ) ;
+    sh:minCount 1 ;
+    sh:message "Property must have quantity kind Power or ActivePower." .
+
+obc:power-unit a sh:PropertyShape ;
+    sh:path qudt:hasUnit ;
+    sh:in ( unit:W unit:KiloW unit:MegaW ) ;
+    sh:minCount 1 ;
+    sh:message "Power must be in W, kW or MW." .
+
+obc:is-setpoint a sh:PropertyShape ;
+    sh:path s223:hasAspect ;
+    sh:hasValue s223:Aspect-Setpoint ;
+    sh:minCount 1 ;
+    sh:message "Property must be aspected as a setpoint." .
+
+obc:not-a-df-target a sh:PropertyShape ;
+    rdfs:label "carries no demand flexibility target aspect" ;
+    sh:path s223:hasAspect ;
+    sh:qualifiedValueShape [ sh:class obc:Aspect-DemandFlexibilityTarget ] ;
+    sh:qualifiedMaxCount 0 ;
+    sh:message "The active zone setpoint must not also be a demand flexibility event target (pre-conditioning, load-shed or default)." .
+
+#################################################################
+# Sensor context
+#
+# What makes a temperature a *zone* temperature in 223P is the observation
+# location of the sensor that observes it, not the property itself.
+#################################################################
+
+obc:zone-temperature-sensor a sh:NodeShape ;
+    rdfs:label "Sensor observing a temperature inside a domain space" ;
+    sh:class s223:Sensor ;
+    sh:property [
+        sh:path s223:hasObservationLocation ;
+        sh:class s223:DomainSpace ;
+        sh:minCount 1 ;
+        sh:message "Zone temperature sensor must observe inside an s223:DomainSpace." ;
+    ] .
+
+obc:observed-in-zone a sh:PropertyShape ;
+    sh:path [ sh:inversePath s223:observes ] ;
+    sh:qualifiedValueShape obc:zone-temperature-sensor ;
+    sh:minCount 1 ;
+    sh:qualifiedMinCount 1 ;
+    sh:message "Property must be observed by a sensor located in a domain space." .
+
+obc:observed-by-electricity-meter a sh:PropertyShape ;
+    sh:path [ sh:inversePath s223:observes ] ;
+    sh:qualifiedValueShape [ sh:class s223:ElectricityMeter ] ;
+    sh:minCount 1 ;
+    sh:qualifiedMinCount 1 ;
+    sh:message "Property must be observed by an s223:ElectricityMeter." .
+
+#################################################################
+# Connector shapes -- zone temperature
+#################################################################
+
+# TCurZon : RealInput[nZon] "Current zone temperature"
+obc:TCurZon a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Current zone temperature" ;
+    rdfs:comment "Measured zone air temperature, read by the sequence." ;
+    sh:class s223:QuantifiableObservableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:observed-in-zone ,
+        obc:has-external-ref .
+
+# TCurZonSet : RealInput[nZon]
+#   "Current zone temperature setpoint from the external setpoint controller"
+#
+# TCurZonSet and TComZonSet are deliberately given the same requirements: the
+# sequence reads the active zone setpoint and writes it back. In most buildings
+# both connectors resolve to the *same* property. The read/write distinction is
+# carried by s223:hasInput vs s223:hasOutput on the function, not by the
+# property itself.
+obc:TCurZonSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Current zone temperature setpoint" ;
+    rdfs:comment "Active zone temperature setpoint held by the external setpoint controller." ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:is-setpoint ,
+        obc:not-a-df-target ,
+        obc:has-external-ref .
+
+# TComZonSet : RealOutput[nZon]
+#   "Commanded zone temperature setpoint to the external setpoint controller"
+obc:TComZonSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Commanded zone temperature setpoint" ;
+    rdfs:comment "Zone temperature setpoint written by the sequence. Normally the same property as obc:TCurZonSet." ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:is-setpoint ,
+        obc:not-a-df-target ,
+        obc:has-external-ref .
+
+#################################################################
+# Connector shapes -- demand flexibility target setpoints
+#
+# These three are the event targets. They are distinguished from each other,
+# and from the active setpoint above, only by the OBC-Flex aspect they carry.
+#################################################################
+
+# TPreTarSet : RealInput[nZon] "Pre-cool or pre-heat target temperature setpoint"
+obc:TPreTarSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Pre-conditioning target temperature setpoint" ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:is-setpoint ,
+        [ sh:path s223:hasAspect ;
+          sh:hasValue obc:Aspect-PreConditioningTarget ;
+          sh:minCount 1 ;
+          sh:message "Must be aspected obc:Aspect-PreConditioningTarget." ] .
+
+# TSheTarSet : RealInput[nZon] "Load-shed target temperature setpoint"
+obc:TSheTarSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Load-shed target temperature setpoint" ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:is-setpoint ,
+        [ sh:path s223:hasAspect ;
+          sh:hasValue obc:Aspect-LoadShedTarget ;
+          sh:minCount 1 ;
+          sh:message "Must be aspected obc:Aspect-LoadShedTarget." ] .
+
+# TDefSet : RealInput[nZon] "Default temperature setpoint"
+obc:TDefSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Default temperature setpoint" ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-temperature ,
+        obc:temperature-unit ,
+        obc:is-setpoint ,
+        [ sh:path s223:hasAspect ;
+          sh:hasValue obc:Aspect-DefaultTarget ;
+          sh:minCount 1 ;
+          sh:message "Must be aspected obc:Aspect-DefaultTarget." ] .
+
+#################################################################
+# Connector shapes -- building electrical demand
+#################################################################
+
+# PBui : RealInput "Electricity demand of the building"
+obc:PBui a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Building electricity demand" ;
+    rdfs:comment "Whole-building electric power, measured at the building's electricity meter." ;
+    sh:class s223:QuantifiableObservableProperty ;
+    sh:property
+        obc:is-power ,
+        obc:power-unit ,
+        obc:observed-by-electricity-meter ,
+        obc:has-external-ref .
+
+# PBuiThrVar : RealInput "Variable threshold for the electricity demand of the building"
+obc:PBuiThrVar a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Variable building electricity demand threshold" ;
+    rdfs:comment "Externally supplied demand limit that the sequence controls against." ;
+    sh:class s223:QuantifiableActuatableProperty ;
+    sh:property
+        obc:is-power ,
+        obc:power-unit ,
+        obc:has-external-ref ,
+        [ sh:path s223:hasAspect ;
+          sh:hasValue s223:Aspect-Threshold ;
+          sh:minCount 1 ;
+          sh:message "Must be aspected s223:Aspect-Threshold." ] .
+
+#################################################################
+# Connector shapes -- enumerated inputs
+#################################################################
+
+# rouZonFla : BooleanInput[nZon] "Flags for rogue zones"
+obc:rouZonFla a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Rogue zone flag" ;
+    rdfs:comment "True if the zone is excluded from demand flexibility setpoint changes." ;
+    sh:class s223:EnumeratedObservableProperty ;
+    sh:property
+        [ sh:path s223:hasEnumerationKind ;
+          sh:hasValue s223:Binary-Logical ;
+          sh:minCount 1 ;
+          sh:message "Rogue zone flag must be a logical binary property." ] ,
+        [ sh:path s223:hasAspect ;
+          sh:hasValue obc:Aspect-RogueZoneFlag ;
+          sh:minCount 1 ;
+          sh:message "Must be aspected obc:Aspect-RogueZoneFlag." ] .
+
+# demFleMod : IntegerInput "Demand flexibility mode"
+obc:demFleMod a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Demand flexibility mode" ;
+    rdfs:comment "Current demand flexibility operating mode driving the sequence." ;
+    sh:class s223:EnumeratedObservableProperty ;
+    sh:property
+        [ sh:path s223:hasEnumerationKind ;
+          sh:hasValue obc:EnumerationKind-DemandFlexibilityMode ;
+          sh:minCount 1 ;
+          sh:message "Mode must use obc:EnumerationKind-DemandFlexibilityMode." ] .
+
+#################################################################
+# Control target
+#
+# HeatingOrCooling is vectorised over nZon zones. The shape describes ONE zone;
+# binding produces one match per zone and the order of those matches is the
+# order of the connector arrays.
+#################################################################
+
+obc:hoc-zone a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Zone controlled by HeatingOrCooling" ;
+    sh:class s223:Zone ;
+    sh:property
+        [ sh:path s223:hasDomain ;
+          sh:hasValue s223:Domain-HVAC ;
+          sh:minCount 1 ;
+          sh:message "Controlled zone must be an HVAC domain zone." ] ,
+        [ sh:path s223:hasDomainSpace ;
+          sh:class s223:DomainSpace ;
+          sh:minCount 1 ;
+          sh:message "Zone must have at least one domain space." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:TCurZon ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a current zone temperature." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:TCurZonSet ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a zone temperature setpoint." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:TPreTarSet ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a pre-conditioning target setpoint." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:TSheTarSet ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a load-shed target setpoint." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:TDefSet ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a default target setpoint." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:rouZonFla ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a rogue zone flag." ] .
+
+# The building-level electrical service the sequence reads demand from.
+obc:hoc-electrical-service a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Building electrical service read by HeatingOrCooling" ;
+    sh:class s223:Zone ;
+    sh:property
+        [ sh:path s223:hasDomain ;
+          sh:hasValue s223:Domain-Electrical ;
+          sh:minCount 1 ;
+          sh:message "Electrical service must be an electrical domain zone." ] ,
+        [ sh:path s223:hasProperty ;
+          sh:qualifiedValueShape obc:PBui ;
+          sh:minCount 1 ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Electrical service must have a building electricity demand." ] .
+
+#################################################################
+# The sequence itself
+#################################################################
+
+obc:heating-or-cooling a rdfs:Class, sh:NodeShape ;
+    rdfs:label "HeatingOrCooling demand flexibility sequence" ;
+    rdfs:comment "Buildings.Controls.OBC.DemandFlexibility.ZoneTemperatureSetpointChange.HeatingOrCooling" ;
+    sh:class s223:Function ;
+    sh:property
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:TCurZon ;    sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:TCurZonSet ; sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:TPreTarSet ; sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:TSheTarSet ; sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:TDefSet ;    sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:rouZonFla ;  sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasInput ; sh:qualifiedValueShape obc:demFleMod ;  sh:minCount 1 ; sh:qualifiedMinCount 1 ] ,
+        [ sh:path s223:hasOutput ; sh:qualifiedValueShape obc:TComZonSet ; sh:minCount 1 ; sh:qualifiedMinCount 1 ] .
+
+#################################################################
+# Inference rules
+#
+# Label every node in a building model that conforms to a requirement shape
+# with that shape as an rdf:type, so binding can look the connector's target
+# class up directly.
+#################################################################
+
+obc:TCurZonAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableObservableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TCurZon ;
+        sh:condition obc:TCurZon ] .
+
+obc:PBuiAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableObservableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:PBui ;
+        sh:condition obc:PBui ] .
+
+obc:TCurZonSetAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TCurZonSet ;
+        sh:condition obc:TCurZonSet ] .
+
+obc:TComZonSetAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TComZonSet ;
+        sh:condition obc:TComZonSet ] .
+
+obc:TPreTarSetAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TPreTarSet ;
+        sh:condition obc:TPreTarSet ] .
+
+obc:TSheTarSetAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TSheTarSet ;
+        sh:condition obc:TSheTarSet ] .
+
+obc:TDefSetAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TDefSet ;
+        sh:condition obc:TDefSet ] .
+
+obc:PBuiThrVarAnnotation a sh:NodeShape ;
+    sh:targetClass s223:QuantifiableActuatableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:PBuiThrVar ;
+        sh:condition obc:PBuiThrVar ] .
+
+obc:rouZonFlaAnnotation a sh:NodeShape ;
+    sh:targetClass s223:EnumeratedObservableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:rouZonFla ;
+        sh:condition obc:rouZonFla ] .
+
+obc:demFleModAnnotation a sh:NodeShape ;
+    sh:targetClass s223:EnumeratedObservableProperty ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:demFleMod ;
+        sh:condition obc:demFleMod ] .
+
+obc:hoc-zoneAnnotation a sh:NodeShape ;
+    sh:targetClass s223:Zone ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:hoc-zone ;
+        sh:condition obc:hoc-zone ] .
+
+obc:hoc-electrical-serviceAnnotation a sh:NodeShape ;
+    sh:targetClass s223:Zone ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:hoc-electrical-service ;
+        sh:condition obc:hoc-electrical-service ] .

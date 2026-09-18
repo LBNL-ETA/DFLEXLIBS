@@ -1,0 +1,43 @@
+@prefix bldg:  <urn:example-building#> .
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix s223:  <http://data.ashrae.org/standard223#> .
+@prefix qudt:  <http://qudt.org/schema/qudt/> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+
+# Zone2: HVAC zone but missing the load-shed and default targets entirely.
+bldg:Zone2 a s223:Zone ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasDomainSpace bldg:Space2 ;
+    s223:hasProperty bldg:Zone2_TCurZon, bldg:Zone2_TCurZonSet, bldg:Zone2_TPreTarSet .
+
+bldg:Space2 a s223:DomainSpace ; s223:hasDomain s223:Domain-HVAC .
+
+# Duct temperature, NOT a zone temperature: sensor observes a connection, not a space.
+bldg:DuctTemp a s223:QuantifiableObservableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasExternalReference bldg:refD .
+bldg:DuctSensor a s223:Sensor ; s223:observes bldg:DuctTemp .
+bldg:refD a s223:BACnetExternalReference .
+
+bldg:Zone2_TempSensor a s223:Sensor ;
+    s223:observes bldg:Zone2_TCurZon ; s223:hasObservationLocation bldg:Space2 .
+
+# No external reference -> not addressable in the BAS.
+bldg:Zone2_TCurZon a s223:QuantifiableObservableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C .
+
+# Wrong unit (a pressure unit) for a temperature.
+bldg:Zone2_TCurZonSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:PA ;
+    s223:hasAspect s223:Aspect-Setpoint ;
+    s223:hasExternalReference bldg:refE .
+bldg:refE a s223:BACnetExternalReference .
+
+bldg:Zone2_TPreTarSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasAspect s223:Aspect-Setpoint, obc:Aspect-PreConditioningTarget .

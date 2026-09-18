@@ -1,0 +1,110 @@
+# OBC-Flex vocabulary extensions to Brick.
+#
+# Brick carries meaning in the class name rather than in aspects, so a point
+# that Brick has no class for needs a new subclass. Brick has classes for
+# load shedding, but they are power setpoints (brick:Load_Shed_Setpoint is a
+# brick:Load_Setpoint with quantity Power); there is nothing for the zone
+# temperature targets a demand flexibility sequence drives to. Those are added
+# here, along with a status point for the rogue zone flag and a mode point for
+# the demand flexibility mode.
+#
+# It also declares the two linking predicates that the CDL
+# __cdl(semantic(...)) annotations emit, so that this shape library is
+# self-describing.
+
+@prefix obc:    <urn:hpflex/shapes#> .
+@prefix brick:  <https://brickschema.org/schema/Brick#> .
+@prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+#################################################################
+# Linking predicates emitted by the CDL semantic annotations
+#################################################################
+
+obc:controls a rdf:Property ;
+    rdfs:label "controls" ;
+    rdfs:comment """Associates a CDL sequence instance with the shape describing
+the structure it controls (e.g. obc:hoc-zone). Used to select which template the
+sequence is targeting when resolving bindings.""" .
+
+obc:binds a rdf:Property ;
+    rdfs:label "binds" ;
+    rdfs:comment """Associates a single CDL connector (input or output) with the
+shape describing the semantic entity it must be bound to. The CDL side names the
+shape; this library defines what the shape requires.""" .
+
+#################################################################
+# Demand flexibility zone temperature targets
+#
+# All three are event targets rather than the zone's active setpoint. They share
+# a superclass so that the active-setpoint shapes can exclude them in one
+# constraint -- without it, every one of these would also match
+# obc:TCurZonSet, since Brick subclass entailment makes them
+# brick:Zone_Air_Temperature_Setpoint too.
+#################################################################
+
+obc:Demand_Flexibility_Zone_Air_Temperature_Setpoint a rdfs:Class ;
+    rdfs:subClassOf brick:Zone_Air_Temperature_Setpoint ;
+    brick:hasQuantity qudtqk:Temperature ;
+    rdfs:label "Demand Flexibility Zone Air Temperature Setpoint" ;
+    skos:definition """A zone air temperature setpoint that a demand flexibility
+sequence drives the zone to during an event, as opposed to the zone's active
+setpoint.""" .
+
+obc:Pre_Conditioning_Zone_Air_Temperature_Setpoint a rdfs:Class ;
+    rdfs:subClassOf obc:Demand_Flexibility_Zone_Air_Temperature_Setpoint ;
+    brick:hasQuantity qudtqk:Temperature ;
+    rdfs:label "Pre-Conditioning Zone Air Temperature Setpoint" ;
+    skos:definition """The zone air temperature target during a pre-cool or
+pre-heat period, ahead of a demand flexibility event.""" .
+
+obc:Load_Shed_Zone_Air_Temperature_Setpoint a rdfs:Class ;
+    rdfs:subClassOf obc:Demand_Flexibility_Zone_Air_Temperature_Setpoint ;
+    brick:hasQuantity qudtqk:Temperature ;
+    rdfs:label "Load Shed Zone Air Temperature Setpoint" ;
+    skos:definition """The zone air temperature target during a load-shed period.
+Distinct from brick:Load_Shed_Setpoint, which is a power setpoint.""" .
+
+obc:Default_Zone_Air_Temperature_Setpoint a rdfs:Class ;
+    rdfs:subClassOf obc:Demand_Flexibility_Zone_Air_Temperature_Setpoint ;
+    brick:hasQuantity qudtqk:Temperature ;
+    rdfs:label "Default Zone Air Temperature Setpoint" ;
+    skos:definition """The normal, non-event zone air temperature target the zone
+returns to when no demand flexibility mode is active.""" .
+
+#################################################################
+# Building electrical demand threshold
+#
+# brick:Demand_Setpoint is the right parent (a Setpoint with quantity Power),
+# but it is generic enough that a chiller or AHU demand setpoint would match it
+# too. This subclass pins it to the whole-building electrical demand limit that
+# the sequence controls against.
+#################################################################
+
+obc:Building_Electrical_Demand_Threshold_Setpoint a rdfs:Class ;
+    rdfs:subClassOf brick:Demand_Setpoint ;
+    brick:hasQuantity qudtqk:Power ;
+    rdfs:label "Building Electrical Demand Threshold Setpoint" ;
+    skos:definition """The whole-building electrical demand limit that a demand
+flexibility sequence controls against during an event.""" .
+
+#################################################################
+# Status points
+#################################################################
+
+obc:Rogue_Zone_Status a rdfs:Class ;
+    rdfs:subClassOf brick:Status ;
+    rdfs:label "Rogue Zone Status" ;
+    skos:definition """Indicates whether a zone is a rogue zone, i.e. one
+excluded from demand flexibility setpoint changes.""" .
+
+obc:Demand_Flexibility_Mode_Status a rdfs:Class ;
+    rdfs:subClassOf brick:Mode_Status ;
+    rdfs:label "Demand Flexibility Mode Status" ;
+    skos:definition """Indicates the demand flexibility operating mode currently
+driving the sequence. Values follow
+Buildings.Controls.OBC.DemandFlexibility.Types.DemandFlexibilityModes:
+0 = pre-condition (pre-cool or pre-heat), 1 = default, 2 = load-shed,
+3 = load-rebound.""" .

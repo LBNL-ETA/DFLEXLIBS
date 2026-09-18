@@ -1,0 +1,45 @@
+# Brick model exercising each rejection path.
+@prefix bldg:  <urn:example-building#> .
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref:   <https://brickschema.org/schema/Brick/ref#> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+
+# Zone2: missing the load-shed target, the default target and the rogue flag.
+bldg:Zone2 a brick:HVAC_Zone ;
+    brick:hasPoint bldg:Zone2_TCurZon, bldg:Zone2_TCurZonSet, bldg:Zone2_TPreTarSet .
+
+# No external reference -> not addressable in the BAS.
+bldg:Zone2_TCurZon a brick:Zone_Air_Temperature_Sensor ;
+    brick:hasUnit unit:DEG_C .
+
+# Wrong unit (a pressure unit) for a temperature.
+bldg:Zone2_TCurZonSet a brick:Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:PA ;
+    ref:hasExternalReference bldg:refE .
+bldg:refE a ref:BACnetReference .
+
+bldg:Zone2_TPreTarSet a obc:Pre_Conditioning_Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C .
+
+# A discharge air temperature sensor is not a zone air temperature sensor.
+bldg:DuctTemp a brick:Discharge_Air_Temperature_Sensor ;
+    brick:hasUnit unit:DEG_C ;
+    ref:hasExternalReference bldg:refD .
+bldg:refD a ref:BACnetReference .
+
+# A power sensor that is not a point of a building electrical meter.
+bldg:ChillerPower a brick:Electric_Power_Sensor ;
+    brick:hasUnit unit:KiloW ;
+    ref:hasExternalReference bldg:refP .
+bldg:refP a ref:BACnetReference .
+bldg:Chiller a brick:Chiller ; brick:hasPoint bldg:ChillerPower .
+
+# The Brick-specific trap: a demand flexibility target is also, by subclass
+# entailment, a brick:Zone_Air_Temperature_Setpoint. It must NOT be offered as a
+# candidate for the active setpoint connector.
+bldg:Zone3 a brick:HVAC_Zone ; brick:hasPoint bldg:Zone3_TSheTarSet .
+bldg:Zone3_TSheTarSet a obc:Load_Shed_Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C ;
+    ref:hasExternalReference bldg:refS .
+bldg:refS a ref:BACnetReference .

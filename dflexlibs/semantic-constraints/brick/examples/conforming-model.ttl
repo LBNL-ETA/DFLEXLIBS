@@ -1,0 +1,49 @@
+# Minimal Brick model that satisfies every HeatingOrCooling shape.
+@prefix bldg:  <urn:example-building#> .
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref:   <https://brickschema.org/schema/Brick/ref#> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+
+bldg:Zone1 a brick:HVAC_Zone ;
+    brick:hasPoint bldg:Zone1_TCurZon, bldg:Zone1_TCurZonSet,
+        bldg:Zone1_TPreTarSet, bldg:Zone1_TSheTarSet, bldg:Zone1_TDefSet,
+        bldg:Zone1_rouZonFla .
+
+bldg:Zone1_TCurZon a brick:Zone_Air_Temperature_Sensor ;
+    brick:hasUnit unit:DEG_C ;
+    ref:hasExternalReference bldg:ref1 .
+
+bldg:Zone1_TCurZonSet a brick:Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C ;
+    ref:hasExternalReference bldg:ref2 .
+
+bldg:Zone1_TPreTarSet a obc:Pre_Conditioning_Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C .
+
+bldg:Zone1_TSheTarSet a obc:Load_Shed_Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C .
+
+bldg:Zone1_TDefSet a obc:Default_Zone_Air_Temperature_Setpoint ;
+    brick:hasUnit unit:DEG_C .
+
+bldg:Zone1_rouZonFla a obc:Rogue_Zone_Status .
+
+bldg:DemandFlexMode a obc:Demand_Flexibility_Mode_Status .
+
+bldg:Meter a brick:Building_Electrical_Meter ;
+    brick:hasPoint bldg:PBui, bldg:PBuiThr .
+
+bldg:PBui a brick:Electric_Power_Sensor ;
+    brick:hasUnit unit:W ;
+    ref:hasExternalReference bldg:ref3 .
+
+bldg:PBuiThr a obc:Building_Electrical_Demand_Threshold_Setpoint ;
+    brick:hasUnit unit:KiloW ;
+    ref:hasExternalReference bldg:ref4 .
+
+bldg:ref1 a ref:BACnetReference ; bacnet:object-identifier "analog-input,1" .
+bldg:ref2 a ref:BACnetReference ; bacnet:object-identifier "analog-value,2" .
+bldg:ref3 a ref:BACnetReference ; bacnet:object-identifier "analog-input,3" .
+bldg:ref4 a ref:BACnetReference ; bacnet:object-identifier "analog-value,4" .

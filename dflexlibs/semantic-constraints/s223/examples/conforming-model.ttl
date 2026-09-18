@@ -1,0 +1,70 @@
+@prefix bldg:  <urn:example-building#> .
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix s223:  <http://data.ashrae.org/standard223#> .
+@prefix qudt:  <http://qudt.org/schema/qudt/> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+@prefix quantitykind: <http://qudt.org/vocab/quantitykind/> .
+@prefix bacnet: <http://data.ashrae.org/bacnet/2020#> .
+
+bldg:Zone1 a s223:Zone ;
+    s223:hasDomain s223:Domain-HVAC ;
+    s223:hasDomainSpace bldg:Space1 ;
+    s223:hasProperty bldg:Zone1_TCurZon, bldg:Zone1_TCurZonSet,
+        bldg:Zone1_TPreTarSet, bldg:Zone1_TSheTarSet, bldg:Zone1_TDefSet,
+        bldg:Zone1_rouZonFla .
+
+bldg:Space1 a s223:DomainSpace ;
+    s223:hasDomain s223:Domain-HVAC .
+
+bldg:Zone1_TempSensor a s223:Sensor ;
+    s223:observes bldg:Zone1_TCurZon ;
+    s223:hasObservationLocation bldg:Space1 .
+
+bldg:Zone1_TCurZon a s223:QuantifiableObservableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasExternalReference bldg:ref1 .
+
+bldg:Zone1_TCurZonSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasAspect s223:Aspect-Setpoint ;
+    s223:hasExternalReference bldg:ref2 .
+
+bldg:Zone1_TPreTarSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasAspect s223:Aspect-Setpoint, obc:Aspect-PreConditioningTarget .
+
+bldg:Zone1_TSheTarSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasAspect s223:Aspect-Setpoint, obc:Aspect-LoadShedTarget .
+
+bldg:Zone1_TDefSet a s223:QuantifiableActuatableProperty ;
+    qudt:hasQuantityKind quantitykind:Temperature ;
+    qudt:hasUnit unit:DEG_C ;
+    s223:hasAspect s223:Aspect-Setpoint, obc:Aspect-DefaultTarget .
+
+bldg:Zone1_rouZonFla a s223:EnumeratedObservableProperty ;
+    s223:hasEnumerationKind s223:Binary-Logical ;
+    s223:hasAspect obc:Aspect-RogueZoneFlag .
+
+bldg:DemandFlexMode a s223:EnumeratedObservableProperty ;
+    s223:hasEnumerationKind obc:EnumerationKind-DemandFlexibilityMode .
+
+bldg:ElecService a s223:Zone ;
+    s223:hasDomain s223:Domain-Electrical ;
+    s223:hasProperty bldg:PBui .
+
+bldg:Meter a s223:ElectricityMeter ;
+    s223:observes bldg:PBui .
+
+bldg:PBui a s223:QuantifiableObservableProperty ;
+    qudt:hasQuantityKind quantitykind:ActivePower ;
+    qudt:hasUnit unit:W ;
+    s223:hasExternalReference bldg:ref3 .
+
+bldg:ref1 a s223:BACnetExternalReference ; bacnet:object-identifier "analog-input,1" .
+bldg:ref2 a s223:BACnetExternalReference ; bacnet:object-identifier "analog-value,2" .
+bldg:ref3 a s223:BACnetExternalReference ; bacnet:object-identifier "analog-input,3" .

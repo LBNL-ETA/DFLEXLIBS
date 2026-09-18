@@ -1,0 +1,123 @@
+# OBC-Flex vocabulary extensions to ASHRAE 223P.
+#
+# 223P has no terms for demand-flexibility-specific concepts, so this file adds
+# them the way 223P adds its own: as EnumerationKind subclasses that are punned
+# as both a class and an instance of themselves (the pattern used by
+# s223:Aspect-Setpoint, s223:Aspect-Threshold, etc.).
+#
+# It also declares the two linking predicates that the CDL __cdl(semantic(...))
+# annotations emit, so that this shape library is self-describing.
+
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix s223:  <http://data.ashrae.org/standard223#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+
+#################################################################
+# Linking predicates emitted by the CDL semantic annotations
+#################################################################
+
+obc:controls a rdf:Property ;
+    rdfs:label "controls" ;
+    rdfs:comment """Associates a CDL sequence instance with the shape describing
+the structure it controls (e.g. obc:hoc-zone). Used to select which template the
+sequence is targeting when resolving bindings.""" .
+
+obc:binds a rdf:Property ;
+    rdfs:label "binds" ;
+    rdfs:comment """Associates a single CDL connector (input or output) with the
+shape describing the semantic entity it must be bound to. The CDL side names the
+shape; this library defines what the shape requires.""" .
+
+#################################################################
+# Aspects
+#
+# All of the temperature setpoint inputs of the DF sequences are
+# s223:Aspect-Setpoint. These additional aspects distinguish *which*
+# setpoint, which 223P alone cannot express.
+#################################################################
+
+obc:Aspect-DemandFlexibilityTarget a s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf s223:EnumerationKind-Aspect ;
+    rdfs:label "Demand flexibility target" ;
+    rdfs:comment """Groups the aspects that mark a setpoint as an event target
+rather than the zone's active setpoint. The active-setpoint shapes exclude any
+property carrying an aspect of this kind, so that a zone's event targets are not
+also candidates for the active setpoint connector.""" .
+
+obc:Aspect-PreConditioningTarget a obc:Aspect-PreConditioningTarget,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:Aspect-DemandFlexibilityTarget ;
+    rdfs:label "Pre-conditioning target" ;
+    rdfs:comment """The property value is the target the zone is driven to during
+a pre-cool or pre-heat period, ahead of a demand flexibility event.""" .
+
+obc:Aspect-LoadShedTarget a obc:Aspect-LoadShedTarget,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:Aspect-DemandFlexibilityTarget ;
+    rdfs:label "Load-shed target" ;
+    rdfs:comment """The property value is the target the zone is driven to during
+a load-shed period.""" .
+
+obc:Aspect-DefaultTarget a obc:Aspect-DefaultTarget,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:Aspect-DemandFlexibilityTarget ;
+    rdfs:label "Default target" ;
+    rdfs:comment """The property value is the normal, non-event target the zone
+returns to when no demand flexibility mode is active.""" .
+
+obc:Aspect-RogueZoneFlag a obc:Aspect-RogueZoneFlag,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf s223:EnumerationKind-Aspect ;
+    rdfs:label "Rogue zone flag" ;
+    rdfs:comment """The property value indicates whether a zone is a rogue zone,
+i.e. one excluded from demand flexibility setpoint changes.""" .
+
+#################################################################
+# Demand flexibility mode
+#
+# Mirrors the integer constants in
+# Buildings.Controls.OBC.DemandFlexibility.Types.DemandFlexibilityModes.
+#################################################################
+
+obc:EnumerationKind-DemandFlexibilityMode a s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf s223:EnumerationKind ;
+    rdfs:label "Demand flexibility mode" ;
+    rdfs:comment """The operating mode of a demand flexibility sequence. The
+numeric values are those carried on the demFleMod connector of the CDL
+sequences.""" .
+
+obc:DemandFlexibilityMode-PreCondition a obc:EnumerationKind-DemandFlexibilityMode,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:EnumerationKind-DemandFlexibilityMode ;
+    rdfs:label "Pre-condition" ;
+    rdfs:comment "Pre-cool or pre-heat. CDL value 0." .
+
+obc:DemandFlexibilityMode-Default a obc:EnumerationKind-DemandFlexibilityMode,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:EnumerationKind-DemandFlexibilityMode ;
+    rdfs:label "Default" ;
+    rdfs:comment "Normal operation, no event active. CDL value 1." .
+
+obc:DemandFlexibilityMode-LoadShed a obc:EnumerationKind-DemandFlexibilityMode,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:EnumerationKind-DemandFlexibilityMode ;
+    rdfs:label "Load-shed" ;
+    rdfs:comment "Load-shed period. CDL value 2." .
+
+obc:DemandFlexibilityMode-LoadRebound a obc:EnumerationKind-DemandFlexibilityMode,
+        s223:Class,
+        sh:NodeShape ;
+    rdfs:subClassOf obc:EnumerationKind-DemandFlexibilityMode ;
+    rdfs:label "Load-rebound" ;
+    rdfs:comment "Load-rebound period following a load-shed period. CDL value 3." .

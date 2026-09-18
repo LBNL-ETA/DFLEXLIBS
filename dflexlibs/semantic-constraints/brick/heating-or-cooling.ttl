@@ -1,0 +1,304 @@
+# Brick semantic constraints for
+# Buildings.Controls.OBC.DemandFlexibility.ZoneTemperatureSetpointChange.HeatingOrCooling
+#
+# The Brick counterpart of ../s223/heating-or-cooling.ttl. Same connectors, same
+# structure, but the requirements are expressed the way Brick expresses meaning:
+# through the point's class rather than through aspects on a property.
+#
+# Each requirement shape is paired with an "Annotation" node shape carrying a
+# sh:TripleRule, so that running inference over a building model labels every
+# conforming node with the shape's class. Binding then resolves a CDL connector
+# to a node of the class its obc:binds annotation names.
+#
+# Requires: obc-extensions.ttl
+
+@prefix obc:   <urn:hpflex/shapes#> .
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix ref:   <https://brickschema.org/schema/Brick/ref#> .
+@prefix unit:  <http://qudt.org/vocab/unit/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+
+#################################################################
+# Shared property shapes
+#################################################################
+
+# Every connector must resolve to something addressable in the BAS. Drop this
+# from the point shapes below if you want to match models that do not yet carry
+# external references.
+obc:has-external-ref a sh:PropertyShape ;
+    rdfs:label "has a BACnet external reference" ;
+    sh:path ref:hasExternalReference ;
+    sh:minCount 1 ;
+    sh:qualifiedValueShape [ sh:class ref:BACnetReference ] ;
+    sh:qualifiedMinCount 1 ;
+    sh:message "Point must carry at least one ref:BACnetReference." .
+
+# CDL works internally in kelvin; real BAS points are commonly degC or degF.
+# Unit conversion is the translator's job, so accept all three here.
+obc:temperature-unit a sh:PropertyShape ;
+    sh:path brick:hasUnit ;
+    sh:in ( unit:K unit:DEG_C unit:DEG_F ) ;
+    sh:minCount 1 ;
+    sh:message "Temperature must be in K, degC or degF." .
+
+obc:power-unit a sh:PropertyShape ;
+    sh:path brick:hasUnit ;
+    sh:in ( unit:W unit:KiloW unit:MegaW ) ;
+    sh:minCount 1 ;
+    sh:message "Power must be in W, kW or MW." .
+
+# Brick subclass entailment makes every demand flexibility target a
+# brick:Zone_Air_Temperature_Setpoint as well, so the active setpoint has to say
+# explicitly that it is not one of them.
+#
+# This is a node constraint, not a property shape: it has to test the type of
+# the focus node itself. Testing it as sh:class over the rdf:type path does NOT
+# work, because the value node there is the class, and a Brick class is an
+# rdfs:Class rather than an instance of itself. (223P aspects are punned that
+# way, which is why the s223 shapes can express the same rule as a property
+# shape.)
+obc:not-a-df-target a sh:NodeShape ;
+    rdfs:label "is not a demand flexibility target setpoint" ;
+    sh:not [ sh:class obc:Demand_Flexibility_Zone_Air_Temperature_Setpoint ] ;
+    sh:message "The active zone setpoint must not also be a demand flexibility event target (pre-conditioning, load-shed or default)." .
+
+#################################################################
+# Connector shapes -- zone temperature
+#################################################################
+
+# TCurZon : RealInput[nZon] "Current zone temperature"
+obc:TCurZon a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Current zone temperature" ;
+    rdfs:comment "Measured zone air temperature, read by the sequence." ;
+    sh:class brick:Zone_Air_Temperature_Sensor ;
+    sh:property
+        obc:temperature-unit ,
+        obc:has-external-ref .
+
+# TCurZonSet : RealInput[nZon]
+#   "Current zone temperature setpoint from the external setpoint controller"
+#
+# TCurZonSet and TComZonSet are deliberately given the same requirements: the
+# sequence reads the active zone setpoint and writes it back. In most buildings
+# both connectors resolve to the *same* point. The read/write distinction is
+# carried by the CDL connector direction, not by the Brick class.
+obc:TCurZonSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Current zone temperature setpoint" ;
+    rdfs:comment "Active zone temperature setpoint held by the external setpoint controller." ;
+    sh:class brick:Zone_Air_Temperature_Setpoint ;
+    sh:node obc:not-a-df-target ;
+    sh:property
+        obc:temperature-unit ,
+        obc:has-external-ref .
+
+# TComZonSet : RealOutput[nZon]
+#   "Commanded zone temperature setpoint to the external setpoint controller"
+obc:TComZonSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Commanded zone temperature setpoint" ;
+    rdfs:comment "Zone temperature setpoint written by the sequence. Normally the same point as obc:TCurZonSet." ;
+    sh:class brick:Zone_Air_Temperature_Setpoint ;
+    sh:node obc:not-a-df-target ;
+    sh:property
+        obc:temperature-unit ,
+        obc:has-external-ref .
+
+#################################################################
+# Connector shapes -- demand flexibility target setpoints
+#################################################################
+
+# TPreTarSet : RealInput[nZon] "Pre-cool or pre-heat target temperature setpoint"
+obc:TPreTarSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Pre-conditioning target temperature setpoint" ;
+    sh:class obc:Pre_Conditioning_Zone_Air_Temperature_Setpoint ;
+    sh:property obc:temperature-unit .
+
+# TSheTarSet : RealInput[nZon] "Load-shed target temperature setpoint"
+obc:TSheTarSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Load-shed target temperature setpoint" ;
+    sh:class obc:Load_Shed_Zone_Air_Temperature_Setpoint ;
+    sh:property obc:temperature-unit .
+
+# TDefSet : RealInput[nZon] "Default temperature setpoint"
+obc:TDefSet a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Default temperature setpoint" ;
+    sh:class obc:Default_Zone_Air_Temperature_Setpoint ;
+    sh:property obc:temperature-unit .
+
+#################################################################
+# Connector shapes -- building electrical demand
+#################################################################
+
+# PBui : RealInput "Electricity demand of the building"
+obc:PBui a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Building electricity demand" ;
+    rdfs:comment "Whole-building electric power, reported by a point of the building electrical meter." ;
+    sh:class brick:Electric_Power_Sensor ;
+    sh:property
+        obc:power-unit ,
+        obc:has-external-ref ,
+        [ sh:path [ sh:inversePath brick:hasPoint ] ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape [ sh:class brick:Building_Electrical_Meter ] ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Building electricity demand must be a point of a brick:Building_Electrical_Meter." ] .
+
+# PBuiThrVar : RealInput "Variable threshold for the electricity demand of the building"
+obc:PBuiThrVar a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Variable building electricity demand threshold" ;
+    rdfs:comment "Externally supplied demand limit that the sequence controls against." ;
+    sh:class obc:Building_Electrical_Demand_Threshold_Setpoint ;
+    sh:property
+        obc:power-unit ,
+        obc:has-external-ref .
+
+#################################################################
+# Connector shapes -- status inputs
+#################################################################
+
+# rouZonFla : BooleanInput[nZon] "Flags for rogue zones"
+obc:rouZonFla a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Rogue zone flag" ;
+    rdfs:comment "True if the zone is excluded from demand flexibility setpoint changes." ;
+    sh:class obc:Rogue_Zone_Status .
+
+# demFleMod : IntegerInput "Demand flexibility mode"
+obc:demFleMod a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Demand flexibility mode" ;
+    rdfs:comment "Current demand flexibility operating mode driving the sequence." ;
+    sh:class obc:Demand_Flexibility_Mode_Status .
+
+#################################################################
+# Control target
+#
+# HeatingOrCooling is vectorised over nZon zones. The shape describes ONE zone;
+# binding produces one match per zone and the order of those matches is the
+# order of the connector arrays.
+#################################################################
+
+obc:hoc-zone a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Zone controlled by HeatingOrCooling" ;
+    sh:class brick:HVAC_Zone ;
+    sh:property
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:TCurZon ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a zone air temperature sensor." ] ,
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:TCurZonSet ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a zone air temperature setpoint." ] ,
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:TPreTarSet ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a pre-conditioning target setpoint." ] ,
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:TSheTarSet ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a load-shed target setpoint." ] ,
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:TDefSet ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a default target setpoint." ] ,
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:rouZonFla ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Zone must have a rogue zone status point." ] .
+
+# The building electrical meter the sequence reads demand from.
+obc:hoc-electrical-meter a rdfs:Class, sh:NodeShape ;
+    rdfs:label "Building electrical meter read by HeatingOrCooling" ;
+    sh:class brick:Building_Electrical_Meter ;
+    sh:property
+        [ sh:path brick:hasPoint ;
+          sh:minCount 1 ;
+          sh:qualifiedValueShape obc:PBui ;
+          sh:qualifiedMinCount 1 ;
+          sh:message "Meter must have an electric power sensor." ] .
+
+#################################################################
+# Inference rules
+#
+# Label every node in a building model that conforms to a requirement shape
+# with that shape as an rdf:type, so binding can look the connector's target
+# class up directly.
+#################################################################
+
+obc:TCurZonAnnotation a sh:NodeShape ;
+    sh:targetClass brick:Zone_Air_Temperature_Sensor ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TCurZon ;
+        sh:condition obc:TCurZon ] .
+
+obc:TCurZonSetAnnotation a sh:NodeShape ;
+    sh:targetClass brick:Zone_Air_Temperature_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TCurZonSet ;
+        sh:condition obc:TCurZonSet ] .
+
+obc:TComZonSetAnnotation a sh:NodeShape ;
+    sh:targetClass brick:Zone_Air_Temperature_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TComZonSet ;
+        sh:condition obc:TComZonSet ] .
+
+obc:TPreTarSetAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Pre_Conditioning_Zone_Air_Temperature_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TPreTarSet ;
+        sh:condition obc:TPreTarSet ] .
+
+obc:TSheTarSetAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Load_Shed_Zone_Air_Temperature_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TSheTarSet ;
+        sh:condition obc:TSheTarSet ] .
+
+obc:TDefSetAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Default_Zone_Air_Temperature_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:TDefSet ;
+        sh:condition obc:TDefSet ] .
+
+obc:PBuiAnnotation a sh:NodeShape ;
+    sh:targetClass brick:Electric_Power_Sensor ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:PBui ;
+        sh:condition obc:PBui ] .
+
+obc:PBuiThrVarAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Building_Electrical_Demand_Threshold_Setpoint ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:PBuiThrVar ;
+        sh:condition obc:PBuiThrVar ] .
+
+obc:rouZonFlaAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Rogue_Zone_Status ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:rouZonFla ;
+        sh:condition obc:rouZonFla ] .
+
+obc:demFleModAnnotation a sh:NodeShape ;
+    sh:targetClass obc:Demand_Flexibility_Mode_Status ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:demFleMod ;
+        sh:condition obc:demFleMod ] .
+
+obc:hoc-zoneAnnotation a sh:NodeShape ;
+    sh:targetClass brick:HVAC_Zone ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:hoc-zone ;
+        sh:condition obc:hoc-zone ] .
+
+obc:hoc-electrical-meterAnnotation a sh:NodeShape ;
+    sh:targetClass brick:Building_Electrical_Meter ;
+    sh:rule [ a sh:TripleRule ;
+        sh:subject sh:this ; sh:predicate rdf:type ; sh:object obc:hoc-electrical-meter ;
+        sh:condition obc:hoc-electrical-meter ] .
