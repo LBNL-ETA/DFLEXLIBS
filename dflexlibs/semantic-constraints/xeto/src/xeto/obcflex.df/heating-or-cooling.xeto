@@ -1,0 +1,79 @@
+//
+// Semantic requirements for
+// Buildings.Controls.OBC.DemandFlexibility.ZoneTemperatureSetpointChange.HeatingOrCooling
+//
+// Structured after ashrae.g36::G36Vav: an equip spec whose `points` slot lists
+// what the sequence needs.
+//
+// Note the container. In s223 the connectors hang off an s223:Zone via
+// hasProperty, and in Brick off a brick:HVAC_Zone via hasPoint. Haystack has no
+// equivalent: `points` is a Query on ph::Equip and ph::Space does not have one.
+// Zone points in Haystack belong to the equip serving the zone and reference
+// the space through spaceRef. So the control target here is the zone equip, and
+// the zone itself is reached through it.
+//
+
+// Zone equipment controlled by the HeatingOrCooling demand flexibility
+// sequence. One instance per zone; the sequence is vectorised over nZon zones
+// and binding produces one match per zone, in connector-array order.
+DfHeatingOrCoolingZoneEquip : Equip {
+  dfHeatingOrCooling
+
+  // Space served by this equip. Required, because the sequence controls a
+  // zone and the binding has to know which one.
+  spaceRef: Ref
+
+  points: {
+    // TCurZon    : RealInput[nZon]  "Current zone temperature"
+    ZoneAirTempSensor
+
+    // TCurZonSet : RealInput[nZon]  "Current zone temperature setpoint"
+    // TComZonSet : RealOutput[nZon] "Commanded zone temperature setpoint"
+    //
+    // One point, not two. The sequence reads the active zone setpoint and
+    // writes it back, so both connectors normally resolve to the same record.
+    // The read/write distinction is the CDL connector direction.
+    //
+    // This must be the *effective* setpoint, not plain ZoneAirTempSp. The three
+    // demand flexibility targets below inherit from ZoneAirTempSp, so requiring
+    // that here matches all four and `xeto fits -graph` rightly reports
+    // "Ambiguous match". ZoneAirTempEffectiveSp is a sibling of the targets,
+    // which resolves it without needing a negation Xeto does not have.
+    ZoneAirTempEffectiveSp
+
+    // TPreTarSet : RealInput[nZon]  "Pre-cool or pre-heat target setpoint"
+    PreConditionZoneAirTempSp
+
+    // TSheTarSet : RealInput[nZon]  "Load-shed target setpoint"
+    LoadShedZoneAirTempSp
+
+    // TDefSet    : RealInput[nZon]  "Default temperature setpoint"
+    DefaultZoneAirTempSp
+
+    // rouZonFla  : BooleanInput[nZon] "Rogue zone flag"
+    RogueZoneSp
+  }
+}
+
+// Building electrical meter the sequence reads whole-building demand from.
+// Only required for ZoneControlVariant 3 and 4.
+DfHeatingOrCoolingElecMeter : ElecMeter {
+  points: {
+    // PBui       : RealInput "Electricity demand of the building"
+    ElecAcActivePowerSensor
+
+    // PBuiThrVar : RealInput "Variable building demand threshold"
+    ElecDemandThresholdSp
+  }
+}
+
+// The demand flexibility supervisor that publishes the mode to the sequences.
+// demFleMod is a single building-level input rather than a per-zone point, so
+// it does not belong on the zone equip.
+DfSupervisor : Equip {
+  dfSupervisor
+  points: {
+    // demFleMod : IntegerInput "Demand flexibility mode"
+    DfModeSp
+  }
+}

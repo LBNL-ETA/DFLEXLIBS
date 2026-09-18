@@ -12,7 +12,7 @@
 # __cdl(semantic(...)) annotations emit, so that this shape library is
 # self-describing.
 
-@prefix obc:    <urn:hpflex/shapes#> .
+@prefix obc:    <urn:obc/shapes#> .
 @prefix brick:  <https://brickschema.org/schema/Brick#> .
 @prefix qudtqk: <http://qudt.org/vocab/quantitykind/> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .

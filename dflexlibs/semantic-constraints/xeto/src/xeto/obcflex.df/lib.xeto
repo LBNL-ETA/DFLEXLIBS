@@ -1,0 +1,23 @@
+//
+// OBC-Flex demand flexibility control sequence requirements.
+//
+// Modelled on ashrae.g36 (xeto/src/xeto/ashrae.g36), which expresses ASHRAE
+// Guideline 36 sequence requirements the same way: an equip spec whose
+// `points` slot lists the points the sequence needs.
+//
+
+pragma: Lib <
+  doc: "Semantic requirements for the OBC-Flex demand flexibility CDL sequences"
+  version: "0.1.0"
+  depends: {
+    { lib: "sys",            versions: "5.x.x" }
+    { lib: "ph",             versions: "5.x.x" }
+    { lib: "ph.points",      versions: "5.x.x" }
+    { lib: "ph.elec",        versions: "5.x.x" }
+  }
+  categories: {"hvac"}
+  org: {
+    dis: "Lawrence Berkeley National Laboratory"
+    uri: "https://github.com/LBNL-ETA/DFLEXLIBS"
+  }
+>

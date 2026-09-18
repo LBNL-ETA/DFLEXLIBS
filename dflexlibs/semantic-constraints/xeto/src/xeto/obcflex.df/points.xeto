@@ -1,0 +1,102 @@
+//
+// Point specs for the demand flexibility sequences.
+//
+// Haystack has no demand flexibility vocabulary -- the searches for loadShed,
+// demandResponse, curtail and precool tags across xeto/ and haystack-defs/ all
+// come back empty -- so the event targets, the rogue zone flag and the mode
+// point are defined here, the same way the s223 and brick libraries had to
+// define their own.
+//
+
+//////////////////////////////////////////////////////////////////////////
+// Demand flexibility setpoint role
+//
+// A Choice is a taxonomy where an instance selects exactly one subtype. This
+// is what keeps the three event targets distinct from each other, and is the
+// reason the Haystack library needs no explicit exclusion constraint of the
+// kind the s223 and brick libraries both required.
+//////////////////////////////////////////////////////////////////////////
+
+// Which demand flexibility target a zone temperature setpoint represents
+DfSetpointRole: Choice
+
+// Target during a pre-cool or pre-heat period, ahead of an event
+PreConditionDfSetpointRole : DfSetpointRole { dfPreCondition }
+
+// Target during a load-shed period
+LoadShedDfSetpointRole : DfSetpointRole { dfLoadShed }
+
+// Target when no demand flexibility mode is active
+DefaultDfSetpointRole : DfSetpointRole { dfDefault }
+
+//////////////////////////////////////////////////////////////////////////
+// Demand flexibility zone temperature targets
+//
+// All three carry the `dfTarget` marker. It is not needed to tell them apart
+// -- the Choice does that -- but it is what lets a Haystack filter exclude
+// them in one term when looking for the zone's *active* setpoint, which is
+// otherwise matched by these too through spec inheritance.
+//////////////////////////////////////////////////////////////////////////
+
+// Zone air temperature setpoint used as a demand flexibility event target,
+// as opposed to the zone's active setpoint
+DfZoneAirTempSp : ZoneAirTempSp <abstract> {
+  dfTarget
+  dfSetpointRole: DfSetpointRole
+}
+
+// Zone air temperature target during a pre-cool or pre-heat period
+PreConditionZoneAirTempSp : DfZoneAirTempSp {
+  dfSetpointRole: PreConditionDfSetpointRole
+}
+
+// Zone air temperature target during a load-shed period
+LoadShedZoneAirTempSp : DfZoneAirTempSp {
+  dfSetpointRole: LoadShedDfSetpointRole
+}
+
+// Zone air temperature target when no demand flexibility mode is active
+DefaultZoneAirTempSp : DfZoneAirTempSp {
+  dfSetpointRole: DefaultDfSetpointRole
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Building electrical demand threshold
+//////////////////////////////////////////////////////////////////////////
+
+// Whole-building electric demand limit a demand flexibility sequence
+// controls against during an event
+ElecDemandThresholdSp : NumberPoint & SpPoint {
+  elec
+  power
+  dfThreshold
+  unit: Unit <quantity:"power"> "kW"
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Status and mode points
+//////////////////////////////////////////////////////////////////////////
+
+// Flag marking a zone as a rogue zone, i.e. one excluded from demand
+// flexibility setpoint changes
+RogueZoneSp : BoolPoint & SpPoint {
+  zone
+  dfRogueZone
+}
+
+// Demand flexibility operating mode. Keys correspond to the integer
+// constants in
+// Buildings.Controls.OBC.DemandFlexibility.Types.DemandFlexibilityModes:
+// preCondition = 0, default = 1, loadShed = 2, loadRebound = 3.
+DfModeEnum: Enum {
+  preCondition <doc:"Pre-cool or pre-heat. CDL value 0.">
+  normal       <key:"default", doc:"No event active. CDL value 1.">
+  loadShed     <doc:"Load-shed period. CDL value 2.">
+  loadRebound  <doc:"Load-rebound period following a load-shed. CDL value 3.">
+}
+
+// Current demand flexibility operating mode driving the sequence
+DfModeSp : EnumPoint & SpPoint {
+  dfMode
+  enum: DfModeEnum
+}

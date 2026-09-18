@@ -1,0 +1,98 @@
+// Records exercising each rejection path. Every rec here should produce at
+// least one error from `xeto fits -graph`.
+id: @site
+dis: "Example Site"
+spec: @ph::Site
+site
+---
+id: @zone2
+dis: "Zone 2"
+spec: @ph::ZoneSpace
+space
+zone
+siteRef: @site
+---
+// Zone 2 equip: missing the load-shed target, the default target and the
+// rogue zone flag.
+id: @zone2Equip
+dis: "Zone 2 DF Controller"
+spec: @obcflex.df::DfHeatingOrCoolingZoneEquip
+equip
+dfHeatingOrCooling
+siteRef: @site
+spaceRef: @zone2
+---
+id: @zone2TCurZon
+dis: "Zone 2 Air Temp"
+spec: @ph.points::ZoneAirTempSensor
+point
+sensor
+zone
+air
+temp
+kind: "Number"
+unit: "°C"
+equipRef: @zone2Equip
+siteRef: @site
+---
+id: @zone2TCurZonSet
+dis: "Zone 2 Air Temp Sp"
+spec: @ph.points::ZoneAirTempEffectiveSp
+point
+sp
+zone
+air
+temp
+effective
+kind: "Number"
+unit: "°C"
+equipRef: @zone2Equip
+siteRef: @site
+---
+id: @zone2TPreTarSet
+dis: "Zone 2 Pre-Conditioning Target"
+spec: @obcflex.df::PreConditionZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+dfPreCondition
+kind: "Number"
+unit: "°C"
+equipRef: @zone2Equip
+siteRef: @site
+---
+// A demand flexibility target that omits its role marker. The Choice slot is
+// required, so this must be rejected rather than silently treated as some
+// unspecified target.
+id: @zone2TSheTarSetNoRole
+dis: "Zone 2 Load Shed Target, no role"
+spec: @obcflex.df::LoadShedZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+kind: "Number"
+unit: "°C"
+equipRef: @zone2Equip
+siteRef: @site
+---
+// Wrong unit family: a pressure unit on a temperature setpoint.
+id: @zone2BadUnit
+dis: "Zone 2 Default Target, wrong unit"
+spec: @obcflex.df::DefaultZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+dfDefault
+kind: "Number"
+unit: "kPa"
+equipRef: @zone2Equip
+siteRef: @site

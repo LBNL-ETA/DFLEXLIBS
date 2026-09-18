@@ -1,0 +1,161 @@
+// Haystack records that should satisfy every obcflex.df spec.
+id: @site
+dis: "Example Site"
+spec: @ph::Site
+site
+---
+id: @zone1
+dis: "Zone 1"
+spec: @ph::ZoneSpace
+space
+zone
+siteRef: @site
+---
+id: @zone1Equip
+dis: "Zone 1 DF Controller"
+spec: @obcflex.df::DfHeatingOrCoolingZoneEquip
+equip
+dfHeatingOrCooling
+siteRef: @site
+spaceRef: @zone1
+---
+id: @zone1TCurZon
+dis: "Zone 1 Air Temp"
+spec: @ph.points::ZoneAirTempSensor
+point
+sensor
+zone
+air
+temp
+kind: "Number"
+unit: "°C"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @zone1TCurZonSet
+dis: "Zone 1 Air Temp Sp"
+spec: @ph.points::ZoneAirTempEffectiveSp
+point
+sp
+zone
+air
+temp
+effective
+kind: "Number"
+unit: "°C"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @zone1TPreTarSet
+dis: "Zone 1 Pre-Conditioning Target"
+spec: @obcflex.df::PreConditionZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+dfPreCondition
+kind: "Number"
+unit: "°C"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @zone1TSheTarSet
+dis: "Zone 1 Load Shed Target"
+spec: @obcflex.df::LoadShedZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+dfLoadShed
+kind: "Number"
+unit: "°C"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @zone1TDefSet
+dis: "Zone 1 Default Target"
+spec: @obcflex.df::DefaultZoneAirTempSp
+point
+sp
+zone
+air
+temp
+dfTarget
+dfDefault
+kind: "Number"
+unit: "°C"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @zone1RouZonFla
+dis: "Zone 1 Rogue Zone Flag"
+spec: @obcflex.df::RogueZoneSp
+point
+sp
+zone
+dfRogueZone
+kind: "Bool"
+equipRef: @zone1Equip
+siteRef: @site
+---
+id: @meter
+dis: "Building Electrical Meter"
+spec: @obcflex.df::DfHeatingOrCoolingElecMeter
+equip
+elec
+meter
+ac
+siteRef: @site
+---
+id: @PBui
+dis: "Building Electric Demand"
+spec: @ph.elec::ElecAcImportActivePowerSensor
+point
+sensor
+elec
+ac
+power
+active
+import
+avg
+magnitude
+minVal: 0
+kind: "Number"
+unit: "kW"
+equipRef: @meter
+siteRef: @site
+---
+id: @PBuiThrVar
+dis: "Building Demand Threshold"
+spec: @obcflex.df::ElecDemandThresholdSp
+point
+sp
+elec
+power
+dfThreshold
+kind: "Number"
+unit: "kW"
+equipRef: @meter
+siteRef: @site
+---
+id: @dfSup
+dis: "DF Supervisor"
+spec: @obcflex.df::DfSupervisor
+equip
+dfSupervisor
+siteRef: @site
+---
+id: @demFleMod
+dis: "Demand Flexibility Mode"
+spec: @obcflex.df::DfModeSp
+point
+sp
+dfMode
+kind: "Str"
+enum: "preCondition,default,loadShed,loadRebound"
+equipRef: @dfSup
+siteRef: @site

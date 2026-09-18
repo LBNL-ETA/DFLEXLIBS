@@ -1,0 +1,12 @@
+//
+// Marks this directory as the Xeto workDir so the CLI resolves obcflex.df
+// here rather than walking up to the DFLEXLIBS git root.
+//
+// The ph libs come from the Haxall install. To build against a local
+// Project-Haystack source checkout instead, add it to the path (semicolons
+// separate entries, on every platform):
+//
+//   path=../../../../xeto
+//
+// See README.md for the version constraints that apply if you do.
+//
