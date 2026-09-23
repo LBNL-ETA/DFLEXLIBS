@@ -4,7 +4,7 @@ SHACL shapes describing the semantic data requirements of the CDL demand
 flexibility sequences in Brick, so that the points a sequence needs can be found
 automatically in a building's Brick model instead of being mapped by hand.
 
-Currently covered:
+Coverage:
 
 | Sequence | File |
 |---|---|
@@ -14,10 +14,17 @@ Currently covered:
 by all of them.
 
 This is the Brick counterpart of `../s223/`. Same connectors, same pipeline, same
-`obc:binds` / `obc:controls` linking predicates — see that README for how the
+`obc:binds` / `obc:controls` linking predicates; see that README for how the
 CDL annotation, `modelica-json` extraction and SHACL inference fit together.
 
-Run `python examples/validate.py` to see it work on a small model.
+## Running the checks
+
+```sh
+python examples/validate.py
+```
+
+Runs inference over `examples/conforming-model.ttl` and
+`examples/non-conforming-model.ttl` and checks the result.
 
 ## Shapes
 
@@ -41,18 +48,18 @@ Plus two structural shapes: `obc:hoc-zone` (the control target, a
 
 ## How this differs from the 223P shapes
 
-The two libraries cover the same connectors but the modelling is not a
+The two libraries cover the same connectors, but the modelling is not a
 transliteration, because the two ontologies carry meaning differently.
 
 **Brick puts the meaning in the class name; 223P puts it in aspects on a
 property.** Where the 223P shapes say "a quantifiable actuatable property with
 quantity kind Temperature and aspect `Aspect-LoadShedTarget`", the Brick shape
-just says `sh:class obc:Load_Shed_Zone_Air_Temperature_Setpoint`. That makes the
+says `sh:class obc:Load_Shed_Zone_Air_Temperature_Setpoint`. That makes the
 Brick shapes shorter, at the cost of needing new classes.
 
 **Quantity kinds come for free.** Brick declares `brick:hasQuantity` on the
 class, so `brick:Zone_Air_Temperature_Sensor` already implies Temperature. The
-223P shapes have to check `qudt:hasQuantityKind` on every instance.
+223P shapes check `qudt:hasQuantityKind` on every instance.
 
 **A zone temperature is identified by class, not by sensor location.** The 223P
 shapes need the sensor's `hasObservationLocation` to be a `DomainSpace` to tell a
@@ -62,7 +69,7 @@ says it outright.
 **Brick needs five new classes where 223P needed four new aspects.** Brick has
 load-shedding vocabulary, but `brick:Load_Shed_Setpoint` is a *power* setpoint
 (`brick:Load_Setpoint`, quantity Power), so it cannot be reused for a zone
-temperature target. `brick:Demand_Setpoint` *is* a good parent for the demand
+temperature target. `brick:Demand_Setpoint` is a suitable parent for the demand
 threshold and is used as one.
 
 ## Modelling decisions
@@ -70,26 +77,26 @@ threshold and is used as one.
 **The active setpoint exclusion is a node constraint, not a property shape.**
 Brick subclass entailment makes every DF target a
 `brick:Zone_Air_Temperature_Setpoint` too, so without an explicit exclusion a
-zone's three event targets would also match `obc:TCurZonSet`, leaving the binder
-with four candidates per zone. The exclusion is `obc:not-a-df-target`, applied
-with `sh:node`.
+zone's three event targets also match `obc:TCurZonSet`, leaving the binder with
+four candidates per zone. The exclusion is `obc:not-a-df-target`, applied with
+`sh:node`.
 
 It cannot be written as a property shape over the `rdf:type` path the way the
 223P version is: there the value node would be the *class*, and a Brick class is
 an `rdfs:Class` rather than an instance of itself. 223P aspects are punned that
 way, which is why the same rule takes a different form in each library.
-`examples/non-conforming-model.ttl` pins this down with `Zone3_TSheTarSet`, and
+`examples/non-conforming-model.ttl` covers this with `Zone3_TSheTarSet`, and
 `validate.py` asserts it explicitly.
 
-**`TCurZonSet` and `TComZonSet` have identical requirements** — the sequence
+**`TCurZonSet` and `TComZonSet` have identical requirements.** The sequence
 reads the active zone setpoint and writes it back, so in most buildings both
 connectors resolve to the same point. The read/write distinction is the CDL
 connector direction, not the Brick class.
 
-**Units are permissive** — K, degC, degF for temperature; W, kW, MW for power.
+**Units are permissive:** K, degC, degF for temperature; W, kW, MW for power.
 Converting to the CDL unit is the translator's job.
 
-**BACnet references are required on measured and commanded points only** —
+**BACnet references are required on measured and commanded points only:**
 `TCurZon`, `TCurZonSet`, `TComZonSet`, `PBui` and `PBuiThrVar`. The three event
 targets and `rouZonFla` do not require one, as they are typically supplied as
 configuration or by a DF supervisor rather than read from a controller.
@@ -106,28 +113,29 @@ Same as the 223P library, plus one Brick-specific item:
   `brick:Zone_Air_Heating_Temperature_Setpoint` or
   `brick:Zone_Air_Cooling_Temperature_Setpoint` accordingly. Both are subclasses
   of `brick:Zone_Air_Temperature_Setpoint`, so both currently match
-  `obc:TCurZonSet` — which is right for a mode-agnostic shape but not specific
-  enough for deployment.
+  `obc:TCurZonSet`, which is right for a mode-agnostic shape but not specific
+  enough for deployment. The same change has to land in `../s223/`,
+  `../project-haystack/` and `../xeto/` at the same time.
 - **Variant-conditional connectors are not expressed.** `PBui` and `PBuiThrVar`
   only exist for `ZoneControlVariant` 3 and 4.
 - **The new classes are not upstream.** The five classes in
-  `obc-extensions.ttl` are OBC-Flex extensions. If any belong in Brick proper,
-  proposing them upstream would remove the need for the extension file.
-- **Namespace is inherited.** `obc:` is `urn:hpflex/shapes#`, carried over from
-  the earlier HPFlex work so that the existing tooling keeps working.
+  `obc-extensions.ttl` are OBC-Flex extensions. Proposing the ones that belong
+  in Brick proper would remove the need for the extension file.
+- **Namespace.** `obc:` is `urn:hpflex/shapes#`, carried over from the earlier
+  HPFlex work so that the existing tooling keeps working.
 
 ## Toolchain notes
 
 **pySHACL `sh:qualifiedMinCount`.** pySHACL 0.21 does not raise
 `sh:qualifiedMinCount` when a path has *zero* values, so every
 `sh:qualifiedMinCount 1` here is paired with a plain `sh:minCount 1`. Removing
-the `sh:minCount` will silently stop the shape from rejecting models where the
-point is missing entirely.
+the `sh:minCount` silently stops the shape from rejecting models where the point
+is missing entirely.
 
 **Brick.ttl is not loaded by `validate.py`.** The example models type their
 points with the exact classes the shapes name, so only `obc-extensions.ttl` is
 needed to resolve the subclass chains. A real building model is validated with
-Brick loaded, which additionally lets Brick's own subclasses match — notably
+Brick loaded, which additionally lets Brick's own subclasses match, notably
 `Zone_Air_Heating_Temperature_Setpoint` and
 `Zone_Air_Cooling_Temperature_Setpoint` for `obc:TCurZonSet`.
 
