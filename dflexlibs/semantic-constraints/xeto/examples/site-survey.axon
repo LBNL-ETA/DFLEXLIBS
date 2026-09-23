@@ -1,0 +1,188 @@
+//
+// Survey a real, un-prepared Haystack model against the obcflex.df specs.
+//
+// `xeto fits` cannot do this. It validates records that *declare* their spec
+// with a `spec` ref tag, and a real Haystack 3/4 export carries none -- run
+// `xeto fits examples/alpha.trio` and all 2032 recs come back
+// "Missing 'spec' ref tag". That is the right behaviour for the CLI and the
+// wrong question for binding, which has to work out which spec a record fits
+// without being told.
+//
+// The Axon `fits()` function does inference instead, so this is the Xeto
+// counterpart of ../../project-haystack/examples/site-survey.axon: same three
+// sites, same grid, specs in place of filters, so the two can be read side by
+// side.
+//
+// Run it with ./validate.sh; see README.md.
+//
+// The site models live in ../../project-haystack/examples/ rather than being
+// copied here. They are 60k lines of trio between them and neither library
+// modifies them.
+//
+
+// Connector table: one row per CDL connector, naming the spec it binds to.
+// This is the same mapping the container specs in
+// src/xeto/obcflex.df/heating-or-cooling.xeto declare in their `points` slots,
+// flattened so it can be resolved one connector at a time.
+dfHocSpecs: () => [
+  {connector:"TCurZon",    dir:"in",  scope:"zoneEquip", spec:"ph.points::ZoneAirTempSensor"},
+  {connector:"TCurZonSet", dir:"in",  scope:"zoneEquip", spec:"ph.points::ZoneAirTempEffectiveSp"},
+  {connector:"TComZonSet", dir:"out", scope:"zoneEquip", spec:"ph.points::ZoneAirTempEffectiveSp"},
+  {connector:"TPreTarSet", dir:"in",  scope:"zoneEquip", spec:"obcflex.df::PreConditionZoneAirTempSp"},
+  {connector:"TSheTarSet", dir:"in",  scope:"zoneEquip", spec:"obcflex.df::LoadShedZoneAirTempSp"},
+  {connector:"TDefSet",    dir:"in",  scope:"zoneEquip", spec:"obcflex.df::DefaultZoneAirTempSp"},
+  {connector:"rouZonFla",  dir:"in",  scope:"zoneEquip", spec:"obcflex.df::RogueZoneSp"},
+  {connector:"PBui",       dir:"in",  scope:"site",      spec:"ph.elec::ElecAcActivePowerSensor"},
+  {connector:"PBuiThrVar", dir:"in",  scope:"site",      spec:"obcflex.df::ElecDemandThresholdSp"},
+  {connector:"demFleMod",  dir:"in",  scope:"site",      spec:"obcflex.df::DfModeSp"},
+]
+
+// Drop ref tags the specs do not declare as slots.
+//
+// This is a workaround for the Axon shell, not a modelling decision. fits()
+// resolves every Ref value to check its target exists; `{ignoreRefs}` waives
+// that for refs the spec declares (equipRef, siteRef, spaceRef) but not for
+// incidental ones such as airRef or hotWaterRef, and the shell's in-memory
+// folio does not implement readById at all, so those throw. In a real project
+// folio neither the strip nor {ignoreRefs} is needed.
+dfHocStrip: (r) => r.findAll((v, n) =>
+  v.isRef == false or n == "id" or n == "equipRef" or n == "siteRef" or n == "spaceRef")
+
+// Every point in the project, stripped once, since fits() is called against
+// each of them for all ten specs.
+dfHocPoints: () => readAll(point).toRecList.map(r => dfHocStrip(r))
+
+// Recs matching one spec, keyed back to their equip.
+dfHocMatches: (points, qname) => do
+  s: spec(qname)
+  points.findAll(r => fits(r, s, {ignoreRefs}))
+end
+
+// Candidate zones: every equip owning a point that fits ZoneAirTempSensor.
+// Same selector as the Haystack survey, expressed as a spec rather than a
+// filter, so the zone counts are directly comparable.
+dfHocZones: (points) => do
+  recs: readAll(id).toRecList
+  dfHocMatches(points, "ph.points::ZoneAirTempSensor")
+    .findAll(p => p.has("equipRef"))
+    .map(p => p->equipRef)
+    .unique()
+    .map(i => recs.find(r => r->id == i))
+    .findAll(r => r != null)
+end
+
+// One row per connector, aggregated over every candidate zone.
+dfHocSurvey: () => do
+  points: dfHocPoints()
+  zones: dfHocZones(points)
+
+  dfHocSpecs().map(c => do
+    hits: dfHocMatches(points, c->spec)
+    counts: if (c->scope == "zoneEquip")
+              zones.map(eq =>
+                hits.findAll(p => p.has("equipRef") and p->equipRef == eq->id).size)
+            else
+              [hits.size]
+    nZones: if (c->scope == "zoneEquip") zones.size else 1
+    dfHocSummary(c, nZones, counts)
+  end).toGrid.reorderCols(
+    ["connector","dir","scope","zones","ok","missing","ambiguous","worst","verdict"])
+end
+
+// Roll a list of per-zone match counts up into one row. Same columns and the
+// same verdict rules as the Haystack survey.
+dfHocSummary: (c, nZones, counts) => do
+  ok:    counts.findAll(n => n == 1).size
+  none:  counts.findAll(n => n == 0).size
+  ambig: counts.findAll(n => n > 1).size
+  {
+    connector: c->connector,
+    dir:       c->dir,
+    scope:     c->scope,
+    zones:     nZones,
+    ok:        ok,
+    missing:   none,
+    ambiguous: ambig,
+    worst:     if (counts.isEmpty) 0 else counts.sort.last,
+    verdict:   if (nZones == 0)      "no zones"
+               else if (ok == nZones)    "ok"
+               else if (none == nZones)  "MISSING"
+               else if (ambig == nZones) "AMBIGUOUS"
+               else                      "partial",
+  }
+end
+
+// Show what an ambiguous connector actually matched, for the first zone where
+// its spec matched more than one point.
+dfHocExplain: (connector) => do
+  c: dfHocSpecs().find(r => r->connector == connector)
+  points: dfHocPoints()
+  hits: dfHocMatches(points, c->spec)
+  bad: dfHocZones(points).find(eq =>
+    hits.findAll(p => p.has("equipRef") and p->equipRef == eq->id).size > 1)
+  if (bad == null)
+    echo("  " + connector + ": no zone matched more than once")
+  else do
+    echo("  " + connector + " (" + c->spec + ") in " + bad->dis + ":")
+    hits.findAll(p => p->equipRef == bad->id).each(p => echo("    - " + p->dis))
+  end
+end
+
+//////////////////////////////////////////////////////////////////////////
+// Per-zone applicability
+//
+// dfHocSurvey() aggregates one row per connector across the whole model.
+// dfHocApplicable() turns the same data the other way up: one row per zone,
+// stating whether HeatingOrCooling can be bound to that zone as the building
+// is tagged today. Nothing in the model is changed or assumed.
+//
+// A zone is applicable when every zone-scoped connector resolves to exactly
+// one point in it. Zero means the sequence cannot be deployed there; more than
+// one means the tagging does not say which point to use.
+//////////////////////////////////////////////////////////////////////////
+
+// One row per candidate zone.
+dfHocApplicable: () => do
+  conns: dfHocSpecs().findAll(c => c->scope == "zoneEquip")
+  points: dfHocPoints()
+  zones: dfHocZones(points)
+  hits: conns.map(c => dfHocMatches(points, c->spec))
+
+  zones.map(eq => do
+    counts: conns.map((c, i) =>
+      {connector: c->connector,
+       count: hits[i].findAll(p => p.has("equipRef") and p->equipRef == eq->id).size})
+    resolved: counts.findAll(r => r->count == 1)
+    missing:  counts.findAll(r => r->count == 0)
+    ambig:    counts.findAll(r => r->count > 1)
+    {
+      zone:      eq->dis,
+      resolved:  resolved.size,
+      required:  counts.size,
+      missing:   missing.map(r => r->connector).concat(", "),
+      ambiguous: ambig.map(r => r->connector).concat(", "),
+      verdict:   if (resolved.size == counts.size) "applicable" else "not applicable",
+    }
+  end).toGrid.reorderCols(
+    ["zone","verdict","resolved","required","missing","ambiguous"])
+end
+
+// Applicability rolled up: which zones can take the sequence, and for the rest,
+// how many share each distinct reason.
+dfHocApplicability: () => do
+  rows: dfHocApplicable().toRecList
+  yes: rows.findAll(r => r->verdict == "applicable")
+  echo("  zones: " + rows.size + "   applicable: " + yes.size)
+  if (yes.isEmpty == false)
+    yes.each(r => echo("    applicable: " + r->zone))
+  // group the rest by the (missing, ambiguous) pair they share
+  keys: rows.findAll(r => r->verdict != "applicable")
+            .map(r => r->missing + " | " + r->ambiguous).unique()
+  keys.each(k => do
+    same: rows.findAll(r => (r->missing + " | " + r->ambiguous) == k)
+    echo("    " + same.size + " zone(s), e.g. " + same.first->zone)
+    if (same.first->missing != "")   echo("      missing:   " + same.first->missing)
+    if (same.first->ambiguous != "") echo("      ambiguous: " + same.first->ambiguous)
+  end)
+  rows.size
+end

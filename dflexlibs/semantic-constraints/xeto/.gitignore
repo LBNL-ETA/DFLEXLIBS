@@ -1,2 +1,5 @@
 # xeto build output
 /lib/
+
+# local tooling, not part of the published library
+/tools/

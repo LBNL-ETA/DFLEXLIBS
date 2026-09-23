@@ -1,0 +1,88 @@
+//
+// Survey a real, un-prepared Haystack model against the HeatingOrCooling
+// binding filters.
+//
+// examples/conforming.trio and examples/non-conforming.trio are hand-built to
+// exercise the filters, so every connector is expected to resolve there. The
+// three site models (alpha/bravo/charlie, from project-haystack.org) are real
+// exports that know nothing about demand flexibility, so running validate.axon
+// over them unmodified would only report that the df* tags are absent.
+//
+// This file asks the more useful question: given a building as it is actually
+// tagged, which connectors of the sequence would bind, which are missing, and
+// which are ambiguous? That is the commissioning gap for the site.
+//
+// Requires dfHocConnectors() and dfHocResolve() from ../validate.axon -- load
+// that first, or use `./validate.sh`, which concatenates the two.
+//
+
+// Candidate zones: every equip owning a point that matches the TCurZon filter.
+// The sequence controls a thermal zone, and a zone air temperature sensor is
+// the one point it cannot do without, so this is the requirement itself used
+// as the selector rather than a guess at the local equip naming.
+dfHocZones: () => do
+  recs: readAll(id).toRecList
+  readAll(point and sensor and zone and air and temp).toRecList
+    .findAll(p => p.has("equipRef"))
+    .map(p => p->equipRef)
+    .unique()
+    .map(i => recs.find(r => r->id == i))
+    .findAll(r => r != null)
+end
+
+// One row per connector, aggregated over every candidate zone.
+dfHocSurvey: () => do
+  zones: dfHocZones()
+  conns: dfHocConnectors()
+
+  zoneRows: conns.findAll(c => c->scope == "zoneEquip").map(c => do
+    counts: zones.map(eq => dfHocResolve(c, eq->id)->count)
+    dfHocSummary(c, zones.size, counts)
+  end)
+
+  siteRows: conns.findAll(c => c->scope == "site").map(c =>
+    dfHocSummary(c, 1, [dfHocResolve(c, null)->count]))
+
+  zoneRows.addAll(siteRows).toGrid.reorderCols(
+    ["connector","dir","scope","zones","ok","missing","ambiguous","worst","verdict"])
+end
+
+// Roll a list of per-zone match counts up into one row.
+dfHocSummary: (c, nZones, counts) => do
+  ok:     counts.findAll(n => n == 1).size
+  none:   counts.findAll(n => n == 0).size
+  ambig:  counts.findAll(n => n > 1).size
+  worst:  if (counts.isEmpty) 0 else counts.sort.last
+  {
+    connector: c->connector,
+    dir:       c->dir,
+    scope:     c->scope,
+    zones:     nZones,
+    ok:        ok,
+    missing:   none,
+    ambiguous: ambig,
+    worst:     worst,
+    verdict:   if (nZones == 0)      "no zones"
+               else if (ok == nZones)    "ok"
+               else if (none == nZones)  "MISSING"
+               else if (ambig == nZones) "AMBIGUOUS"
+               else                      "partial",
+  }
+end
+
+// Show what an ambiguous connector actually matched, for the first zone where
+// it matched more than once. This is how you tell a tagging error in the model
+// from a filter that is genuinely under-specified.
+dfHocExplain: (connector) => do
+  c: dfHocConnectors().find(r => r->connector == connector)
+  hits: readAll(parseFilter(c->filter)).toRecList
+  zones: dfHocZones()
+  bad: zones.find(eq =>
+    hits.findAll(p => p.has("equipRef") and p->equipRef == eq->id).size > 1)
+  if (bad == null)
+    echo("  " + connector + ": no zone matched more than once")
+  else do
+    echo("  " + connector + " in " + bad->dis + ":")
+    hits.findAll(p => p->equipRef == bad->id).each(p => echo("    - " + p->dis))
+  end
+end
